@@ -1,14 +1,42 @@
 import { MantineProvider } from "@mantine/core";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { theme } from "./theme";
-import Main from "./components/pages/Main";
-import { LIGHT } from "./common/constants";
+import {
+  DASHBOARD,
+  ELECTIONS,
+  HOME,
+  LIGHT,
+  YOUR_NOMINATIONS,
+} from "./common/constants";
+import { Suspense, lazy } from "react";
+import Elections from "./components/pages/Elections";
+
+// Lazy load the components
+const Main = lazy(() => import("./components/pages/Main"));
 
 function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme={LIGHT}>
-      <Main>
-        <p>Hello</p>
-      </Main>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path={HOME} element={<Navigate to={ELECTIONS} />} />
+            <Route path={HOME} element={<Main />}>
+              <Route path={DASHBOARD} element={<p>Dashboard</p>} />
+              <Route path={ELECTIONS} element={<Elections />} />
+              <Route
+                path={YOUR_NOMINATIONS}
+                element={<p>Your Nominations</p>}
+              />
+            </Route>
+          </Routes>
+        </Suspense>
+      </Router>
     </MantineProvider>
   );
 }

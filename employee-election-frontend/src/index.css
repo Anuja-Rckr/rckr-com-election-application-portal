@@ -27,3 +27,7 @@ code {
 [data-mantine-color-scheme="dark"] .mantine-NavLink-root:hover {
   background-color: var(--mantine-color-dark-4) !important;
 }
+
+.main-padding {
+  padding: var(--mantine-spacing-md);
+}

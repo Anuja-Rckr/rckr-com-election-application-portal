@@ -19,11 +19,13 @@ import {
   VIOLET,
   WHITE,
 } from "../../common/constants";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import "../../index.css";
 
-const Main = ({ children }: { children: React.ReactNode }) => {
+const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme(LIGHT);
+  const location = useLocation();
 
   return (
     <AppShell
@@ -32,7 +34,7 @@ const Main = ({ children }: { children: React.ReactNode }) => {
       bg={computedColorScheme === DARK ? DARK_8 : GRAY_1}
     >
       <AppShell.Header
-        withBorder={false}
+        withBorder={true}
         bg={computedColorScheme === DARK ? DARK_6 : WHITE}
       >
         <div className="flex-between">
@@ -47,7 +49,7 @@ const Main = ({ children }: { children: React.ReactNode }) => {
               onClick={() =>
                 setColorScheme(computedColorScheme === LIGHT ? DARK : LIGHT)
               }
-              variant="default"
+              variant={LIGHT}
               size="lg"
             >
               {computedColorScheme === LIGHT ? <IconMoon /> : <IconSun />}
@@ -68,12 +70,19 @@ const Main = ({ children }: { children: React.ReactNode }) => {
               key={item.label}
               label={item.label}
               leftSection={item.icon}
+              component={Link}
+              to={item.path}
+              active={location.pathname === item.path}
             />
           ))}
         </Stack>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <div className="main-padding">
+          <Outlet />
+        </div>
+      </AppShell.Main>
     </AppShell>
   );
 };
