@@ -1,7 +1,7 @@
 import CountCard from "../common/CountCard";
 import FlatTable from "../common/FlatTable";
 
-const Elections = () => {
+const YourNominations = () => {
   return (
     <>
       <CountCard />
@@ -10,4 +10,4 @@ const Elections = () => {
   );
 };
 
-export default Elections;
+export default YourNominations;

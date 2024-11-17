@@ -57,3 +57,9 @@ export const colorsArray = [
   "grape",
   "gray",
 ];
+
+// Table constants
+export const LINK = "link";
+export const DATETIME = "datetime";
+export const DATA = "data";
+export const STATUS = "status";

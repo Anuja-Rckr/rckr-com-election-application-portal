@@ -9,14 +9,10 @@ import {
   Menu,
   Tooltip,
   Button,
+  Paper,
 } from "@mantine/core";
 import { useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
-import {
-  IconMoon,
-  IconSettings,
-  IconSun,
-  IconLogout,
-} from "@tabler/icons-react";
+import { IconMoon, IconSun, IconLogout } from "@tabler/icons-react";
 import {
   DARK,
   DARK_6,
@@ -30,7 +26,7 @@ import {
 } from "../../common/constants";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "../../index.css";
-import { generateRandomColor } from "../../common/utils";
+import { generateRandomColor, getPageName } from "../../common/utils";
 
 const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
@@ -134,6 +130,9 @@ const Main = () => {
 
       <AppShell.Main>
         <div className="main-padding">
+          <Paper p="lg" mb="lg">
+            <Text fw={700}>{getPageName(location.pathname)}</Text>
+          </Paper>
           <Outlet />
         </div>
       </AppShell.Main>

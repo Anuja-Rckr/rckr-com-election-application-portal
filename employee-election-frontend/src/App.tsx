@@ -15,6 +15,7 @@ import {
 } from "./common/constants";
 import { Suspense, lazy } from "react";
 import Elections from "./components/pages/Elections";
+import YourNominations from "./components/pages/YourNominations";
 
 // Lazy load the components
 const Main = lazy(() => import("./components/pages/Main"));
@@ -29,10 +30,7 @@ function App() {
             <Route path={HOME} element={<Main />}>
               <Route path={DASHBOARD} element={<p>Dashboard</p>} />
               <Route path={ELECTIONS} element={<Elections />} />
-              <Route
-                path={YOUR_NOMINATIONS}
-                element={<p>Your Nominations</p>}
-              />
+              <Route path={YOUR_NOMINATIONS} element={<YourNominations />} />
             </Route>
           </Routes>
         </Suspense>

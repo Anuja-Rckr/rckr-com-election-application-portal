@@ -35,3 +35,28 @@ code {
 .text-center {
   text-align: center;
 }
+
+.wrap-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.table-styles {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table-styles-max {
+  width: max-content;
+  table-layout: fixed;
+}
+
+.container-styles {
+  width: 100%;
+  overflow: hidden;
+}
+
+.w-100 {
+  width: 100%;
+}
