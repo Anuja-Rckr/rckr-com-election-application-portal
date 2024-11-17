@@ -84,3 +84,8 @@ export const LINK = "link";
 export const DATETIME = "datetime";
 export const DATA = "data";
 export const STATUS = "status";
+
+// Tab constants
+export const OVERVIEW = "Overview";
+export const NOMINATIONS = "Nominations";
+export const RESULTS = "Results";

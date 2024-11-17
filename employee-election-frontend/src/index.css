@@ -64,3 +64,13 @@ code {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.bg-overview {
+  background: var(--mantine-color-violet-5);
+  color: white;
+}
+
+.border-right {
+  border-right: 1px solid #ffffff;
+  width: fit-content;
+}
