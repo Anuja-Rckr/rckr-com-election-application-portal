@@ -31,3 +31,7 @@ code {
 .main-padding {
   padding: var(--mantine-spacing-md);
 }
+
+.text-center {
+  text-align: center;
+}

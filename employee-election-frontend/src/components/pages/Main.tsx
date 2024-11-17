@@ -6,13 +6,22 @@ import {
   Avatar,
   NavLink,
   Text,
+  Menu,
+  Tooltip,
+  Button,
 } from "@mantine/core";
 import { useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import {
+  IconMoon,
+  IconSettings,
+  IconSun,
+  IconLogout,
+} from "@tabler/icons-react";
 import {
   DARK,
   DARK_6,
   DARK_8,
+  FILLED,
   GRAY_1,
   LIGHT,
   menuItems,
@@ -21,11 +30,56 @@ import {
 } from "../../common/constants";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "../../index.css";
+import { generateRandomColor } from "../../common/utils";
 
 const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme(LIGHT);
   const location = useLocation();
+
+  const renderProfile = () => {
+    return (
+      <Menu width={200}>
+        <Menu.Target>
+          <Tooltip label="View Profile">
+            <Avatar
+              radius="xl"
+              size="md"
+              color={VIOLET}
+              style={{ cursor: "pointer" }}
+            />
+          </Tooltip>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          <Menu.Item>
+            <Group justify="center" align="center">
+              <Avatar color={generateRandomColor("Anuja")} radius="xl">
+                AA
+              </Avatar>
+              <div>
+                <Text c="dimmed" className="text-center">
+                  Anuja Aliveli
+                </Text>
+                <Text className="text-center">demo.email@gmail.com</Text>
+              </div>
+            </Group>
+          </Menu.Item>
+
+          <Menu.Item>
+            <Button
+              color={VIOLET}
+              variant={FILLED}
+              leftSection={<IconLogout size={20} />}
+              fullWidth
+            >
+              Logout
+            </Button>
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    );
+  };
 
   return (
     <AppShell
@@ -54,7 +108,7 @@ const Main = () => {
             >
               {computedColorScheme === LIGHT ? <IconMoon /> : <IconSun />}
             </ActionIcon>
-            <Avatar radius="xl" size="md" color={VIOLET} />
+            {renderProfile()}
           </Group>
         </div>
       </AppShell.Header>

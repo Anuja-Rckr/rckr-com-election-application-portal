@@ -3,6 +3,8 @@ import { IconChartBar, IconTicket, IconTrophy } from "@tabler/icons-react";
 // theme constants
 export const LIGHT = "light";
 export const DARK = "dark";
+export const OUTLINE = "outline";
+export const FILLED = "filled";
 
 // color constants
 export const RED = "red";
@@ -37,4 +39,21 @@ export const menuItems = [
     label: "Your Nominations",
     path: YOUR_NOMINATIONS,
   },
+];
+
+// colors array
+export const colorsArray = [
+  "pink",
+  "indigo",
+  "blue",
+  "violet",
+  "red",
+  "green",
+  "yellow",
+  "orange",
+  "teal",
+  "cyan",
+  "lime",
+  "grape",
+  "gray",
 ];
