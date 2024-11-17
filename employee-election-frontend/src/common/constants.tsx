@@ -21,6 +21,7 @@ export const DASHBOARD = "/dashboard";
 export const ELECTIONS = "/elections";
 export const YOUR_NOMINATIONS = "/your-nominations";
 export const HOME = "/";
+export const ELECTION_DETAILS = "/election-details/:id";
 
 // Menu options
 export const menuItems = [
@@ -38,6 +39,26 @@ export const menuItems = [
     icon: <IconTrophy size={20} />,
     label: "Your Nominations",
     path: YOUR_NOMINATIONS,
+  },
+];
+
+// Page Names
+export const pageNames = [
+  {
+    path: DASHBOARD,
+    label: "Dashboard",
+  },
+  {
+    path: ELECTIONS,
+    label: "Elections",
+  },
+  {
+    path: YOUR_NOMINATIONS,
+    label: "Your Nominations",
+  },
+  {
+    path: ELECTION_DETAILS,
+    label: "Election Details",
   },
 ];
 

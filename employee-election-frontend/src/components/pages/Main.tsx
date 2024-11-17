@@ -42,7 +42,7 @@ const Main = () => {
               radius="xl"
               size="md"
               color={VIOLET}
-              style={{ cursor: "pointer" }}
+              className="cursor-pointer"
             />
           </Tooltip>
         </Menu.Target>

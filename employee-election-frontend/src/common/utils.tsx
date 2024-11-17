@@ -1,4 +1,4 @@
-import { colorsArray, DATETIME, menuItems } from "./constants";
+import { colorsArray, DATETIME, menuItems, pageNames } from "./constants";
 
 // Generate random color for profile
 export const generateRandomColor = (input: string) => {
@@ -63,6 +63,12 @@ export const formatDate = (timestamp: string, returnType: string = "date") => {
 
 // Get Page Name
 export const getPageName = (path: string) => {
-  const page = menuItems.find((element) => element.path === path);
+  const page = pageNames.find((element) => {
+    if (element.path.includes(":")) {
+      return path.split("/")[1] === element.path.split("/")[1];
+    } else {
+      return element.path === path;
+    }
+  });
   return page ? page.label : "";
 };
