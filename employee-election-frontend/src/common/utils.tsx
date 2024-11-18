@@ -105,3 +105,23 @@ export const getActiveNumber = (status: string) => {
       return -1;
   }
 };
+
+// Get Initials
+export const getInitials = (name: string) => {
+  const nameParts = name
+    .trim()
+    .split(" ")
+    .filter((part: string) => part !== "");
+
+  if (nameParts.length === 0) {
+    return "";
+  }
+
+  const firstInitial = nameParts[0].charAt(0).toUpperCase();
+  const lastInitial =
+    nameParts.length > 1
+      ? nameParts[nameParts.length - 1].charAt(0).toUpperCase()
+      : "";
+
+  return firstInitial + lastInitial;
+};

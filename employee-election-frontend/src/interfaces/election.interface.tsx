@@ -28,3 +28,10 @@ export interface overviewData {
   value: string;
   type: string;
 }
+
+export interface NominationCardDetails {
+  empid: string;
+  name: string;
+  role: string;
+  appeal: string;
+}

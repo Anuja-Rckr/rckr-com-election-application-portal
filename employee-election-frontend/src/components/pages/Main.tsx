@@ -26,7 +26,11 @@ import {
 } from "../../common/constants";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "../../index.css";
-import { generateRandomColor, getPageName } from "../../common/utils";
+import {
+  generateRandomColor,
+  getInitials,
+  getPageName,
+} from "../../common/utils";
 
 const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
@@ -51,7 +55,7 @@ const Main = () => {
           <Menu.Item>
             <Group justify="center" align="center">
               <Avatar color={generateRandomColor("Anuja")} radius="xl">
-                AA
+                {getInitials("Anuja Aliveli")}
               </Avatar>
               <div>
                 <Text c="dimmed" className="text-center">

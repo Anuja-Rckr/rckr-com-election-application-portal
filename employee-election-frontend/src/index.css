@@ -74,3 +74,7 @@ code {
   border-right: 1px solid #ffffff;
   width: fit-content;
 }
+
+.width-fit-content {
+  width: fit-content;
+}

@@ -34,6 +34,7 @@ import {
   ElectionDetailsInterface,
   overviewData,
 } from "../../interfaces/election.interface";
+import NominationTab from "./NominationTab";
 
 const ElectionDetails = () => {
   const electionStatus: string = "Live";
@@ -72,7 +73,9 @@ const ElectionDetails = () => {
                     <Text fw={700} className="text-center">
                       {item.title}
                     </Text>
-                    <Text className="text-center">{item.value}</Text>
+                    <Text className="text-center">
+                      {formatDate(item.value)}
+                    </Text>
                   </Stack>
                 ) : item.type === STATUS ? (
                   <Stack
@@ -262,7 +265,9 @@ const ElectionDetails = () => {
             {renderTimeline()}
           </Tabs.Panel>
 
-          <Tabs.Panel value={NOMINATIONS}>Nominations tab content</Tabs.Panel>
+          <Tabs.Panel value={NOMINATIONS}>
+            <NominationTab />
+          </Tabs.Panel>
 
           <Tabs.Panel value={RESULTS}>Results tab content</Tabs.Panel>
         </Tabs>
