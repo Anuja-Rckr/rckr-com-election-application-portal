@@ -1,4 +1,19 @@
-import { colorsArray, DATETIME, menuItems, pageNames } from "./constants";
+import {
+  CLOSED,
+  colorsArray,
+  COMPLETED,
+  DARK,
+  DATETIME,
+  DECLARED,
+  GRAPE,
+  GREEN,
+  INDIGO,
+  LIVE,
+  NOMINATIONS,
+  ORANGE,
+  pageNames,
+  PINK,
+} from "./constants";
 
 // Generate random color for profile
 export const generateRandomColor = (input: string) => {
@@ -13,18 +28,18 @@ export const generateRandomColor = (input: string) => {
 // Generate color for status
 export const getColorForStatus = (status: string) => {
   switch (status) {
-    case "Declared":
-      return "orange";
-    case "Nominations":
-      return "indigo";
-    case "Live":
-      return "pink";
-    case "Completed":
-      return "green";
-    case "Closed":
-      return "grape";
+    case DECLARED:
+      return ORANGE;
+    case NOMINATIONS:
+      return INDIGO;
+    case LIVE:
+      return PINK;
+    case COMPLETED:
+      return GREEN;
+    case CLOSED:
+      return GRAPE;
     default:
-      return "dark";
+      return DARK;
   }
 };
 
@@ -71,4 +86,22 @@ export const getPageName = (path: string) => {
     }
   });
   return page ? page.label : "";
+};
+
+// Get Active
+export const getActiveNumber = (status: string) => {
+  switch (status) {
+    case DECLARED:
+      return -1;
+    case NOMINATIONS:
+      return 0;
+    case LIVE:
+      return 1;
+    case COMPLETED:
+      return 1;
+    case CLOSED:
+      return 2;
+    default:
+      return -1;
+  }
 };

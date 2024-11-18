@@ -15,6 +15,10 @@ export const DARK_6 = "dark.6";
 export const DARK_8 = "dark.8";
 export const GRAY_1 = "gray.1";
 export const WHITE = "white";
+export const ORANGE = "orange";
+export const PINK = "pink";
+export const INDIGO = "indigo";
+export const GRAPE = "grape";
 
 // Route constants
 export const DASHBOARD = "/dashboard";
@@ -89,3 +93,9 @@ export const STATUS = "status";
 export const OVERVIEW = "Overview";
 export const NOMINATIONS = "Nominations";
 export const RESULTS = "Results";
+
+// Status Constants
+export const DECLARED = "Declared";
+export const LIVE = "Live";
+export const COMPLETED = "Completed";
+export const CLOSED = "Closed";
