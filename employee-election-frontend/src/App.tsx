@@ -23,7 +23,7 @@ const YourNominations = lazy(
   () => import("./components/pages/YourNominations")
 );
 const ElectionDetails = lazy(
-  () => import("./components/pages/ElectionDetails")
+  () => import("./components/pages/ElectionDetails/ElectionDetails")
 );
 
 function App() {

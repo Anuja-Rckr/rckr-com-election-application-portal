@@ -3,12 +3,12 @@ import {
   formatDate,
   generateRandomColor,
   getInitials,
-} from "../../common/utils";
-import { DATETIME } from "../../common/constants";
+} from "../../../common/utils";
+import { DATETIME } from "../../../common/constants";
 import {
   NominationCardDetails,
   overviewData,
-} from "../../interfaces/election.interface";
+} from "../../../interfaces/election.interface";
 
 const NavigationTab = () => {
   const nominationDetails: overviewData[] = [
@@ -95,7 +95,7 @@ const NavigationTab = () => {
   const renderNominationDetails = () => {
     return (
       <>
-        <Paper className="bg-overview width-fit-content" p="sm">
+        <Paper className="bg-overview width-fit-content" p="sm" mt="lg">
           <Group justify="center">
             {nominationDetails.map((item, index) => (
               <Stack
@@ -125,8 +125,8 @@ const NavigationTab = () => {
       <>
         <SimpleGrid cols={5} spacing="md" mt="lg">
           {nominees.map((item, index) => (
-            <Paper withBorder p="md" radius="md" key={item.empid}>
-              <Group justify="center" align="center">
+            <Paper p="md" radius="md" key={item.empid}>
+              <Stack justify="center" align="center">
                 <Avatar color={generateRandomColor(item.name)} radius="xl">
                   {getInitials(item.name)}
                 </Avatar>
@@ -150,7 +150,7 @@ const NavigationTab = () => {
                     <Text className="text-center">{item.role}</Text>
                   </Group>
                 </div>
-              </Group>
+              </Stack>
               <Group justify="center" gap={0}>
                 <Text className="text-center" fw={500}>
                   Appeal:
@@ -166,10 +166,8 @@ const NavigationTab = () => {
 
   return (
     <>
-      <Paper p="md">
-        {renderNominationDetails()}
-        {renderNominationList()}
-      </Paper>
+      {renderNominationDetails()}
+      {renderNominationList()}
     </>
   );
 };
