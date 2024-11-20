@@ -19,9 +19,11 @@ from django.urls import path
 
 from election_process.election_list_page.elections_list import get_elections_list
 from election_process.election_list_page.elections_card import get_elections_card
+from election_process.election_details_page.overview import get_election_overview_details
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('election-cards/', get_elections_card),
-    path('elections-list/', get_elections_list)
+    path('elections-list/', get_elections_list),
+    path('election-overview-details/', get_election_overview_details)
 ]

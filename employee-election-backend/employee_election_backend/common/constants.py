@@ -26,58 +26,17 @@ ELECTION_LIST_FIELDS = [
             'voting_end_date', 'created_by_name', 'created_at'
         ]
         
-ELECTION_TABLE_COLUMN_DATA = [
-    {
-        'title': 'Election Id',
-        'field': 'election_id',
-        'type': 'link'
-    },
-    {
-        'title': 'Election Title',
-        'field': 'election_title',
-        'type': 'data'
-    },
-    {
-        'title': 'Cut off',
-        'field': 'election_cutoff',
-        'type': 'data'
-    },
-    {
-        'title': 'Created By',
-        'field': 'created_by_name',
-        'type': 'data'
-    },
-    {
-        'title': 'Election Status',
-        'field': 'election_status',
-        'type': 'status'
-    },
-    {
-        'title': 'Created At',
-        'field': 'created_at',
-        'type': 'datetime'
-    },
-    {
-        'title': 'Nomination Start Date',
-        'field': 'nomination_start_date',
-        'type': 'datetime'
-    },
-    {
-        'title': 'Nomination End Date',
-        'field': 'nomination_end_date',
-        'type': 'datetime'
-    },
-    {
-        'title': 'Voting Start Date',
-        'field': 'voting_start_date',
-        'type': 'datetime'
-    },
-    {
-        'title': 'Voting end Date',
-        'field': 'voting_end_date',
-        'type': 'datetime'
-    }
+OVERVIEW_DETAILS_FIELDS = [
+    'election_title',
+    'created_by_name',
+    'created_at',
+    'election_cutoff',
+    'election_reward',
+    'election_status'
 ]
 
 # Field constants
 ELECTION_ID = 'election_id'
+
+# Error constants
+ELECTION_ID_REQUIRED = 'Election id is required'
