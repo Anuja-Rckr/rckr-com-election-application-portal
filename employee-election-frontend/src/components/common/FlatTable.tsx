@@ -36,47 +36,47 @@ type ThProps = {
 const FlatTable = () => {
   const columnData: ColumnData[] = [
     {
-      label: "Election ID",
+      title: "Election ID",
       field: "election_id",
       type: "link",
     },
     {
-      label: "Election Title",
+      title: "Election Title",
       field: "election_title",
       type: "data",
     },
     {
-      label: "Created By Name",
+      title: "Created By Name",
       field: "created_by_name",
       type: "data",
     },
     {
-      label: "Status",
+      title: "Status",
       field: "election_status",
       type: "status",
     },
     {
-      label: "Created At",
+      title: "Created At",
       field: "created_at",
       type: "datetime",
     },
     {
-      label: "Nomination Start Date",
+      title: "Nomination Start Date",
       field: "nomination_start_date",
       type: "datetime",
     },
     {
-      label: "Nomination End Date",
+      title: "Nomination End Date",
       field: "nomination_end_date",
       type: "datetime",
     },
     {
-      label: "Voting Start Date",
+      title: "Voting Start Date",
       field: "voting_start_date",
       type: "datetime",
     },
     {
-      label: "Voting End Date",
+      title: "Voting End Date",
       field: "voting_end_date",
       type: "datetime",
     },
@@ -184,7 +184,7 @@ const FlatTable = () => {
               setReverseSortDirection((prev) => !prev);
             }}
           >
-            {col.label}
+            {col.title}
           </Th>
         ))}
       </Table.Tr>

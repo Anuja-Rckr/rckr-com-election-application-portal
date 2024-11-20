@@ -7,7 +7,7 @@ export interface CountCardInterface {
 }
 
 export interface ColumnData {
-  label: string;
+  title: string;
   field: string;
   type: string;
 }
