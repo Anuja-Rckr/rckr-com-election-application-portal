@@ -31,3 +31,28 @@ def get_nominations_details_list(nomination_details,total_nominations):
         }
     ]
     return result
+
+def get_winner_details_list(winner_details):
+    result = [
+        {
+            'title': 'Emp ID',
+            'value': winner_details.emp_id,
+            'type': 'data'
+        },
+        {
+            'title': 'Name',
+            'value': winner_details.emp_name,
+            'type': 'data'
+        },
+        {
+            'title': 'Role',
+            'value': winner_details.emp_role,
+            'type': 'data'
+        },
+        {
+            'title': 'Total Votes',
+            'value': winner_details.total_votes,
+            'type': 'data'
+        },
+    ]
+    return result
