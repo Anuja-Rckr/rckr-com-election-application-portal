@@ -64,3 +64,22 @@ def getIconForCard(title):
         return '<IconClipboardCheck size={28} />'
     elif (title == ct.CLOSED):
         return '<IconX size={28} />'
+    
+def get_winner_details_query():
+    query = """
+    SELECT 
+        nvc.emp_id, 
+        nm.emp_name, 
+        nm.emp_role, 
+        nvc.total_votes
+    FROM 
+        nomination_vote_count nvc
+    JOIN 
+        nominations nm ON nvc.nomination_id = nm.nomination_id
+    WHERE 
+        nvc.election_id = %s
+    ORDER BY 
+        nvc.total_votes DESC 
+    LIMIT 1
+    """
+    return query

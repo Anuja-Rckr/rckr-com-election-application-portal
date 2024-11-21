@@ -42,6 +42,8 @@ NOMINATION_DETAILS_FIELDS = [
 
 # Field constants
 ELECTION_ID = 'election_id'
+NOMINATION_ID = 'nomination_id'
 
 # Error constants
 ELECTION_ID_REQUIRED = 'Election id is required'
+NO_WINNER_FOR_ELECTION = 'No winner found for this election'
