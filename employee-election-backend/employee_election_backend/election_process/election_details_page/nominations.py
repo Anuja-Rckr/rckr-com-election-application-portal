@@ -22,3 +22,16 @@ def get_nominations_details(request):
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
+
+def get_nomination_candidates_list(request):
+    election_id = request.GET.get(ct.ELECTION_ID, None)
+    if not election_id:
+        return JsonResponse({
+            'error': ct.ELECTION_ID_REQUIRED,
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        nominations_list = list(NominationsModel.objects.filter(election_id=int(election_id)).values())
+        return JsonResponse({'data': nominations_list}, status=status.HTTP_200_OK)
+    except Exception as error:
+        return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
