@@ -35,6 +35,11 @@ OVERVIEW_DETAILS_FIELDS = [
     'election_status'
 ]
 
+NOMINATION_DETAILS_FIELDS = [
+    'nomination_start_date',
+    'nomination_end_date'
+]
+
 # Field constants
 ELECTION_ID = 'election_id'
 
