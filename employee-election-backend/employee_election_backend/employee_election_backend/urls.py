@@ -21,7 +21,7 @@ from election_process.election_list_page.elections_list import get_elections_lis
 from election_process.election_list_page.elections_card import get_elections_card
 from election_process.election_details_page.overview import get_election_overview_details
 from election_process.election_details_page.nominations import get_nomination_candidates_list, get_nominations_details
-from election_process.election_details_page.results import get_winner_details
+from election_process.election_details_page.results import get_results_chart_data, get_results_table, get_winner_details
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,7 @@ urlpatterns = [
     path('election-overview-details/', get_election_overview_details),
     path('election-nomination-details/', get_nominations_details),
     path('election-nomination-candidates-list', get_nomination_candidates_list),
-    path('election-winner-details/', get_winner_details)
+    path('election-winner-details/', get_winner_details),
+    path('election-results-charts/',get_results_chart_data),
+    path('election-results-table/', get_results_table)
 ]

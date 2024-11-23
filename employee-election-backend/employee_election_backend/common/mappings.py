@@ -64,7 +64,31 @@ def getIconForCard(title):
         return '<IconClipboardCheck size={28} />'
     elif (title == ct.CLOSED):
         return '<IconX size={28} />'
+    elif(title == 'Total'):
+        return '<IconSum size={28}/>'
+    elif(title == 'Cut Off'):
+        return '<IconLockCheck size={28}/>'
     
+def get_results_stat_cards(total_election_votes, total_nominations, election_cut_off):
+    result = [
+        {
+            'title': 'Total Votes',
+            'value': total_election_votes,
+            'icon': getIconForCard('Total')
+        },
+        {
+            'title': 'Total Nominations',
+            'value': total_nominations,
+            'icon': getIconForCard('Nominations')
+        },
+        {
+            'title': 'Election Cutoff',
+            'value': election_cut_off,
+            'icon': getIconForCard('Cut Off')
+        }
+    ]
+    return result
+
 def get_winner_details_query():
     query = """
     SELECT 
@@ -83,3 +107,33 @@ def get_winner_details_query():
     LIMIT 1
     """
     return query
+
+def results_winner_table_col_data():
+    col_data = [
+        {
+            'title': 'Name',
+            'field': 'emp_name',
+            'type': 'data'
+        },
+        {
+            'title': 'Role',
+            'field': 'emp_role',
+            'type': 'data'
+        },
+        {
+            'title': 'Total Votes',
+            'field': 'total_votes',
+            'type': 'data'
+        },
+        {
+            'title': 'Total Votes(%)',
+            'field': 'total_votes_%',
+            'type': 'data'
+        },
+        {
+            'title': 'Created At',
+            'field': 'created_at',
+            'type': 'datetime'
+        },
+    ]
+    return col_data
