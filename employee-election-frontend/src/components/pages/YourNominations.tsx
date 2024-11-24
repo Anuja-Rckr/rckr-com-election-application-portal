@@ -4,8 +4,9 @@ import FlatTable from "../common/FlatTable";
 const YourNominations = () => {
   return (
     <>
-      <CountCard />
-      <FlatTable />
+      <p>Hello</p>
+      {/* <CountCard />
+      <FlatTable /> */}
     </>
   );
 };

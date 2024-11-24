@@ -11,7 +11,7 @@ class ElectionModel(models.Model):
     election_status = models.CharField(
         max_length=ct.CHAR_MEDIUM_LIMIT,
         choices=ct.ELECTION_STATUS_CHOICES,  
-        default='DECLARED',  
+        default='Declared',  
         blank=True, 
         null=True
     )

@@ -12,12 +12,12 @@ COMPLETED = 'Completed'
 CLOSED = 'Closed'
 
 ELECTION_STATUS_CHOICES = [
-        ('DECLARED', 'Declared'),
-        ('NOMINATION', 'Nominations'),  
-        ('LIVE', 'Live'),
-        ('COMPLETED', 'Completed'),
-        ('CLOSED', 'Closed')
-    ]
+    ('Declared', 'Declared'),
+    ('Nominations', 'Nominations'),
+    ('Live', 'Live'),
+    ('Completed', 'Completed'),
+    ('Closed', 'Closed')
+]
 
 ELECTION_LIST_FIELDS = [
             'election_id', 'election_title', 'election_cutoff', 

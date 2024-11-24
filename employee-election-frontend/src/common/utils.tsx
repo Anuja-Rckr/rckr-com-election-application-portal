@@ -1,4 +1,13 @@
 import {
+  IconCheck,
+  IconCircleFilled,
+  IconClipboardCheck,
+  IconLockCheck,
+  IconSum,
+  IconUserPlus,
+  IconX,
+} from "@tabler/icons-react";
+import {
   CLOSED,
   colorsArray,
   COMPLETED,
@@ -124,4 +133,25 @@ export const getInitials = (name: string) => {
       : "";
 
   return firstInitial + lastInitial;
+};
+
+export const getIcon = (icon: any) => {
+  switch (icon) {
+    case "IconCheck":
+      return IconCheck;
+    case "IconUserPlus":
+      return IconUserPlus;
+    case "IconCircleFilled":
+      return IconCircleFilled;
+    case "IconClipboardCheck":
+      return IconClipboardCheck;
+    case "IconX":
+      return IconX;
+    case "IconSum":
+      return IconSum;
+    case "IconLockCheck":
+      return IconLockCheck;
+    default:
+      return IconLockCheck;
+  }
 };

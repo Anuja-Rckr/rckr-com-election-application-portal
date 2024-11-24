@@ -169,7 +169,8 @@ const Results = () => {
           </Paper>
 
           <Box mt="lg" w="28%">
-            <CountCard type="stack" />
+            <p>Hello</p>
+            {/* <CountCard type="stack" /> */}
           </Box>
         </Flex>
       </>
@@ -180,7 +181,8 @@ const Results = () => {
     <>
       {renderWinnerDetails()}
       {renderCharts()}
-      <FlatTable />
+      <p>Hello</p>
+      {/* <FlatTable /> */}
     </>
   );
 };

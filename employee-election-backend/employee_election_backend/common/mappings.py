@@ -4,7 +4,8 @@ ELECTION_TABLE_COLUMN_DATA = [
     {
         'title': 'Election Id',
         'field': 'election_id',
-        'type': 'link'
+        'type': 'link',
+        'path': 'election-details/'
     },
     {
         'title': 'Election Title',
@@ -55,19 +56,19 @@ ELECTION_TABLE_COLUMN_DATA = [
 
 def getIconForCard(title):
     if (title == ct.DECLARED):
-        return '<IconCheck size={28} />'
+        return 'IconCheck'
     elif (title == ct.NOMINATIONS):
-        return '<IconUserPlus size={28} />'
+        return 'IconUserPlus'
     elif (title == ct.LIVE):
-        return '<IconCircleFilled size={28} />'
+        return 'IconCircleFilled'
     elif (title == ct.COMPLETED):
-        return '<IconClipboardCheck size={28} />'
+        return 'IconClipboardCheck'
     elif (title == ct.CLOSED):
-        return '<IconX size={28} />'
+        return 'IconX'
     elif(title == 'Total'):
-        return '<IconSum size={28}/>'
+        return 'IconSum'
     elif(title == 'Cut Off'):
-        return '<IconLockCheck size={28}/>'
+        return 'IconLockCheck'
     
 def get_results_stat_cards(total_election_votes, total_nominations, election_cut_off):
     result = [
