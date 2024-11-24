@@ -52,8 +52,8 @@ def get_distribution_of_votes_percentage(election_id, distribution_of_votes_numb
     result = []
     for index, item in enumerate(distribution_of_votes_number):
         result_obj = {
-            'emp_name' : item['emp_name'],
-            'total_votes': get_vote_percentage(total_election_votes,item['total_votes']),
+            'name' : item['emp_name'],
+            'value': get_vote_percentage(total_election_votes,item['total_votes']),
             'color': ct.COLORS_LIST[index],
         }
         result.append(result_obj)
@@ -98,7 +98,7 @@ def get_results_table_row_data(election_id):
     )
     total_election_votes = get_total_election_votes(election_id)
     for index, item in enumerate(results):
-        item['total_votes_%'] = get_vote_percentage(total_election_votes, item['total_votes'])
+        item['total_votes_%'] = f'{get_vote_percentage(total_election_votes, item['total_votes'])} %'
     return results
 
 @api_view(['GET'])

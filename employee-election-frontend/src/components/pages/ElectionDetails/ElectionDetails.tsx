@@ -36,31 +36,41 @@ import {
 } from "../../../interfaces/election.interface";
 import NominationTab from "../ElectionDetails/NominationTab";
 import Results from "./Results";
+import { useEffect, useState } from "react";
+import { getElectionOverview } from "../../../services/ApiService";
+import { useParams } from "react-router-dom";
 
 const ElectionDetails = () => {
-  const electionStatus: string = "Live";
-  const stackData: overviewData[] = [
-    { title: "Title", value: "Best Performance 2023", type: "data" },
-    { title: "Created By", value: "Anuja Aliveli", type: "data" },
-    {
-      title: "Created At",
-      value: "2024-10-31T17:00:00Z",
-      type: "datetime",
-    },
-    { title: "Cutoff", value: "50 votes", type: "data" },
-    { title: "Reward", value: "Rs.1000", type: "data" },
-    {
-      title: "Election Status",
-      value: "Declared",
-      type: "status",
-    },
-  ];
+  const { id } = useParams<{ id: string }>();
+  const electionId = id;
+  const [electionDetails, setElectionDetails] = useState<overviewData[]>([]);
+  const [electionStatus, setElectionStatus] = useState<string>(DECLARED);
+
+  const fetchElectionDetails = async () => {
+    if (electionId) {
+      const response = await getElectionOverview(electionId);
+      setElectionDetails(response);
+      const status = response.find(
+        (item: overviewData) => item.type === "status"
+      );
+      setElectionStatus(status);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchElectionDetails();
+    };
+
+    fetchData();
+  }, [electionId]);
+
   const renderOverview = () => {
     return (
       <>
         <Paper className="bg-overview" p="sm" mb="lg">
           <Group justify="space-around">
-            {stackData.map((item, index) =>
+            {electionDetails.map((item, index) =>
               item.type === DATA ? (
                 <Stack gap={0} className="border-right" pr="sm" key={index}>
                   <Text fw={700} className="text-center">
@@ -78,14 +88,18 @@ const ElectionDetails = () => {
               ) : item.type === STATUS ? (
                 <Stack
                   gap={0}
-                  className={stackData.length === index ? "border-right" : ""}
+                  className={
+                    electionDetails.length === index ? "border-right" : ""
+                  }
                   pr="sm"
                   key={index}
                 >
                   <Text fw={700} className="text-center">
                     {item.title}
                   </Text>
-                  <Badge color={getColorForStatus(item.value)}>Declared</Badge>
+                  <Badge color={getColorForStatus(item.value)}>
+                    {item.value}
+                  </Badge>
                 </Stack>
               ) : null
             )}

@@ -138,3 +138,38 @@ def results_winner_table_col_data():
         },
     ]
     return col_data
+
+def get_results_overview_list(overview_details):
+    result = [
+        {
+            'title': 'Title',
+            'value': overview_details['election_title'],
+            'type': 'data'
+        },
+        {
+            'title': 'Created By',
+            'value': overview_details['created_by_name'],
+            'type': 'data'
+        },
+        {
+            'title': 'Created At',
+            'value': overview_details['created_at'],
+            'type': 'datetime'
+        },
+        {
+            'title': 'Cut off',
+            'value': overview_details['election_cutoff'],
+            'type': 'data'
+        },
+        {
+            'title': 'Reward',
+            'value': overview_details['election_reward'],
+            'type': 'data'
+        },
+        {
+            'title': 'Election Status',
+            'value': overview_details['election_status'],
+            'type': 'status'
+        },
+    ]
+    return result

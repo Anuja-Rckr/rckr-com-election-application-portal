@@ -1,88 +1,74 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
-import { overviewData } from "../../../interfaces/election.interface";
+import {
+  DistributionOfVotesNumber,
+  DistributionOfVotesPercentage,
+  overviewData,
+  resultsTableData,
+} from "../../../interfaces/election.interface";
 import { BarChart, DonutChart } from "@mantine/charts";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  getElectionResultsCharts,
+  getElectionResultsTable,
+  getElectionWinnerDetails,
+} from "../../../services/ApiService";
 import CountCard from "../../common/CountCard";
+import { ColumnData } from "../../../interfaces/common.interface";
 import FlatTable from "../../common/FlatTable";
 
 const Results = () => {
-  const winnerDetails: overviewData[] = [
-    {
-      title: "EmpId",
-      value: "123",
-      type: "data",
-    },
-    {
-      title: "Name",
-      value: "John",
-      type: "data",
-    },
-    {
-      title: "Role",
-      value: "Software Engineer",
-      type: "data",
-    },
-    {
-      title: "Total Votes",
-      value: "20",
-      type: "data",
-    },
-    {
-      title: "Total Votes",
-      value: "20%",
-      type: "data",
-    },
-  ];
+  const { id } = useParams<{ id: string }>();
+  const electionId = id;
+  const [winnerDetails, setWinnerDetails] = useState<overviewData[]>([]);
+  const [distributionOfVotesNumber, setDistributionOfVotesNumber] = useState<
+    DistributionOfVotesNumber[]
+  >([]);
+  const [distributionOfVotesPercent, setDistributionOfVotesPercent] = useState(
+    []
+  );
+  const [StatCards, setStatCards] = useState([]);
+  const [electionCutOff, setElectionCutOff] = useState();
+  const [resultsColData, setResultsColData] = useState<ColumnData[]>([]);
+  const [resultsRowData, setResultsRowData] = useState<resultsTableData[]>([]);
 
-  const data = [
-    {
-      name: "Harnek",
-      votes: 35,
-    },
-    {
-      name: "Sandya",
-      votes: 53,
-    },
-    {
-      name: "Nandu",
-      votes: 73,
-    },
-    {
-      name: "Prem",
-      votes: 89,
-    },
-    {
-      name: "Anuja",
-      votes: 64,
-    },
-  ];
+  const fetchWinnerDetails = async () => {
+    if (electionId) {
+      const response = await getElectionWinnerDetails(electionId);
+      setWinnerDetails(response);
+    }
+  };
 
-  const doughnutData = [
-    {
-      name: "Harnek",
-      value: 35,
-      color: "violet.0",
-    },
-    {
-      name: "Sandya",
-      value: 53,
-      color: "violet.1",
-    },
-    {
-      name: "Nandu",
-      value: 73,
-      color: "violet.2",
-    },
-    {
-      name: "Prem",
-      value: 89,
-      color: "violet.3",
-    },
-    {
-      name: "Anuja",
-      value: 64,
-      color: "violet.4",
-    },
-  ];
+  const fetchChartData = async () => {
+    if (electionId) {
+      const response = await getElectionResultsCharts(electionId);
+      setDistributionOfVotesNumber(response.distribution_of_votes_number);
+      setDistributionOfVotesPercent(response.distribution_of_votes_percentage);
+      setStatCards(response.stat_cards);
+      const cutoff = response.stat_cards.find(
+        (item: any) => item.title === "Election Cutoff"
+      );
+      setElectionCutOff(cutoff.value);
+    }
+  };
+
+  const fetchResultsTable = async () => {
+    if (electionId) {
+      const response = await getElectionResultsTable(electionId);
+      setResultsColData(response.col_data);
+      setResultsRowData(response.row_data);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchWinnerDetails();
+      await fetchChartData();
+      await fetchResultsTable();
+    };
+
+    fetchData();
+  }, [electionId]);
 
   const renderWinnerDetails = () => {
     return (
@@ -124,13 +110,13 @@ const Results = () => {
             </Text>
             <BarChart
               h={235}
-              data={data}
-              dataKey="name"
+              data={distributionOfVotesNumber}
+              dataKey="emp_name"
               maxBarWidth={40}
-              series={[{ name: "votes", color: "url(#barGradient)" }]}
+              series={[{ name: "total_votes", color: "url(#barGradient)" }]}
               referenceLines={[
                 {
-                  y: 45,
+                  y: electionCutOff,
                   color: "grape.5",
                   label: "Cutoff",
                   labelPosition: "top",
@@ -161,7 +147,7 @@ const Results = () => {
             </Text>
             <DonutChart
               h={200}
-              data={doughnutData}
+              data={distributionOfVotesPercent}
               tooltipDataSource="segment"
               mx="auto"
               withLabels
@@ -169,8 +155,7 @@ const Results = () => {
           </Paper>
 
           <Box mt="lg" w="28%">
-            <p>Hello</p>
-            {/* <CountCard type="stack" /> */}
+            <CountCard type="stack" cardsData={StatCards} />
           </Box>
         </Flex>
       </>
@@ -181,8 +166,7 @@ const Results = () => {
     <>
       {renderWinnerDetails()}
       {renderCharts()}
-      <p>Hello</p>
-      {/* <FlatTable /> */}
+      <FlatTable colData={resultsColData} rowData={resultsRowData} />
     </>
   );
 };

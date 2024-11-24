@@ -39,21 +39,24 @@ export const CountCard = (props: CountCardPropsInterface) => {
 
       {type === "stack" && (
         <Stack>
-          {cardsData.map((stat, index) => (
-            <Paper withBorder={false} p="md" radius="md" key={index}>
-              <Group justify="apart">
-                <ThemeIcon variant={LIGHT} size={45} radius="md">
-                  {stat.icon}
-                </ThemeIcon>
-                <div>
-                  <Text c="dimmed">{stat.title}</Text>
-                  <Text fw={400} fz="xl">
-                    {stat.value}
-                  </Text>
-                </div>
-              </Group>
-            </Paper>
-          ))}
+          {cardsData.map((stat, index) => {
+            const IconComponent = getIcon(stat.icon);
+            return (
+              <Paper withBorder={false} p="md" radius="md" key={index}>
+                <Group justify="apart">
+                  <ThemeIcon variant="light" size={45} radius="md">
+                    {IconComponent && <IconComponent size={28} />}
+                  </ThemeIcon>
+                  <div>
+                    <Text c="dimmed">{stat.title}</Text>
+                    <Text fw={400} fz="xl">
+                      {stat.value}
+                    </Text>
+                  </div>
+                </Group>
+              </Paper>
+            );
+          })}
         </Stack>
       )}
     </>

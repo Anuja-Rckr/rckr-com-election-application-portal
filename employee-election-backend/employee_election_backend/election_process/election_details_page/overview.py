@@ -4,6 +4,7 @@ from django.core.serializers import serialize
 import json
 from common import constants as ct
 from election_process.models.election.election_model import ElectionModel
+from common.mappings import get_results_overview_list
 
 def get_election_overview_details(request):
    election_id = request.GET.get(ct.ELECTION_ID, None)
@@ -15,9 +16,9 @@ def get_election_overview_details(request):
    
    try:
        election_overview_details = list(ElectionModel.objects.filter(election_id=election_id).values(*ct.OVERVIEW_DETAILS_FIELDS))[0]
-       
+       election_overview_details_list = get_results_overview_list(election_overview_details)
        return JsonResponse({
-           'data': election_overview_details
+           'data': election_overview_details_list
        }, status=status.HTTP_200_OK)
    
    except Exception as err:

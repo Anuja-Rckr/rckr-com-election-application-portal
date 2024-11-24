@@ -18,7 +18,7 @@ export const getElectionList = async () => {
   }
 };
 
-export const getElectionOverview = async (electionId: number) => {
+export const getElectionOverview = async (electionId: string) => {
   try {
     const response = await api.get(`election-overview-details/`, {
       params: { election_id: electionId },
@@ -29,7 +29,7 @@ export const getElectionOverview = async (electionId: number) => {
   }
 };
 
-export const getElectionNominationDetails = async (electionId: number) => {
+export const getElectionNominationDetails = async (electionId: string) => {
   try {
     const response = await api.get(`election-nomination-details/`, {
       params: { election_id: electionId },
@@ -41,10 +41,10 @@ export const getElectionNominationDetails = async (electionId: number) => {
 };
 
 export const getElectionNominationCandidateList = async (
-  electionId: number
+  electionId: string
 ) => {
   try {
-    const response = await api.get(`election-nomination-candidates-list/`, {
+    const response = await api.get(`election-nomination-candidates-list`, {
       params: { election_id: electionId },
     });
     return response.data.data;
@@ -53,7 +53,7 @@ export const getElectionNominationCandidateList = async (
   }
 };
 
-export const getElectionWinnerDetails = async (electionId: number) => {
+export const getElectionWinnerDetails = async (electionId: string) => {
   try {
     const response = await api.get(`election-winner-details/`, {
       params: { election_id: electionId },
@@ -64,7 +64,7 @@ export const getElectionWinnerDetails = async (electionId: number) => {
   }
 };
 
-export const getElectionResultsCharts = async (electionId: number) => {
+export const getElectionResultsCharts = async (electionId: string) => {
   try {
     const response = await api.get(`election-results-charts/`, {
       params: { election_id: electionId },
@@ -75,7 +75,7 @@ export const getElectionResultsCharts = async (electionId: number) => {
   }
 };
 
-export const getElectionResultsTable = async (electionId: number) => {
+export const getElectionResultsTable = async (electionId: string) => {
   try {
     const response = await api.get(`election-results-table/`, {
       params: { election_id: electionId },
