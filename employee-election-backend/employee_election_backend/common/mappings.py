@@ -69,6 +69,10 @@ def getIconForCard(title):
         return 'IconSum'
     elif(title == 'Cut Off'):
         return 'IconLockCheck'
+    elif(title == 'Scheduled'):
+        return 'IconClockHour3'
+    elif(title == 'Active'):
+        return 'IconCircleFilled'
     
 def get_results_stat_cards(total_election_votes, total_nominations, election_cut_off):
     result = [
@@ -170,6 +174,72 @@ def get_results_overview_list(overview_details):
             'title': 'Election Status',
             'value': overview_details['election_status'],
             'type': 'status'
+        },
+    ]
+    return result
+
+def get_nomination_list_col_data():
+    result = [
+        {
+            'title': 'Election ID',
+            'field': 'election_id',
+            'type': 'link',
+            'path': 'election-details/'
+        },
+         {
+            'title': 'Election Title',
+            'field': 'election_title',
+            'type': 'data',
+        }, 
+        {
+            'title': 'Election Cutoff',
+            'field': 'election_cutoff',
+            'type': 'data',
+        },
+        {
+            'title': 'Election Status',
+            'field': 'election_status',
+            'type': 'status',
+        },
+        {
+            'title': 'Nomination Start Date',
+            'field': 'nomination_start_date',
+            'type': 'datetime',
+        },
+        {
+            'title': 'Nomination End Date',
+            'field': 'nomination_end_date',
+            'type': 'datetime',
+        },
+        {
+            'title': 'Nomination Created At',
+            'field': 'nomination_created_at',
+            'type': 'datetime',
+        },
+    ]
+    return result
+
+def get_your_nominations_cards_list(total_nominations,active_nominations,scheduled_nominations,completed_nominations):
+    result = [
+        {
+            'title': 'Total Nominations',
+            'value': total_nominations,
+            'icon': getIconForCard('Total')
+        },
+        {
+            'title': 'Active Nominations',
+            'value': active_nominations,
+            'icon': getIconForCard('Active')
+        },
+        {
+            'title': 'Scheduled Nominations ',
+            'value': scheduled_nominations,
+            'icon': getIconForCard('Scheduled')
+        },
+        {
+            'title': 'Completed Nominations',
+            'value': completed_nominations,
+            'icon': getIconForCard('Completed')
         },
     ]
     return result

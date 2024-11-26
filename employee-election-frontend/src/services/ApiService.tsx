@@ -85,3 +85,25 @@ export const getElectionResultsTable = async (electionId: string) => {
     throw error;
   }
 };
+
+export const getYourNominationsCards = async (empId: string = "102") => {
+  try {
+    const response = await api.get(`your-nominations-cards/`, {
+      params: { emp_id: empId },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getYourNominationsTable = async (empId: string = "102") => {
+  try {
+    const response = await api.get(`your-nominations-list/`, {
+      params: { emp_id: empId },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

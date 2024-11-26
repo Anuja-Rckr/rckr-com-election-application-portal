@@ -25,6 +25,15 @@ ELECTION_LIST_FIELDS = [
             'nomination_end_date', 'voting_start_date', 
             'voting_end_date', 'created_by_name', 'created_at'
         ]
+
+NOMINATION_LIST_FIELDS = [
+    'election_id',
+    'election_title',
+    'election_cutoff',
+    'election_status',
+    'nomination_start_date',
+    'nomination_end_date'
+]
         
 OVERVIEW_DETAILS_FIELDS = [
     'election_title',
@@ -43,9 +52,11 @@ NOMINATION_DETAILS_FIELDS = [
 # Field constants
 ELECTION_ID = 'election_id'
 NOMINATION_ID = 'nomination_id'
+EMP_ID = 'emp_id'
 
 # Error constants
 ELECTION_ID_REQUIRED = 'Election id is required'
+EMP_ID_REQUIRED = 'Emp id is required'
 NO_WINNER_FOR_ELECTION = 'No winner found for this election'
 
 # Colors Array
