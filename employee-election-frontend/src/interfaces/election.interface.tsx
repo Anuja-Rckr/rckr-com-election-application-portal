@@ -69,3 +69,8 @@ export interface resultsTableData {
   created_at: Date;
   "total_votes_%": number;
 }
+
+export interface NominationFormProps {
+  isOpened: boolean;
+  onClose: () => void;
+}
