@@ -222,22 +222,22 @@ def get_nomination_list_col_data():
 def get_your_nominations_cards_list(total_nominations,active_nominations,scheduled_nominations,completed_nominations):
     result = [
         {
-            'title': 'Total Nominations',
+            'title': 'Total',
             'value': total_nominations,
             'icon': getIconForCard('Total')
         },
         {
-            'title': 'Active Nominations',
+            'title': 'Active',
             'value': active_nominations,
             'icon': getIconForCard('Active')
         },
         {
-            'title': 'Scheduled Nominations ',
+            'title': 'Scheduled',
             'value': scheduled_nominations,
             'icon': getIconForCard('Scheduled')
         },
         {
-            'title': 'Completed Nominations',
+            'title': 'Completed',
             'value': completed_nominations,
             'icon': getIconForCard('Completed')
         },

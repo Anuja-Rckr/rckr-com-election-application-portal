@@ -15,6 +15,7 @@ import {
   YOUR_NOMINATIONS,
 } from "./common/constants";
 import { Suspense, lazy } from "react";
+import Dashboard from "./components/pages/Dashboard";
 
 // Lazy load the components
 const Main = lazy(() => import("./components/pages/Main"));
@@ -33,7 +34,7 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path={HOME} element={<Main />}>
-              <Route path={DASHBOARD} element={<p>Dashboard</p>} />
+              <Route path={DASHBOARD} element={<Dashboard />} />
               <Route path={ELECTIONS} element={<Elections />} />
               <Route path={ELECTION_DETAILS} element={<ElectionDetails />} />
               <Route path={YOUR_NOMINATIONS} element={<YourNominations />} />
