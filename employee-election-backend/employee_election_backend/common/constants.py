@@ -61,16 +61,16 @@ NO_WINNER_FOR_ELECTION = 'No winner found for this election'
 
 # Colors Array
 COLORS_LIST = [
-    'violet.0',
-    'violet.1',
-    'violet.2',
-    'violet.3',
-    'violet.4',
-    'violet.5',
-    'blue.0',
-    'blue.1',
-    'blue.2',
-    'blue.3',
-    'blue.4',
-    'blue.5',
+    'orange.0',
+    'orange.1',
+    'orange.2',
+    'orange.3',
+    'orange.4',
+    'orange.5',
+    'yellow.0',
+    'yellow.1',
+    'yellow.2',
+    'yellow.3',
+    'yellow.4',
+    'yellow.5',
 ]

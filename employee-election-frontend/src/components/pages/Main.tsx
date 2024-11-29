@@ -17,11 +17,10 @@ import {
   DARK,
   DARK_6,
   DARK_8,
-  FILLED,
   GRAY_1,
   LIGHT,
   menuItems,
-  VIOLET,
+  ORANGE,
   WHITE,
 } from "../../common/constants";
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -45,7 +44,7 @@ const Main = () => {
             <Avatar
               radius="xl"
               size="md"
-              color={VIOLET}
+              color={ORANGE}
               className="cursor-pointer"
             />
           </Tooltip>
@@ -67,12 +66,7 @@ const Main = () => {
           </Menu.Item>
 
           <Menu.Item>
-            <Button
-              color={VIOLET}
-              variant={FILLED}
-              leftSection={<IconLogout size={20} />}
-              fullWidth
-            >
+            <Button leftSection={<IconLogout size={20} />} fullWidth>
               Logout
             </Button>
           </Menu.Item>
@@ -93,8 +87,8 @@ const Main = () => {
       >
         <div className="flex-between">
           <Group p="md">
-            <Avatar radius="xl" size="md" color={VIOLET} />
-            <Text c={VIOLET} fw={700}>
+            <Avatar radius="xl" size="md" color={ORANGE} />
+            <Text c={ORANGE} fw={700}>
               LOGO
             </Text>
           </Group>

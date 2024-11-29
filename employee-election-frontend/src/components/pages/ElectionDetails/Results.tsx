@@ -117,7 +117,7 @@ const Results = () => {
               referenceLines={[
                 {
                   y: electionCutOff,
-                  color: "grape.5",
+                  color: "red.5",
                   label: "Cutoff",
                   labelPosition: "top",
                 },
@@ -130,11 +130,11 @@ const Results = () => {
                   <linearGradient id="barGradient" x1="0" x2="0" y1="0" y2="1">
                     <stop
                       offset="0%"
-                      stopColor="var(--mantine-color-violet-1)"
+                      stopColor="var(--mantine-color-orange-1)"
                     />
                     <stop
                       offset="100%"
-                      stopColor="var(--mantine-color-violet-6)"
+                      stopColor="var(--mantine-color-orange-6)"
                     />
                   </linearGradient>
                 </defs>

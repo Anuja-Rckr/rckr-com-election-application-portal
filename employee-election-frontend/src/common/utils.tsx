@@ -22,6 +22,7 @@ import {
   ORANGE,
   pageNames,
   PINK,
+  VIOLET,
 } from "./constants";
 
 // Generate random color for profile
@@ -38,7 +39,7 @@ export const generateRandomColor = (input: string) => {
 export const getColorForStatus = (status: string) => {
   switch (status) {
     case DECLARED:
-      return ORANGE;
+      return VIOLET;
     case NOMINATIONS:
       return INDIGO;
     case LIVE:
