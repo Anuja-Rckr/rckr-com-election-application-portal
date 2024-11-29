@@ -1,5 +1,12 @@
 import { useForm, isNotEmpty } from "@mantine/form";
-import { Button, TextInput, Drawer, Textarea, Text } from "@mantine/core";
+import {
+  Button,
+  TextInput,
+  Drawer,
+  Textarea,
+  Text,
+  NumberInput,
+} from "@mantine/core";
 import { NominationFormProps } from "../../../interfaces/election.interface";
 
 const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
@@ -57,16 +64,16 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
           mt="md"
           {...form.getInputProps("electionDescription")}
         />
-        <TextInput
+        <NumberInput
           label="Cutoff"
-          placeholder="Enter election cutoff date (YYYY-MM-DD)"
+          placeholder="Enter election cutoff"
           withAsterisk
           mt="md"
           {...form.getInputProps("electionCutoff")}
         />
         <TextInput
           label="Reward"
-          placeholder="Enter election reward details"
+          placeholder="Enter election reward"
           withAsterisk
           mt="md"
           {...form.getInputProps("electionReward")}

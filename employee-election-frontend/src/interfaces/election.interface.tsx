@@ -74,3 +74,9 @@ export interface NominationFormProps {
   isOpened: boolean;
   onClose: () => void;
 }
+
+export interface PublishNominationElectionProps {
+  isOpened: boolean;
+  onClose: () => void;
+  renderNominationModal: boolean;
+}
