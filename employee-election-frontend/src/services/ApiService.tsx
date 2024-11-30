@@ -9,9 +9,21 @@ export const getElectionCards = async () => {
   }
 };
 
-export const getElectionList = async () => {
+export const getElectionList = async (
+  searchInput: string,
+  sortField: string,
+  sortDirection: boolean,
+  pageNumber: number
+) => {
   try {
-    const response = await api.get("elections-list/");
+    const response = await api.get("elections-list/", {
+      params: {
+        search_input: searchInput,
+        page: pageNumber,
+        sort_field: sortField,
+        sort_direction: sortDirection ? "desc" : "asc",
+      },
+    });
     return response.data.data;
   } catch (error) {
     throw error;
@@ -97,10 +109,21 @@ export const getYourNominationsCards = async (empId: string = "102") => {
   }
 };
 
-export const getYourNominationsTable = async (empId: string = "102") => {
+export const getYourNominationsTable = async (
+  searchInput: string,
+  sortField: string,
+  sortDirection: boolean,
+  pageNumber: number
+) => {
   try {
     const response = await api.get(`your-nominations-list/`, {
-      params: { emp_id: empId },
+      params: {
+        emp_id: "102",
+        search_input: searchInput,
+        page: pageNumber,
+        sort_field: sortField,
+        sort_direction: sortDirection ? "desc" : "asc",
+      },
     });
     return response.data.data;
   } catch (error) {

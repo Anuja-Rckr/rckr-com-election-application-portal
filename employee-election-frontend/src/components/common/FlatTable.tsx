@@ -26,20 +26,64 @@ import { useNavigate } from "react-router-dom";
 
 type ThProps = {
   children: React.ReactNode;
-  sorted: boolean;
-  reversed: boolean;
-  onSort: () => void;
+  sorted?: boolean;
+  reversed?: boolean;
+  onSort?: () => void;
 };
 
 const FlatTable = (props: FlatTablePropsInterface) => {
-  const { colData, rowData } = props;
+  const {
+    colData,
+    rowData,
+    totalRows = 0,
+    showSearch = false,
+    showSort = false,
+    handleSearch,
+    handlePagination,
+    handleSort,
+  } = props;
+  const rowsPerPage: number = 10;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchInput, setSearchInput] = useState<string>("");
   const [sortBy, setSortBy] = useState<string | null>(null);
-  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [reverseSortDirection, setReverseSortDirection] =
+    useState<boolean>(false);
   const navigate = useNavigate();
+
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentData = rowData.slice(startIndex, endIndex);
+
+  const handleSearchChange = (event: any) => {
+    setSearchInput(event.target.value);
+    if (handleSearch) {
+      handleSearch(event.target.value);
+    }
+  };
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+    if (handlePagination) {
+      handlePagination(page);
+    }
+  };
+
+  const onSort = (field: string) => {
+    setSortBy(field);
+    setReverseSortDirection((prev) => !prev);
+    if (handleSort) {
+      handleSort(field, !reverseSortDirection);
+    }
+  };
 
   const renderSearch = () => (
     <Group justify="flex-end" pr="lg">
-      <Input placeholder="Search..." leftSection={<IconSearch size={16} />} />
+      <Input
+        placeholder="Search..."
+        leftSection={<IconSearch size={16} />}
+        value={searchInput}
+        onChange={handleSearchChange}
+      />
     </Group>
   );
 
@@ -68,26 +112,34 @@ const FlatTable = (props: FlatTablePropsInterface) => {
   const renderTableColumn = () => (
     <Table.Thead>
       <Table.Tr>
-        {colData.map((col, index) => (
-          <Th
-            key={index}
-            sorted={sortBy === col.field}
-            reversed={reverseSortDirection}
-            onSort={() => {
-              setSortBy(col.field);
-              setReverseSortDirection((prev) => !prev);
-            }}
-          >
-            {col.title}
-          </Th>
-        ))}
+        {colData.map((col, index) =>
+          showSort ? (
+            <Th
+              key={`sortable-${index}`}
+              sorted={sortBy === col.field}
+              reversed={reverseSortDirection}
+              onSort={() => onSort(col.field)}
+            >
+              {col.title}
+            </Th>
+          ) : (
+            <Table.Th
+              key={`nonsortable-${index}`}
+              className="text-center wrap-text"
+            >
+              <Text fw={500} fz="sm">
+                {col.title}
+              </Text>
+            </Table.Th>
+          )
+        )}
       </Table.Tr>
     </Table.Thead>
   );
 
   const renderTableRow = () => (
     <Table.Tbody>
-      {rowData.map((row: any, rowIndex: number) => (
+      {currentData.map((row: any, rowIndex: number) => (
         <Table.Tr key={rowIndex}>
           {colData.map((col, colIndex) => (
             <Table.Td key={colIndex} className="text-center wrap-text">
@@ -128,7 +180,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
   return (
     <div>
       <Paper mt="lg" pt="lg" className="container-styles">
-        {renderSearch()}
+        {showSearch && renderSearch()}
         <ScrollArea style={scrollAreaStyles}>
           <Box className="w-100">
             <Table
@@ -148,7 +200,13 @@ const FlatTable = (props: FlatTablePropsInterface) => {
         </ScrollArea>
 
         <Group justify="flex-end" p="lg">
-          <Pagination total={10} withEdges disabled />
+          <Pagination
+            total={Math.ceil(totalRows / rowsPerPage)}
+            value={currentPage}
+            onChange={onPageChange}
+            withEdges
+            disabled={totalRows <= rowsPerPage || totalRows === 0}
+          />
         </Group>
       </Paper>
     </div>

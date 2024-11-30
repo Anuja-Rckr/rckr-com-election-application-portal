@@ -28,6 +28,7 @@ export interface ElectionRowData {
 export interface ElectionInterface {
   col_data: ColumnData[];
   row_data: ElectionRowData[];
+  total_rows: number;
 }
 
 export interface CountCardPropsInterface {
@@ -38,4 +39,10 @@ export interface CountCardPropsInterface {
 export interface FlatTablePropsInterface {
   colData: ColumnData[];
   rowData: any;
+  totalRows?: number;
+  showSearch?: boolean;
+  showSort?: boolean;
+  handleSearch?: (value: string) => void;
+  handlePagination?: (value: number) => void;
+  handleSort?: (sortField: string, sortDirection: boolean) => void;
 }

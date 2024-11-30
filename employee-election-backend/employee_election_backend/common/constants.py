@@ -53,6 +53,10 @@ NOMINATION_DETAILS_FIELDS = [
 ELECTION_ID = 'election_id'
 NOMINATION_ID = 'nomination_id'
 EMP_ID = 'emp_id'
+PAGE = 'page'
+LIMIT = 'limit'
+SEARCH_INPUT = 'search_input'
+SORT = 'sort'
 
 # Error constants
 ELECTION_ID_REQUIRED = 'Election id is required'
