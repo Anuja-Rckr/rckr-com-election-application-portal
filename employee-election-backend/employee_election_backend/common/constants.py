@@ -62,6 +62,10 @@ SORT = 'sort'
 ELECTION_ID_REQUIRED = 'Election id is required'
 EMP_ID_REQUIRED = 'Emp id is required'
 NO_WINNER_FOR_ELECTION = 'No winner found for this election'
+ELECTION_DETAILS_EMPTY = 'Election details are missing'
+NOMINATION_DETAILS_EMPTY = 'Nominations details are missing'
+ELECTION_CREATED_SUCCESSFULLY = 'Election created successfully'
+ELECTION_NOT_FOUND = "Election not found"
 
 # Colors Array
 COLORS_LIST = [

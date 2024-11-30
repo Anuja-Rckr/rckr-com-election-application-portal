@@ -23,6 +23,8 @@ from election_process.election_details_page.overview import get_election_overvie
 from election_process.election_details_page.nominations import get_nomination_candidates_list, get_nominations_details
 from election_process.election_details_page.results import get_results_chart_data, get_results_table, get_winner_details
 from election_process.your_nominations.your_nominations import get_your_nominations_cards, get_your_notifications
+from election_process.election_forms.election_forms import create_election, update_nomination_details, update_voting_details
+from election_process.election_forms.create_nomination import create_emp_nomination
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,4 +38,8 @@ urlpatterns = [
     path('election-results-table/', get_results_table),
     path('your-nominations-list/', get_your_notifications),
     path('your-nominations-cards/', get_your_nominations_cards),
+    path('create-election/', create_election),
+    path('update-nomination-details', update_nomination_details),
+    path('update-voting-details',update_voting_details),
+    path('create-nomination',create_emp_nomination),
 ]

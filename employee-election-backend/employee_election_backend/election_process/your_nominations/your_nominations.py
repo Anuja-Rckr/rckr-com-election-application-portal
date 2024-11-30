@@ -53,7 +53,7 @@ def get_your_notifications(request):
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
         col_data = get_nomination_list_col_data()
-        row_data = (
+        row_data = list(
             ElectionModel.objects
             .filter(nominationsmodel__emp_id=emp_id)  
             .select_related('nominationsmodel') 

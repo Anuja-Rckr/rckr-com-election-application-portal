@@ -15,12 +15,12 @@ class ElectionModel(models.Model):
         blank=True, 
         null=True
     )
-    nomination_start_date = models.DateTimeField(blank=False, null=False)
-    nomination_end_date = models.DateTimeField(blank=False, null=False)
-    voting_start_date = models.DateTimeField(blank=False, null=False)
-    voting_end_date = models.DateTimeField(blank=False, null=False)
-    created_by_name = models.CharField(max_length=ct.CHAR_SHORT_LIMIT, blank=False, null=False)
-    created_by_empid = models.IntegerField(blank=False, null=False) 
+    nomination_start_date = models.DateTimeField(blank=True, null=True)
+    nomination_end_date = models.DateTimeField(blank=True, null=True)
+    voting_start_date = models.DateTimeField(blank=True, null=True)
+    voting_end_date = models.DateTimeField(blank=True, null=True)
+    created_by_name = models.CharField(max_length=ct.CHAR_SHORT_LIMIT, blank=True, null=True)
+    created_by_empid = models.IntegerField(blank=True, null=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
