@@ -8,8 +8,11 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { NominationFormProps } from "../../../interfaces/election.interface";
+import { EmpDetailsInterface } from "../../../interfaces/common.interface";
+import { getUserDetails } from "../../../common/utils";
 
 const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
+  const empDetails: EmpDetailsInterface = getUserDetails();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -29,7 +32,18 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
   });
 
   const onCreateElection = (values: typeof form.values) => {
-    console.log("Submitted form values:", values);
+    const electionDetails = {
+      election_title: values.electionTitle,
+      election_description: values.electionDescription,
+      election_cutoff: values.electionCutoff,
+      election_reward: values.electionReward,
+      election_eligibility: {
+        nomination_eligibility: values.electionNominationEligibility,
+        voting_eligibility: values.electionVotingEligibility,
+      },
+      created_by_name: empDetails.empName,
+      created_by_empid: empDetails.empId,
+    };
   };
 
   const handleClose = () => {
@@ -41,11 +55,7 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
     <Drawer
       opened={isOpened}
       onClose={handleClose}
-      title={
-        <Text fw={700} component="h1">
-          Create Election
-        </Text>
-      }
+      title={<Text fw={700}>Create Election</Text>}
       position="right"
     >
       <form onSubmit={form.onSubmit(onCreateElection)}>

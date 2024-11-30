@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useForm, isNotEmpty } from "@mantine/form";
 import {
   Button,
@@ -9,23 +10,24 @@ import {
   Modal,
   Text,
 } from "@mantine/core";
-import { NominationFormProps } from "../../../interfaces/election.interface";
 import {
   generateRandomColor,
   getInitials,
   getUserDetails,
 } from "../../../common/utils";
-import { useState } from "react";
+import { NominationFormProps } from "../../../interfaces/election.interface";
 
 const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [submittedValues, setSubmittedValues] = useState<any>(null);
+
   const empDetails = getUserDetails();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       empId: empDetails.empId,
       empName: empDetails.empName,
-      empRole: "",
+      empRole: empDetails.empRole,
       appeal: "",
     },
     validate: {
@@ -37,6 +39,7 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
   });
 
   const onCreateNomination = (values: typeof form.values) => {
+    setSubmittedValues(values);
     setIsConfirmModalOpen(true);
   };
 
@@ -46,8 +49,10 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
   };
 
   const handleConfirm = () => {
-    setIsConfirmModalOpen(false);
-    onClose();
+    if (submittedValues) {
+      setIsConfirmModalOpen(false);
+      onClose();
+    }
   };
 
   return (
@@ -60,8 +65,12 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
       >
         <form onSubmit={form.onSubmit(onCreateNomination)}>
           <Group justify="center">
-            <Avatar color={generateRandomColor("Anuja")} radius="xl" size="lg">
-              {getInitials("Anuja")}
+            <Avatar
+              color={generateRandomColor(empDetails.empName)}
+              radius="xl"
+              size="lg"
+            >
+              {getInitials(empDetails.empName)}
             </Avatar>
           </Group>
           <TextInput
@@ -86,6 +95,7 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
             placeholder="Enter Emp role"
             withAsterisk
             mt="md"
+            disabled
             key={form.key("empRole")}
             {...form.getInputProps("empRole")}
           />

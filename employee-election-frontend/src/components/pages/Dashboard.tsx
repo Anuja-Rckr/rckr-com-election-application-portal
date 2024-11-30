@@ -3,8 +3,11 @@ import { useState } from "react";
 import NominationForm from "./ElectionForms/NominationForm";
 import CreateElectionForm from "./ElectionForms/CreateElection";
 import PublishNominationElectionForm from "./ElectionForms/PublishNominationElectionForm";
+import { EmpDetailsInterface } from "../../interfaces/common.interface";
+import { getUserDetails } from "../../common/utils";
 
 const Dashboard: React.FC = () => {
+  const empDetails: EmpDetailsInterface = getUserDetails();
   const [isCreateNominationModal, setIsCreateNominationModal] =
     useState<boolean>(false);
   const [isCreateElectionModal, setIsCreateElectionModal] =
@@ -58,15 +61,27 @@ const Dashboard: React.FC = () => {
     <>
       <Paper p="md">
         <Group justify="flex-end">
-          <Button onClick={triggerCreateElectionModal}>Create Election</Button>
-          <Button onClick={triggerPublishNominationModal}>
-            Publish Nomination
-          </Button>
-          <Button onClick={triggerPublishElectionModal}>Publish Voting</Button>
-          <Button onClick={triggerCreateNominationModal}>
-            Create Nomination
-          </Button>
-          <Button>Vote</Button>
+          {empDetails.isAdmin && (
+            <Button onClick={triggerCreateElectionModal}>
+              Create Election
+            </Button>
+          )}
+          {empDetails.isAdmin && (
+            <Button onClick={triggerPublishNominationModal}>
+              Publish Nomination
+            </Button>
+          )}
+          {empDetails.isAdmin && (
+            <Button onClick={triggerPublishElectionModal}>
+              Publish Voting
+            </Button>
+          )}
+          {!empDetails.isAdmin && (
+            <Button onClick={triggerCreateNominationModal}>
+              Create Nomination
+            </Button>
+          )}
+          {!empDetails.isAdmin && <Button>Vote</Button>}
         </Group>
       </Paper>
       <NominationForm

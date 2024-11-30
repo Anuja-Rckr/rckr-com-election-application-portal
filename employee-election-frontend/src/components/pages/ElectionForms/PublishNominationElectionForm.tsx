@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { Button, Drawer, Text, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
@@ -8,6 +9,26 @@ const PublishNominationElectionForm = ({
   onClose,
   renderNominationModal,
 }: PublishNominationElectionProps) => {
+  const nominationValidField = {
+    nominationStartDate: isNotEmpty("Nomination start date is required"),
+    nominationEndDate: (value: Date | null, values: any) =>
+      !value
+        ? "Nomination end date is required"
+        : values.nominationStartDate && value <= values.nominationStartDate
+        ? "Nomination end date must be after the start date"
+        : null,
+  };
+
+  const votingValidField = {
+    votingStartDate: isNotEmpty("Voting start date is required"),
+    votingEndDate: (value: Date | null, values: any) =>
+      !value
+        ? "Voting end date is required"
+        : values.votingStartDate && value <= values.votingStartDate
+        ? "Voting end date must be after the start date"
+        : null,
+  };
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -18,16 +39,22 @@ const PublishNominationElectionForm = ({
       electionId: "1",
       electionTitle: "Emp Performance Award 2024",
     },
-    validate: {
-      nominationStartDate: isNotEmpty("Nomination start date is required"),
-      nominationEndDate: isNotEmpty("Nomination end date is required"),
-      votingStartDate: isNotEmpty("Voting start date is required"),
-      votingEndDate: isNotEmpty("Voting end date is required"),
-    },
+    validate: renderNominationModal ? nominationValidField : votingValidField,
   });
 
-  const onCreateElection = (values: typeof form.values) => {
-    console.log("Submitted form values:", values);
+  const onUpdateElection = (values: typeof form.values) => {
+    let requestBody;
+    if (renderNominationModal) {
+      requestBody = {
+        nomination_start_date: values.nominationStartDate,
+        nomination_end_date: values.nominationEndDate,
+      };
+    } else {
+      requestBody = {
+        voting_start_date: values.votingStartDate,
+        voting_end_date: values.votingEndDate,
+      };
+    }
   };
 
   const handleClose = () => {
@@ -78,13 +105,13 @@ const PublishNominationElectionForm = ({
       opened={isOpened}
       onClose={handleClose}
       title={
-        <Text fw={700} component="h1">
+        <Text fw={700}>
           {renderNominationModal ? "Nomination Dates" : "Voting Dates"}
         </Text>
       }
       position="right"
     >
-      <form onSubmit={form.onSubmit(onCreateElection)}>
+      <form onSubmit={form.onSubmit(onUpdateElection)}>
         <TextInput
           label="Election ID"
           placeholder="Enter election ID"

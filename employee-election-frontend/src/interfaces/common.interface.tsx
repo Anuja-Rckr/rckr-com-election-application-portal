@@ -46,3 +46,10 @@ export interface FlatTablePropsInterface {
   handlePagination?: (value: number) => void;
   handleSort?: (sortField: string, sortDirection: boolean) => void;
 }
+
+export interface EmpDetailsInterface {
+  empId: number;
+  empName: string;
+  empRole: string;
+  isAdmin: boolean;
+}
