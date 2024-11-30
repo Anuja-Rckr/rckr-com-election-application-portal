@@ -80,3 +80,35 @@ export interface PublishNominationElectionProps {
   onClose: () => void;
   renderNominationModal: boolean;
 }
+
+export interface createElectionInterface {
+  election_title: string;
+  election_description: string;
+  election_cutoff: number;
+  election_reward: string;
+  election_eligibility: ElectionEligibility;
+  created_by_name: string;
+  created_by_empid: number;
+}
+
+export interface ElectionEligibility {
+  nomination_eligibility: string;
+  voting_eligibility: string;
+}
+
+export interface UpdateNominationDetails {
+  nomination_start_date: Date | null;
+  nomination_end_date: Date | null;
+}
+
+export interface UpdateVotingDetails {
+  voting_start_date: Date | null;
+  voting_end_date: Date | null;
+}
+
+export interface CreateNominationForm {
+  emp_id: number;
+  emp_name: string;
+  emp_role: string;
+  appeal: string;
+}

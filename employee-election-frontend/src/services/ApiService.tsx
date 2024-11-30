@@ -1,4 +1,10 @@
 import { getUserDetails } from "../common/utils";
+import {
+  createElectionInterface,
+  CreateNominationForm,
+  UpdateNominationDetails,
+  UpdateVotingDetails,
+} from "../interfaces/election.interface";
 import { api } from "./axios";
 
 export const getElectionCards = async () => {
@@ -127,6 +133,57 @@ export const getYourNominationsTable = async (
         sort_field: sortField,
         sort_direction: sortDirection ? "desc" : "asc",
       },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createElection = async (requestBody: createElectionInterface) => {
+  try {
+    const response = await api.post("create-election/", requestBody);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateNominationDetails = async (
+  requestBody: UpdateNominationDetails,
+  electionId: number = 6
+) => {
+  try {
+    const response = await api.put("update-nomination-details", requestBody, {
+      params: { election_id: electionId },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateVotingDetails = async (
+  requestBody: UpdateVotingDetails,
+  electionId: number = 6
+) => {
+  try {
+    const response = await api.put("update-voting-details", requestBody, {
+      params: { election_id: electionId },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createNomination = async (
+  requestBody: CreateNominationForm,
+  electionId: number = 6
+) => {
+  try {
+    const response = await api.post("create-nomination", requestBody, {
+      params: { election_id: electionId },
     });
     return response.data.data;
   } catch (error) {

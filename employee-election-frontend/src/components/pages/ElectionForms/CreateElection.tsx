@@ -7,9 +7,13 @@ import {
   Text,
   NumberInput,
 } from "@mantine/core";
-import { NominationFormProps } from "../../../interfaces/election.interface";
+import {
+  createElectionInterface,
+  NominationFormProps,
+} from "../../../interfaces/election.interface";
 import { EmpDetailsInterface } from "../../../interfaces/common.interface";
 import { getUserDetails } from "../../../common/utils";
+import { createElection } from "../../../services/ApiService";
 
 const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -18,7 +22,7 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
     initialValues: {
       electionTitle: "",
       electionDescription: "",
-      electionCutoff: "",
+      electionCutoff: 0,
       electionReward: "",
       electionNominationEligibility: "",
       electionVotingEligibility: "",
@@ -32,7 +36,7 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
   });
 
   const onCreateElection = (values: typeof form.values) => {
-    const electionDetails = {
+    const electionDetails: createElectionInterface = {
       election_title: values.electionTitle,
       election_description: values.electionDescription,
       election_cutoff: values.electionCutoff,
@@ -44,6 +48,8 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
       created_by_name: empDetails.empName,
       created_by_empid: empDetails.empId,
     };
+    const response = createElection(electionDetails);
+    handleClose();
   };
 
   const handleClose = () => {

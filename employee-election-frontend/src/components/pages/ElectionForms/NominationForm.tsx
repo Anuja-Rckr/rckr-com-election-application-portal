@@ -16,6 +16,7 @@ import {
   getUserDetails,
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
+import { createNomination } from "../../../services/ApiService";
 
 const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
@@ -52,6 +53,14 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
     if (submittedValues) {
       setIsConfirmModalOpen(false);
       onClose();
+      const requestBody = {
+        emp_id: submittedValues.empId,
+        emp_name: submittedValues.empName,
+        emp_role: submittedValues.empRole,
+        appeal: submittedValues.appeal,
+      };
+      const response = createNomination(requestBody, 8);
+      handleClose();
     }
   };
 

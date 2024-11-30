@@ -3,6 +3,10 @@ import { useForm, isNotEmpty } from "@mantine/form";
 import { Button, Drawer, Text, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { PublishNominationElectionProps } from "../../../interfaces/election.interface";
+import {
+  updateNominationDetails,
+  updateVotingDetails,
+} from "../../../services/ApiService";
 
 const PublishNominationElectionForm = ({
   isOpened,
@@ -36,7 +40,7 @@ const PublishNominationElectionForm = ({
       nominationEndDate: null as Date | null,
       votingStartDate: null as Date | null,
       votingEndDate: null as Date | null,
-      electionId: "1",
+      electionId: 8,
       electionTitle: "Emp Performance Award 2024",
     },
     validate: renderNominationModal ? nominationValidField : votingValidField,
@@ -49,12 +53,15 @@ const PublishNominationElectionForm = ({
         nomination_start_date: values.nominationStartDate,
         nomination_end_date: values.nominationEndDate,
       };
+      const response = updateNominationDetails(requestBody, values.electionId);
     } else {
       requestBody = {
         voting_start_date: values.votingStartDate,
         voting_end_date: values.votingEndDate,
       };
+      const response = updateVotingDetails(requestBody, values.electionId);
     }
+    handleClose();
   };
 
   const handleClose = () => {
@@ -70,6 +77,7 @@ const PublishNominationElectionForm = ({
         withAsterisk
         mt="md"
         {...form.getInputProps("nominationStartDate")}
+        minDate={new Date()}
       />
       <DateTimePicker
         label="Nomination End Date"
@@ -77,6 +85,7 @@ const PublishNominationElectionForm = ({
         withAsterisk
         mt="md"
         {...form.getInputProps("nominationEndDate")}
+        minDate={new Date()}
       />
     </>
   );
@@ -89,6 +98,7 @@ const PublishNominationElectionForm = ({
         withAsterisk
         mt="md"
         {...form.getInputProps("votingStartDate")}
+        minDate={new Date()}
       />
       <DateTimePicker
         label="Voting End Date"
@@ -96,6 +106,7 @@ const PublishNominationElectionForm = ({
         withAsterisk
         mt="md"
         {...form.getInputProps("votingEndDate")}
+        minDate={new Date()}
       />
     </>
   );
