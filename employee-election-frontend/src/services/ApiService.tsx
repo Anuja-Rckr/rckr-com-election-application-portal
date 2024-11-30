@@ -1,3 +1,4 @@
+import { getUserDetails } from "../common/utils";
 import { api } from "./axios";
 
 export const getElectionCards = async () => {
@@ -98,10 +99,11 @@ export const getElectionResultsTable = async (electionId: string) => {
   }
 };
 
-export const getYourNominationsCards = async (empId: string = "102") => {
+export const getYourNominationsCards = async () => {
   try {
+    const empDetails = getUserDetails();
     const response = await api.get(`your-nominations-cards/`, {
-      params: { emp_id: empId },
+      params: { emp_id: empDetails.empId },
     });
     return response.data.data;
   } catch (error) {
@@ -116,9 +118,10 @@ export const getYourNominationsTable = async (
   pageNumber: number
 ) => {
   try {
+    const empDetails = getUserDetails();
     const response = await api.get(`your-nominations-list/`, {
       params: {
-        emp_id: "102",
+        emp_id: empDetails.empId,
         search_input: searchInput,
         page: pageNumber,
         sort_field: sortField,

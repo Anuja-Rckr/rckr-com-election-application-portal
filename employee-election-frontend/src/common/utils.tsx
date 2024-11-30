@@ -25,6 +25,16 @@ import {
   VIOLET,
 } from "./constants";
 
+// userDetails
+export const getUserDetails = () => {
+  const empDetails = localStorage.getItem("empDetails");
+  if (empDetails) {
+    return JSON.parse(empDetails);
+  } else {
+    return null;
+  }
+};
+
 // Generate random color for profile
 export const generateRandomColor = (input: string) => {
   const firstLetter = input.charAt(0).toLowerCase();

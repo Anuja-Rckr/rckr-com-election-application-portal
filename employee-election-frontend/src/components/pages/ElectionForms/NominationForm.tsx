@@ -10,16 +10,21 @@ import {
   Text,
 } from "@mantine/core";
 import { NominationFormProps } from "../../../interfaces/election.interface";
-import { generateRandomColor, getInitials } from "../../../common/utils";
+import {
+  generateRandomColor,
+  getInitials,
+  getUserDetails,
+} from "../../../common/utils";
 import { useState } from "react";
 
 const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const empDetails = getUserDetails();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      empId: "102",
-      empName: "Anuja",
+      empId: empDetails.empId,
+      empName: empDetails.empName,
       empRole: "",
       appeal: "",
     },
