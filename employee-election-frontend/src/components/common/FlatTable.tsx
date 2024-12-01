@@ -12,6 +12,8 @@ import {
   Pagination,
   ScrollArea,
   Box,
+  Stack,
+  Card,
 } from "@mantine/core";
 import {
   IconChevronUp,
@@ -77,7 +79,11 @@ const FlatTable = (props: FlatTablePropsInterface) => {
   };
 
   const renderSearch = () => (
-    <Group justify="flex-end" pr="lg">
+    <Group
+      justify="flex-end"
+      pr={{ base: "none", md: "lg" }}
+      mb={{ base: "md", md: "none" }}
+    >
       <Input
         placeholder="Search..."
         leftSection={<IconSearch size={16} />}
@@ -137,6 +143,47 @@ const FlatTable = (props: FlatTablePropsInterface) => {
     </Table.Thead>
   );
 
+  const renderMobileView = () => (
+    <Stack gap="md">
+      {currentData.map((row: any, rowIndex: number) => (
+        <Card key={rowIndex} withBorder radius="md" p="md">
+          {colData.map((col, colIndex) => (
+            <Group key={colIndex} justify="space-between" mb="xs">
+              <Text fw={500} size="sm">
+                {col.title}:
+              </Text>
+              <div>
+                {col.type === LINK && (
+                  <Anchor
+                    fz="sm"
+                    onClick={() =>
+                      navigate(
+                        `/${col.path}${row[col.field]}`.replace(/^\/+/, "/")
+                      )
+                    }
+                  >
+                    {row[col.field]}
+                  </Anchor>
+                )}
+                {col.type === STATUS && (
+                  <Badge
+                    variant={LIGHT}
+                    color={getColorForStatus(row[col.field])}
+                    size="sm"
+                  >
+                    {row[col.field]}
+                  </Badge>
+                )}
+                {col.type === DATETIME && formatDate(row[col.field])}
+                {col.type === DATA && row[col.field]}
+              </div>
+            </Group>
+          ))}
+        </Card>
+      ))}
+    </Stack>
+  );
+
   const renderTableRow = () => (
     <Table.Tbody>
       {currentData.map((row: any, rowIndex: number) => (
@@ -173,42 +220,44 @@ const FlatTable = (props: FlatTablePropsInterface) => {
     </Table.Tbody>
   );
 
-  const scrollAreaStyles = {
-    width: "100%",
-  };
-
   return (
     <div>
-      <Paper mt="lg" pt="lg" className="container-styles">
+      <Box hiddenFrom="md" mt="md">
         {showSearch && renderSearch()}
-        <ScrollArea style={scrollAreaStyles}>
-          <Box className="w-100">
-            <Table
-              mt="lg"
-              stickyHeaderOffset={60}
-              verticalSpacing="sm"
-              highlightOnHover
-              withTableBorder
-              className={
-                colData.length > 5 ? "table-styles-max" : "table-styles"
-              }
-            >
-              {renderTableColumn()}
-              {renderTableRow()}
-            </Table>
-          </Box>
-        </ScrollArea>
+        {renderMobileView()}
+      </Box>
+      <Box visibleFrom="md">
+        <Paper mt="lg" pt="lg" className="container-styles">
+          {showSearch && renderSearch()}
+          <ScrollArea>
+            <Box className="w-100">
+              <Table
+                mt="lg"
+                stickyHeaderOffset={60}
+                verticalSpacing="sm"
+                highlightOnHover
+                withTableBorder
+                className={
+                  colData.length > 5 ? "table-styles-max" : "table-styles"
+                }
+              >
+                {renderTableColumn()}
+                {renderTableRow()}
+              </Table>
+            </Box>
+          </ScrollArea>
+        </Paper>
+      </Box>
 
-        <Group justify="flex-end" p="lg">
-          <Pagination
-            total={Math.ceil(totalRows / rowsPerPage)}
-            value={currentPage}
-            onChange={onPageChange}
-            withEdges
-            disabled={totalRows <= rowsPerPage || totalRows === 0}
-          />
-        </Group>
-      </Paper>
+      <Group justify="flex-end" p="lg">
+        <Pagination
+          total={Math.ceil(totalRows / rowsPerPage)}
+          value={currentPage}
+          onChange={onPageChange}
+          withEdges
+          disabled={totalRows <= rowsPerPage || totalRows === 0}
+        />
+      </Group>
     </div>
   );
 };

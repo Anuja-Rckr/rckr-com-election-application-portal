@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   AppShell,
   Group,
@@ -10,6 +11,7 @@ import {
   Tooltip,
   Button,
   Paper,
+  Burger,
 } from "@mantine/core";
 import { useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import { IconMoon, IconSun, IconLogout } from "@tabler/icons-react";
@@ -36,9 +38,11 @@ const Main = () => {
   const computedColorScheme = useComputedColorScheme(LIGHT);
   const location = useLocation();
 
+  const [mobileNavOpened, setMobileNavOpened] = useState(false);
+
   const renderProfile = () => {
     return (
-      <Menu width={200}>
+      <Menu width={200} position="bottom-end" offset={10}>
         <Menu.Target>
           <Tooltip label="View Profile">
             <Avatar
@@ -53,22 +57,28 @@ const Main = () => {
         <Menu.Dropdown>
           <Menu.Item>
             <Group justify="center" align="center">
-              <Avatar color={generateRandomColor("Anuja")} radius="xl">
+              <Avatar
+                color={generateRandomColor("Anuja")}
+                radius="xl"
+                size="lg"
+              >
                 {getInitials("Anuja Aliveli")}
               </Avatar>
-              <div>
-                <Text c="dimmed" className="text-center">
+              <Stack gap={0}>
+                <Text fw={500} className="text-center">
                   Anuja Aliveli
                 </Text>
-                <Text className="text-center">demo.email@gmail.com</Text>
-              </div>
+                <Text c="dimmed" size="sm" className="text-center">
+                  demo.email@gmail.com
+                </Text>
+              </Stack>
             </Group>
           </Menu.Item>
 
-          <Menu.Item>
-            <Button leftSection={<IconLogout size={20} />} fullWidth>
-              Logout
-            </Button>
+          <Menu.Divider />
+
+          <Menu.Item color="red" leftSection={<IconLogout size={16} />}>
+            Logout
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
@@ -77,34 +87,45 @@ const Main = () => {
 
   return (
     <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 250, breakpoint: "sm" }}
+      header={{ height: { base: 60, md: 60 } }}
+      navbar={{
+        width: { base: 250, md: 250 },
+        breakpoint: "md",
+        collapsed: { mobile: !mobileNavOpened },
+      }}
       bg={computedColorScheme === DARK ? DARK_8 : GRAY_1}
     >
       <AppShell.Header
-        withBorder={true}
+        withBorder={false}
         bg={computedColorScheme === DARK ? DARK_6 : WHITE}
       >
-        <div className="flex-between">
-          <Group p="md">
+        <Group h="100%" px="md" justify="space-between" align="center">
+          <Group>
+            <Burger
+              opened={mobileNavOpened}
+              onClick={() => setMobileNavOpened((o) => !o)}
+              hiddenFrom="md"
+              size="sm"
+            />
             <Avatar radius="xl" size="md" color={ORANGE} />
             <Text c={ORANGE} fw={700}>
               LOGO
             </Text>
           </Group>
-          <Group p="md">
+
+          <Group>
             <ActionIcon
               onClick={() =>
                 setColorScheme(computedColorScheme === LIGHT ? DARK : LIGHT)
               }
-              variant={LIGHT}
+              variant="default"
               size="lg"
             >
               {computedColorScheme === LIGHT ? <IconMoon /> : <IconSun />}
             </ActionIcon>
             {renderProfile()}
           </Group>
-        </div>
+        </Group>
       </AppShell.Header>
 
       <AppShell.Navbar
@@ -121,6 +142,7 @@ const Main = () => {
               component={Link}
               to={item.path}
               active={location.pathname === item.path}
+              onClick={() => setMobileNavOpened(false)}
             />
           ))}
         </Stack>
@@ -128,7 +150,7 @@ const Main = () => {
 
       <AppShell.Main>
         <div className="main-padding">
-          <Paper p="lg" mb="lg">
+          <Paper p={{ base: "md", md: "lg" }} mb={{ base: "md", md: "lg" }}>
             <Text fw={700}>{getPageName(location.pathname)}</Text>
           </Paper>
           <Outlet />

@@ -78,3 +78,11 @@ code {
 .width-fit-content {
   width: fit-content;
 }
+
+.card-text-overflow {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}

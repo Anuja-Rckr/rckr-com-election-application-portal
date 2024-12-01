@@ -53,7 +53,7 @@ const ElectionDetails = () => {
       const status = response.find(
         (item: overviewData) => item.type === "status"
       );
-      setElectionStatus(status);
+      setElectionStatus(status.value);
     }
   };
 
@@ -68,7 +68,7 @@ const ElectionDetails = () => {
   const renderOverview = () => {
     return (
       <>
-        <Paper className="bg-overview" p="sm" mb="lg">
+        <Paper className="bg-overview" p="sm" mb="lg" mt="lg">
           <Group justify="space-around">
             {electionDetails.map((item, index) =>
               item.type === DATA ? (
@@ -266,7 +266,11 @@ const ElectionDetails = () => {
           <Tabs.Tab value={OVERVIEW} leftSection={<IconBook />}>
             Overview
           </Tabs.Tab>
-          <Tabs.Tab value={NOMINATIONS} leftSection={<IconUsers />}>
+          <Tabs.Tab
+            value={NOMINATIONS}
+            leftSection={<IconUsers />}
+            disabled={electionStatus === DECLARED}
+          >
             Nominations
           </Tabs.Tab>
           <Tabs.Tab value={RESULTS} leftSection={<IconReportAnalytics />}>
@@ -274,7 +278,7 @@ const ElectionDetails = () => {
           </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value={OVERVIEW} p="md">
+        <Tabs.Panel value={OVERVIEW}>
           {renderOverview()}
           {renderTimeline()}
         </Tabs.Panel>

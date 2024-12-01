@@ -16,10 +16,12 @@ import {
 import CountCard from "../../common/CountCard";
 import { ColumnData } from "../../../interfaces/common.interface";
 import FlatTable from "../../common/FlatTable";
+import { getUserDetails } from "../../../common/utils";
 
 const Results = () => {
   const { id } = useParams<{ id: string }>();
   const electionId = id;
+  const empDetails = getUserDetails();
   const [winnerDetails, setWinnerDetails] = useState<overviewData[]>([]);
   const [distributionOfVotesNumber, setDistributionOfVotesNumber] = useState<
     DistributionOfVotesNumber[]
@@ -94,7 +96,7 @@ const Results = () => {
               ))}
             </Group>
           </Paper>
-          <Button>Download Report</Button>
+          {empDetails.isAdmin && <Button>Download Report</Button>}
         </Group>
       </>
     );
@@ -103,8 +105,13 @@ const Results = () => {
   const renderCharts = () => {
     return (
       <>
-        <Flex align="flex-start" wrap="nowrap" gap="md">
-          <Paper mt="lg" p="md" w="40%">
+        <Flex
+          align="flex-start"
+          wrap="nowrap"
+          gap="md"
+          direction={{ base: "column", md: "row" }}
+        >
+          <Paper mt="lg" p="md" w={{ base: "100%", md: "40%" }}>
             <Text className="text-center" fw={700} component="h1" mb="lg">
               Distribution of votes
             </Text>
@@ -141,7 +148,7 @@ const Results = () => {
               </svg>
             </BarChart>
           </Paper>
-          <Paper mt="lg" p="md" w="30%">
+          <Paper mt="lg" p="md" w={{ base: "100%", md: "30%" }}>
             <Text className="text-center" fw={700} component="h1" mb="lg">
               Distribution of votes in (%)
             </Text>
@@ -154,7 +161,7 @@ const Results = () => {
             />
           </Paper>
 
-          <Box mt="lg" w="28%">
+          <Box mt="lg" w={{ base: "100%", md: "28%" }}>
             <CountCard type="stack" cardsData={StatCards} />
           </Box>
         </Flex>

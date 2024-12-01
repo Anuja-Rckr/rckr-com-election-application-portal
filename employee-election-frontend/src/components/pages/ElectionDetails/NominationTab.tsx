@@ -80,7 +80,7 @@ const NavigationTab = () => {
   const renderNominationList = () => {
     return (
       <>
-        <SimpleGrid cols={5} spacing="md" mt="lg">
+        <SimpleGrid cols={{ base: 1, md: 5 }} spacing="md" mt="lg">
           {nominationList.map((item, index) => (
             <Paper p="md" radius="md" key={item.emp_id}>
               <Stack justify="center" align="center">
