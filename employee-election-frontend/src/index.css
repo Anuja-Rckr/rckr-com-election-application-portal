@@ -50,6 +50,7 @@ code {
 .table-styles-max {
   width: max-content;
   table-layout: fixed;
+  flex-grow: 1;
 }
 
 .container-styles {

@@ -14,6 +14,7 @@ import {
   Box,
   Stack,
   Card,
+  Flex,
 } from "@mantine/core";
 import {
   IconChevronUp,
@@ -230,7 +231,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
         <Paper mt="lg" pt="lg" className="container-styles">
           {showSearch && renderSearch()}
           <ScrollArea>
-            <Box className="w-100">
+            <Flex direction="row">
               <Table
                 mt="lg"
                 stickyHeaderOffset={60}
@@ -244,7 +245,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
                 {renderTableColumn()}
                 {renderTableRow()}
               </Table>
-            </Box>
+            </Flex>
           </ScrollArea>
         </Paper>
       </Box>

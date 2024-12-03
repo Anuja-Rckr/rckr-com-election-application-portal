@@ -37,19 +37,27 @@ import {
 import NominationTab from "../ElectionDetails/NominationTab";
 import Results from "./Results";
 import { useEffect, useState } from "react";
-import { getElectionOverview } from "../../../services/ApiService";
+import {
+  getElectionOverview,
+  getElectionTimeline,
+} from "../../../services/ApiService";
 import { useParams } from "react-router-dom";
+import { ElectionTimelineDetails } from "../../../interfaces/common.interface";
 
 const ElectionDetails = () => {
   const { id } = useParams<{ id: string }>();
   const electionId = id;
-  const [electionDetails, setElectionDetails] = useState<overviewData[]>([]);
-  const [electionStatus, setElectionStatus] = useState<string>(DECLARED);
+  const [electionOverviewDetails, setElectionOverviewDetails] = useState<
+    overviewData[]
+  >([]);
+  const [electionTimelineDetails, setElectionTimelineDetails] =
+    useState<ElectionTimelineDetails | null>(null);
+  const [electionStatus, setElectionStatus] = useState<string>("Closed");
 
-  const fetchElectionDetails = async () => {
+  const fetchElectionOverviewDetails = async () => {
     if (electionId) {
       const response = await getElectionOverview(electionId);
-      setElectionDetails(response);
+      setElectionOverviewDetails(response);
       const status = response.find(
         (item: overviewData) => item.type === "status"
       );
@@ -57,9 +65,17 @@ const ElectionDetails = () => {
     }
   };
 
+  const fetchElectionTimelineDetails = async () => {
+    if (electionId) {
+      const response = await getElectionTimeline(electionId);
+      setElectionTimelineDetails(response);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      await fetchElectionDetails();
+      await fetchElectionOverviewDetails();
+      await fetchElectionTimelineDetails();
     };
 
     fetchData();
@@ -70,7 +86,7 @@ const ElectionDetails = () => {
       <>
         <Paper className="bg-overview" p="sm" mb="lg" mt="lg">
           <Group justify="space-around">
-            {electionDetails.map((item, index) =>
+            {electionOverviewDetails.map((item, index) =>
               item.type === DATA ? (
                 <Stack gap={0} className="border-right" pr="sm" key={index}>
                   <Text fw={700} className="text-center">
@@ -89,7 +105,9 @@ const ElectionDetails = () => {
                 <Stack
                   gap={0}
                   className={
-                    electionDetails.length === index ? "border-right" : ""
+                    electionOverviewDetails.length === index
+                      ? "border-right"
+                      : ""
                   }
                   pr="sm"
                   key={index}
@@ -167,19 +185,34 @@ const ElectionDetails = () => {
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
                     <b>
-                      {formatDate(timeLineData.nomination_details.start_date)}
+                      {electionTimelineDetails?.election_details
+                        .nomination_start_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .nomination_start_date
+                          )
+                        : ""}
                     </b>
                   </Text>
                   <Text c="dimmed" size="sm" mt="xs" mb="xs">
                     End Date:{" "}
                     <b>
-                      {formatDate(timeLineData.nomination_details.end_date)}
+                      {electionTimelineDetails?.election_details
+                        .nomination_end_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .nomination_end_date
+                          )
+                        : ""}
                     </b>
                   </Text>
                   <Text c="dimmed" size="sm">
                     Total Nominations:{" "}
                     <b>
-                      {timeLineData.nomination_details.total_nominations}{" "}
+                      {
+                        electionTimelineDetails?.election_count_data
+                          .total_nominations
+                      }{" "}
                       Nominations
                     </b>
                   </Text>
@@ -211,15 +244,35 @@ const ElectionDetails = () => {
                 <>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
-                    <b>{formatDate(timeLineData.voting_details.start_date)}</b>
+                    <b>
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .voting_start_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .voting_start_date
+                            )
+                          : ""}
+                      </b>
+                    </b>
                   </Text>
                   <Text c="dimmed" size="sm" mt="xs" mb="xs">
                     End Date:{" "}
-                    <b>{formatDate(timeLineData.voting_details.end_date)}</b>
+                    <b>
+                      {electionTimelineDetails?.election_details.voting_end_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .voting_end_date
+                          )
+                        : ""}
+                    </b>
                   </Text>
                   <Text c="dimmed" size="sm">
                     Total Votes:{" "}
-                    <b>{timeLineData.voting_details.total_votes} Votes</b>
+                    <b>
+                      {electionTimelineDetails?.election_count_data.total_votes}{" "}
+                      Votes
+                    </b>
                   </Text>
                 </>
               )}
@@ -248,7 +301,13 @@ const ElectionDetails = () => {
                   <Text c="dimmed" size="sm">
                     Published On:{" "}
                     <b>
-                      {formatDate(timeLineData.results_details.published_on)}
+                      {electionTimelineDetails?.election_details
+                        .results_published_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .results_published_date
+                          )
+                        : ""}
                     </b>
                   </Text>
                 </>
@@ -266,11 +325,7 @@ const ElectionDetails = () => {
           <Tabs.Tab value={OVERVIEW} leftSection={<IconBook />}>
             Overview
           </Tabs.Tab>
-          <Tabs.Tab
-            value={NOMINATIONS}
-            leftSection={<IconUsers />}
-            disabled={electionStatus === DECLARED}
-          >
+          <Tabs.Tab value={NOMINATIONS} leftSection={<IconUsers />}>
             Nominations
           </Tabs.Tab>
           <Tabs.Tab value={RESULTS} leftSection={<IconReportAnalytics />}>

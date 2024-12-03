@@ -190,3 +190,14 @@ export const createNomination = async (
     throw error;
   }
 };
+
+export const getElectionTimeline = async (electionId: string) => {
+  try {
+    const response = await api.get("election-timeline-details", {
+      params: { election_id: electionId },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

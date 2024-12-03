@@ -19,7 +19,7 @@ from django.urls import path
 
 from election_process.election_list_page.elections_list import get_elections_list
 from election_process.election_list_page.elections_card import get_elections_card
-from election_process.election_details_page.overview import get_election_overview_details
+from election_process.election_details_page.overview import get_election_overview_details, get_election_timeline_details
 from election_process.election_details_page.nominations import get_nomination_candidates_list, get_nominations_details
 from election_process.election_details_page.results import get_results_chart_data, get_results_table, get_winner_details
 from election_process.your_nominations.your_nominations import get_your_nominations_cards, get_your_notifications
@@ -42,4 +42,5 @@ urlpatterns = [
     path('update-nomination-details', update_nomination_details),
     path('update-voting-details',update_voting_details),
     path('create-nomination',create_emp_nomination),
+    path('election-timeline-details', get_election_timeline_details)
 ]

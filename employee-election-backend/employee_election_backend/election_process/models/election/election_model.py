@@ -21,6 +21,7 @@ class ElectionModel(models.Model):
     voting_end_date = models.DateTimeField(blank=True, null=True)
     created_by_name = models.CharField(max_length=ct.CHAR_SHORT_LIMIT, blank=True, null=True)
     created_by_empid = models.IntegerField(blank=True, null=True) 
+    results_published_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
