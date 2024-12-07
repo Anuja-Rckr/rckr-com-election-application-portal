@@ -200,7 +200,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
                     )
                   }
                 >
-                  {row[col.field]}
+                  View Profile
                 </Anchor>
               )}
               {col.type === STATUS && (

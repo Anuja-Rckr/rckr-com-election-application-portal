@@ -23,6 +23,7 @@ import {
   pageNames,
   PINK,
   VIOLET,
+  YELLOW,
 } from "./constants";
 
 // userDetails
@@ -49,7 +50,7 @@ export const generateRandomColor = (input: string) => {
 export const getColorForStatus = (status: string) => {
   switch (status) {
     case DECLARED:
-      return VIOLET;
+      return YELLOW;
     case NOMINATIONS:
       return INDIGO;
     case LIVE:
@@ -64,36 +65,40 @@ export const getColorForStatus = (status: string) => {
 };
 
 export const formatDate = (timestamp: string, returnType: string = "date") => {
-  const date = new Date(timestamp);
+  if (timestamp) {
+    const date = new Date(timestamp);
 
-  const getDayWithSuffix = (day: number) => {
-    if (day > 3 && day < 21) return day + "th";
-    switch (day % 10) {
-      case 1:
-        return day + "st";
-      case 2:
-        return day + "nd";
-      case 3:
-        return day + "rd";
-      default:
-        return day + "th";
+    const getDayWithSuffix = (day: number) => {
+      if (day > 3 && day < 21) return day + "th";
+      switch (day % 10) {
+        case 1:
+          return day + "st";
+        case 2:
+          return day + "nd";
+        case 3:
+          return day + "rd";
+        default:
+          return day + "th";
+      }
+    };
+
+    const day = getDayWithSuffix(date.getDate());
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    const time = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (returnType === DATETIME) {
+      return `${day} ${month}, ${year} ${time}`;
     }
-  };
 
-  const day = getDayWithSuffix(date.getDate());
-  const month = date.toLocaleString("default", { month: "short" });
-  const year = date.getFullYear();
-  const time = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-
-  if (returnType === DATETIME) {
-    return `${day} ${month}, ${year} ${time}`;
+    return `${day} ${month}, ${year}`;
+  } else {
+    return "----";
   }
-
-  return `${day} ${month}, ${year}`;
 };
 
 // Get Page Name

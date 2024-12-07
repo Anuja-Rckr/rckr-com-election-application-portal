@@ -96,14 +96,11 @@ export interface ElectionEligibility {
   voting_eligibility: string;
 }
 
-export interface UpdateNominationDetails {
-  nomination_start_date: Date | null;
-  nomination_end_date: Date | null;
-}
-
-export interface UpdateVotingDetails {
-  voting_start_date: Date | null;
-  voting_end_date: Date | null;
+export interface UpdateElection {
+  nomination_start_date?: Date | null;
+  nomination_end_date?: Date | null;
+  voting_start_date?: Date | null;
+  voting_end_date?: Date | null;
 }
 
 export interface CreateNominationForm {

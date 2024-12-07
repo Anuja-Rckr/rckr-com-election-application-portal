@@ -18,69 +18,33 @@ def create_election(request):
             created_election = serializer.save()
             return JsonResponse({
                 'data': ElectionSerializer(created_election).data
-            }, status=status.HTTP_201_CREATED)
-        else:
-            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as error:
-        return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
-    
-
-@api_view(['PUT'])
-def update_nomination_details(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
-    nomination_details = request.data
-    nomination_details['election_status'] = ct.NOMINATIONS
-    if not election_id:
-        return JsonResponse({
-           'error': ct.ELECTION_DETAILS_EMPTY
-       }, status=status.HTTP_400_BAD_REQUEST)
-    if not election_id:
-        return JsonResponse({
-           'error': ct.NOMINATION_DETAILS_EMPTY
-       }, status=status.HTTP_400_BAD_REQUEST)
-    try:
-        election = ElectionModel.objects.filter(election_id=election_id).first()
-        if not election:
-            return JsonResponse({
-                'error': ct.ELECTION_NOT_FOUND
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = ElectionSerializer(election, data=nomination_details, partial=True)
-        if serializer.is_valid():
-            updated_election = serializer.save()
-            return JsonResponse({
-                'data': ElectionSerializer(updated_election).data
             }, status=status.HTTP_200_OK)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
+
 @api_view(['PUT'])
-def update_voting_details(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
-    voting_details = request.data
-    voting_details['election_status'] = ct.LIVE
+def update_election(request, election_id): 
+    nomination_details = request.data
+    nomination_details['election_status'] = ct.NOMINATIONS
     if not election_id:
         return JsonResponse({
            'error': ct.ELECTION_DETAILS_EMPTY
        }, status=status.HTTP_400_BAD_REQUEST)
-    if not election_id:
-        return JsonResponse({
-           'error': ct.NOMINATION_DETAILS_EMPTY
-       }, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         election = ElectionModel.objects.filter(election_id=election_id).first()
         if not election:
             return JsonResponse({
                 'error': ct.ELECTION_NOT_FOUND
             }, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = ElectionSerializer(election, data=voting_details, partial=True)
+        serializer = ElectionSerializer(election, data=nomination_details, partial=True)
         if serializer.is_valid():
-            updated_election = serializer.save()
+            updated_election_details = serializer.save()
             return JsonResponse({
-                'data': ElectionSerializer(updated_election).data
+                'data': ElectionSerializer(updated_election_details).data
             }, status=status.HTTP_200_OK)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

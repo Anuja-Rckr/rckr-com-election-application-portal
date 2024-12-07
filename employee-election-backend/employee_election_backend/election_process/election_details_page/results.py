@@ -11,9 +11,7 @@ from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_stat_cards, results_winner_table_col_data
 
 @api_view(['GET'])
-def get_winner_details(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
-    election_id = int(election_id)
+def get_winner_details(request, election_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -65,9 +63,7 @@ def get_election_stats_cards(election_id):
     return total_nominations, election_cut_off['election_cutoff']
 
 @api_view(['GET'])
-def get_results_chart_data(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
-    election_id = int(election_id)
+def get_results_chart_data(request, election_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -102,8 +98,7 @@ def get_results_table_row_data(election_id):
     return results
 
 @api_view(['GET'])
-def get_results_table(request):
-    election_id = int(request.GET.get(ct.ELECTION_ID, None))
+def get_results_table(request,election_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED

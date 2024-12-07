@@ -9,9 +9,7 @@ from common.utils import get_total_election_votes, get_total_nominations
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
-def get_election_overview_details(request):
-   election_id = request.GET.get(ct.ELECTION_ID, None)
-   
+def get_election_overview_details(request, election_id):   
    if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -30,8 +28,7 @@ def get_election_overview_details(request):
        }, status=status.HTTP_400_BAD_REQUEST)
    
 @api_view(['GET'])
-def get_election_timeline_details(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
+def get_election_timeline_details(request, election_id):
 
     if not election_id:
         return JsonResponse({

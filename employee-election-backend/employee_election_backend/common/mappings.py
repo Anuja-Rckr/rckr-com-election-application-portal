@@ -2,7 +2,7 @@ from common import constants as ct
 
 ELECTION_TABLE_COLUMN_DATA = [
     {
-        'title': 'Election Id',
+        'title': 'Election',
         'field': 'election_id',
         'type': 'link',
         'path': 'election-details/'

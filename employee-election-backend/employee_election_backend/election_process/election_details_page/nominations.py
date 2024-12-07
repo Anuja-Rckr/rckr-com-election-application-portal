@@ -7,8 +7,7 @@ from election_process.models.nominations.nominations_model import NominationsMod
 from common.utils import get_nominations_details_list
 
 @api_view(['GET'])
-def get_nominations_details(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
+def get_nominations_details(request, election_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -23,8 +22,7 @@ def get_nominations_details(request):
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
-def get_nomination_candidates_list(request):
-    election_id = request.GET.get(ct.ELECTION_ID, None)
+def get_nomination_candidates_list(request, election_id):
     if not election_id:
         return JsonResponse({
             'error': ct.ELECTION_ID_REQUIRED,

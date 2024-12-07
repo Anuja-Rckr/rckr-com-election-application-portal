@@ -23,24 +23,28 @@ from election_process.election_details_page.overview import get_election_overvie
 from election_process.election_details_page.nominations import get_nomination_candidates_list, get_nominations_details
 from election_process.election_details_page.results import get_results_chart_data, get_results_table, get_winner_details
 from election_process.your_nominations.your_nominations import get_your_nominations_cards, get_your_notifications
-from election_process.election_forms.election_forms import create_election, update_nomination_details, update_voting_details
+from election_process.election_forms.election_forms import create_election, update_election
 from election_process.election_forms.create_nomination import create_emp_nomination
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('election-cards/', get_elections_card),
-    path('elections-list/', get_elections_list),
-    path('election-overview-details/', get_election_overview_details),
-    path('election-nomination-details/', get_nominations_details),
-    path('election-nomination-candidates-list', get_nomination_candidates_list),
-    path('election-winner-details/', get_winner_details),
-    path('election-results-charts/',get_results_chart_data),
-    path('election-results-table/', get_results_table),
-    path('your-nominations-list/', get_your_notifications),
-    path('your-nominations-cards/', get_your_nominations_cards),
-    path('create-election/', create_election),
-    path('update-nomination-details', update_nomination_details),
-    path('update-voting-details',update_voting_details),
-    path('create-nomination',create_emp_nomination),
-    path('election-timeline-details', get_election_timeline_details)
+    path('election/cards', get_elections_card),
+    path('elections/list', get_elections_list),
+
+    path('election/overview/<int:election_id>', get_election_overview_details),
+    path('election-timeline/<int:election_id>', get_election_timeline_details),
+    path('election/nomination-details/<int:election_id>', get_nominations_details),
+    path('election/nomination/list/<int:election_id>', get_nomination_candidates_list),
+
+    path('election/winner/<int:election_id>', get_winner_details),
+    path('election/charts/<int:election_id>',get_results_chart_data),
+    path('election/results/<int:election_id>', get_results_table),
+
+    path('your-nominations/list/<int:emp_id>', get_your_notifications),
+    path('your-nominations/cards/<int:emp_id>', get_your_nominations_cards),
+
+    path('election', create_election),
+    path('election/<int:election_id>', update_election),
+
+    path('election/<int:election_id>/nomination',create_emp_nomination),
 ]

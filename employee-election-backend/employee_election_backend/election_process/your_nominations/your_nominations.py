@@ -9,9 +9,7 @@ from common.mappings import get_nomination_list_col_data, get_your_nominations_c
 from common.utils import apply_search_sort_pagination
 
 @api_view(['GET'])
-def get_your_nominations_cards(request):
-    emp_id = int(request.GET.get(ct.EMP_ID, None))
-    
+def get_your_nominations_cards(request, emp_id):    
     if not emp_id:
        return JsonResponse({
            'error': ct.EMP_ID_REQUIRED
@@ -40,8 +38,7 @@ def get_your_nominations_cards(request):
     
 
 @api_view(['GET'])
-def get_your_notifications(request):
-    emp_id = int(request.GET.get(ct.EMP_ID, None))
+def get_your_notifications(request, emp_id):
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')
     search_input = request.GET.get(ct.SEARCH_INPUT, '')
