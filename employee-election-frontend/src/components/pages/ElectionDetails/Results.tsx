@@ -19,6 +19,7 @@ import FlatTable from "../../common/FlatTable";
 import { getUserDetails } from "../../../common/utils";
 
 const Results = () => {
+  console.log("rrrr");
   const { id } = useParams<{ id: string }>();
   const electionId = id;
   const empDetails = getUserDetails();

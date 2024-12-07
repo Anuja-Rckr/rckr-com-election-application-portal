@@ -27,7 +27,7 @@ export const getElectionList = async (
         search_input: searchInput,
         page: pageNumber,
         sort_field: sortField,
-        sort_direction: sortDirection ? "desc" : "asc",
+        sort_direction: sortDirection ? "asc" : "desc",
       },
     });
     return response.data.data;

@@ -87,3 +87,7 @@ code {
   flex: 1;
   min-width: 0;
 }
+
+.no-data-available {
+  height: 250px;
+}

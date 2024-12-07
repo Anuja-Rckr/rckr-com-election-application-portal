@@ -52,7 +52,7 @@ const ElectionDetails = () => {
   >([]);
   const [electionTimelineDetails, setElectionTimelineDetails] =
     useState<ElectionTimelineDetails | null>(null);
-  const [electionStatus, setElectionStatus] = useState<string>("Closed");
+  const [electionStatus, setElectionStatus] = useState<string>("Declared");
 
   const fetchElectionOverviewDetails = async () => {
     if (electionId) {
@@ -127,25 +127,6 @@ const ElectionDetails = () => {
     );
   };
 
-  const timeLineData: ElectionDetailsInterface = {
-    nomination_details: {
-      title: "Nomination Phase",
-      start_date: "2024-10-31T17:00:00Z",
-      end_date: "2024-10-31T17:00:00Z",
-      total_nominations: 10,
-    },
-    voting_details: {
-      title: "Voting Phase",
-      start_date: "2024-10-31T17:00:00Z",
-      end_date: "2024-10-31T17:00:00Z",
-      total_votes: 50,
-    },
-    results_details: {
-      title: "Results",
-      published_on: "2024-10-31T17:00:00Z",
-    },
-  };
-
   const renderTimeline = () => {
     return (
       <>
@@ -157,7 +138,7 @@ const ElectionDetails = () => {
           >
             <Timeline.Item
               bullet={<IconUsers size={15} />}
-              title={timeLineData.nomination_details.title}
+              title="Nomination Phase"
               lineVariant={
                 electionStatus === DECLARED || electionStatus === NOMINATIONS
                   ? "dashed"
@@ -222,7 +203,7 @@ const ElectionDetails = () => {
 
             <Timeline.Item
               bullet={<IconThumbUp size={15} />}
-              title={timeLineData.voting_details.title}
+              title="Voting Phase"
               lineVariant={electionStatus === CLOSED ? "solid" : "dashed"}
             >
               {(electionStatus === DECLARED ||
@@ -279,7 +260,7 @@ const ElectionDetails = () => {
             </Timeline.Item>
 
             <Timeline.Item
-              title={timeLineData.results_details.title}
+              title="Results"
               bullet={<IconReportAnalytics size={15} />}
             >
               {electionStatus !== COMPLETED && electionStatus !== CLOSED && (
@@ -325,10 +306,18 @@ const ElectionDetails = () => {
           <Tabs.Tab value={OVERVIEW} leftSection={<IconBook />}>
             Overview
           </Tabs.Tab>
-          <Tabs.Tab value={NOMINATIONS} leftSection={<IconUsers />}>
+          <Tabs.Tab
+            value={NOMINATIONS}
+            leftSection={<IconUsers />}
+            disabled={electionStatus === DECLARED}
+          >
             Nominations
           </Tabs.Tab>
-          <Tabs.Tab value={RESULTS} leftSection={<IconReportAnalytics />}>
+          <Tabs.Tab
+            value={RESULTS}
+            leftSection={<IconReportAnalytics />}
+            disabled={electionStatus !== CLOSED}
+          >
             Results
           </Tabs.Tab>
         </Tabs.List>
@@ -339,11 +328,11 @@ const ElectionDetails = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value={NOMINATIONS}>
-          <NominationTab />
+          {electionStatus !== DECLARED && <NominationTab />}
         </Tabs.Panel>
 
         <Tabs.Panel value={RESULTS}>
-          <Results />
+          {electionStatus === CLOSED && <Results />}
         </Tabs.Panel>
       </Tabs>
     </>

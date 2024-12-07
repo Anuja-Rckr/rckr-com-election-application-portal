@@ -89,6 +89,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
         placeholder="Search..."
         leftSection={<IconSearch size={16} />}
         value={searchInput}
+        disabled={rowData.length === 0}
         onChange={handleSearchChange}
       />
     </Group>
@@ -185,41 +186,57 @@ const FlatTable = (props: FlatTablePropsInterface) => {
     </Stack>
   );
 
-  const renderTableRow = () => (
-    <Table.Tbody>
-      {currentData.map((row: any, rowIndex: number) => (
-        <Table.Tr key={rowIndex}>
-          {colData.map((col, colIndex) => (
-            <Table.Td key={colIndex} className="text-center wrap-text">
-              {col.type === LINK && (
-                <Anchor
-                  fz="sm"
-                  onClick={() =>
-                    navigate(
-                      `/${col.path}${row[col.field]}`.replace(/^\/+/, "/")
-                    )
-                  }
-                >
-                  View Profile
-                </Anchor>
-              )}
-              {col.type === STATUS && (
-                <Badge
-                  variant={LIGHT}
-                  color={getColorForStatus(row[col.field])}
-                  size="md"
-                >
-                  {row[col.field]}
-                </Badge>
-              )}
-              {col.type === DATETIME && formatDate(row[col.field])}
-              {col.type === DATA && row[col.field]}
+  const renderTableRow = () => {
+    if (currentData.length === 0) {
+      return (
+        <Table.Tbody className="no-data-available">
+          <Table.Tr>
+            <Table.Td colSpan={colData.length} className="text-center">
+              <Text fw={500} color="dimmed">
+                No data available
+              </Text>
             </Table.Td>
-          ))}
-        </Table.Tr>
-      ))}
-    </Table.Tbody>
-  );
+          </Table.Tr>
+        </Table.Tbody>
+      );
+    }
+
+    return (
+      <Table.Tbody>
+        {currentData.map((row: any, rowIndex: number) => (
+          <Table.Tr key={rowIndex}>
+            {colData.map((col, colIndex) => (
+              <Table.Td key={colIndex} className="text-center wrap-text">
+                {col.type === LINK && (
+                  <Anchor
+                    fz="sm"
+                    onClick={() =>
+                      navigate(
+                        `/${col.path}${row[col.field]}`.replace(/^\/+/, "/")
+                      )
+                    }
+                  >
+                    View Profile
+                  </Anchor>
+                )}
+                {col.type === STATUS && (
+                  <Badge
+                    variant={LIGHT}
+                    color={getColorForStatus(row[col.field])}
+                    size="md"
+                  >
+                    {row[col.field]}
+                  </Badge>
+                )}
+                {col.type === DATETIME && formatDate(row[col.field])}
+                {col.type === DATA && row[col.field]}
+              </Table.Td>
+            ))}
+          </Table.Tr>
+        ))}
+      </Table.Tbody>
+    );
+  };
 
   return (
     <div>
