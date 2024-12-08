@@ -140,7 +140,7 @@ export const createElection = async (requestBody: createElectionInterface) => {
 
 export const updateElectionDetails = async (
   requestBody: UpdateElection,
-  electionId: number = 6
+  electionId: number
 ) => {
   try {
     const response = await api.put(`election/${electionId}`, requestBody);
@@ -152,7 +152,7 @@ export const updateElectionDetails = async (
 
 export const createNomination = async (
   requestBody: CreateNominationForm,
-  electionId: number = 6
+  electionId: number
 ) => {
   try {
     const response = await api.post(
@@ -171,6 +171,15 @@ export const createNomination = async (
 export const getElectionTimeline = async (electionId: string) => {
   try {
     const response = await api.get(`election-timeline/${electionId}`);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getDashboardElectionList = async () => {
+  try {
+    const response = await api.get(`dashboard/election/list`);
     return response.data.data;
   } catch (error) {
     throw error;

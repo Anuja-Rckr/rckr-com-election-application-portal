@@ -171,3 +171,9 @@ export const getIcon = (icon: any) => {
       return IconLockCheck;
   }
 };
+
+export const isDateValid = (date: string | null | undefined): boolean => {
+  if (!date) return false;
+  const nominationEndDate = new Date(date);
+  return new Date() > nominationEndDate;
+};

@@ -18,7 +18,11 @@ import {
 import { NominationFormProps } from "../../../interfaces/election.interface";
 import { createNomination } from "../../../services/ApiService";
 
-const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
+const NominationForm = ({
+  isOpened,
+  onClose,
+  electionDetails,
+}: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [submittedValues, setSubmittedValues] = useState<any>(null);
 
@@ -59,7 +63,12 @@ const NominationForm = ({ isOpened, onClose }: NominationFormProps) => {
         emp_role: submittedValues.empRole,
         appeal: submittedValues.appeal,
       };
-      const response = createNomination(requestBody, 8);
+      if (electionDetails?.election_id) {
+        const response = createNomination(
+          requestBody,
+          electionDetails?.election_id
+        );
+      }
       handleClose();
     }
   };

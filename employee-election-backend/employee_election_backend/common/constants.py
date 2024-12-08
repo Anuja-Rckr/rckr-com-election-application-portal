@@ -49,6 +49,16 @@ NOMINATION_DETAILS_FIELDS = [
     'nomination_end_date'
 ]
 
+DASHBOARD_ELECTION_LIST = [
+    'election_id', 
+    'election_title', 
+    'election_status', 
+    'nomination_start_date', 
+    'nomination_end_date',
+    'voting_start_date',
+    'voting_end_date'
+    ]
+
 # Field constants
 ELECTION_ID = 'election_id'
 NOMINATION_ID = 'nomination_id'
@@ -64,6 +74,7 @@ EMP_ID_REQUIRED = 'Emp id is required'
 NO_WINNER_FOR_ELECTION = 'No winner found for this election'
 ELECTION_DETAILS_EMPTY = 'Election details are missing'
 NOMINATION_DETAILS_EMPTY = 'Nominations details are missing'
+NOMINATION_ALREADY_EXISTS = 'Nomination Already Exists'
 ELECTION_CREATED_SUCCESSFULLY = 'Election created successfully'
 ELECTION_NOT_FOUND = "Election not found"
 

@@ -1,10 +1,13 @@
-import { Button, Group, Paper } from "@mantine/core";
-import { useState } from "react";
-import NominationForm from "./ElectionForms/NominationForm";
+import { Button, Group, Paper, Text } from "@mantine/core";
+import { useEffect, useState } from "react";
+import NominationForm from "./ElectionForms/CreateNomination";
 import CreateElectionForm from "./ElectionForms/CreateElection";
 import PublishNominationElectionForm from "./ElectionForms/PublishNominationElectionForm";
 import { EmpDetailsInterface } from "../../interfaces/common.interface";
-import { getUserDetails } from "../../common/utils";
+import { getUserDetails, isDateValid } from "../../common/utils";
+import { getDashboardElectionList } from "../../services/ApiService";
+import { COMPLETED, DECLARED, LIVE, NOMINATIONS } from "../../common/constants";
+import { DashboardElectionDetails } from "../../interfaces/election.interface";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -18,6 +21,13 @@ const Dashboard: React.FC = () => {
     useState<boolean>(false);
   const [isRenderNominationModal, setIsRenderNominationModal] =
     useState<boolean>(false);
+
+  const [currentElectionDetails, setCurrentElectionDetails] =
+    useState<DashboardElectionDetails | null>(null);
+
+  const [dashboardElectionList, setDashboardElectionList] = useState<
+    DashboardElectionDetails[]
+  >([]);
 
   // Handlers for Create Nomination Modal
   const triggerCreateNominationModal = () => {
@@ -38,9 +48,12 @@ const Dashboard: React.FC = () => {
   };
 
   // Handlers for Publish Nomination Modal
-  const triggerPublishNominationModal = () => {
+  const triggerPublishNominationModal = (
+    election: DashboardElectionDetails
+  ) => {
     setIsRenderNominationModal(true);
     setIsPublishNominationModal(true);
+    setCurrentElectionDetails(election);
   };
 
   const closePublishNominationModal = () => {
@@ -57,34 +70,88 @@ const Dashboard: React.FC = () => {
     setIsPublishElectionModal(false);
   };
 
+  const fetchDashboardElectionList = async () => {
+    const response = await getDashboardElectionList();
+    setDashboardElectionList(response);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchDashboardElectionList();
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
+      {empDetails.isAdmin && (
+        <Paper p="md" mb="md">
+          <Group justify="flex-end">
+            {empDetails.isAdmin && (
+              <Button onClick={triggerCreateElectionModal}>
+                Create Election
+              </Button>
+            )}
+          </Group>
+        </Paper>
+      )}
       <Paper p="md">
-        <Group justify="flex-end">
-          {empDetails.isAdmin && (
-            <Button onClick={triggerCreateElectionModal}>
-              Create Election
-            </Button>
-          )}
-          {empDetails.isAdmin && (
-            <Button onClick={triggerPublishNominationModal}>
-              Publish Nomination
-            </Button>
-          )}
-          {empDetails.isAdmin && (
-            <Button onClick={triggerPublishElectionModal}>
-              Publish Voting
-            </Button>
-          )}
-          {!empDetails.isAdmin && (
-            <Button onClick={triggerCreateNominationModal}>
-              Create Nomination
-            </Button>
-          )}
-          {!empDetails.isAdmin && <Button>Vote</Button>}
-        </Group>
+        {dashboardElectionList.map(
+          (election: DashboardElectionDetails, index: number) => (
+            <Group justify="space-between" mt="md" key={index}>
+              <Text>Title: {election.election_title}</Text>
+              <Group>
+                {empDetails.isAdmin && (
+                  <Button
+                    onClick={() => triggerPublishNominationModal(election)}
+                    disabled={election.election_status !== DECLARED}
+                  >
+                    Publish Nomination
+                  </Button>
+                )}
+                {empDetails.isAdmin && (
+                  <Button
+                    onClick={triggerPublishElectionModal}
+                    disabled={election.election_status !== NOMINATIONS}
+                  >
+                    Publish Voting
+                  </Button>
+                )}
+                {empDetails.isAdmin && (
+                  <Button disabled={election.election_status !== COMPLETED}>
+                    Publish Result
+                  </Button>
+                )}
+                {!empDetails.isAdmin && (
+                  <Button
+                    onClick={triggerCreateNominationModal}
+                    disabled={
+                      election.election_status !== NOMINATIONS ||
+                      isDateValid(election.nomination_end_date)
+                    }
+                  >
+                    Create Nomination
+                  </Button>
+                )}
+
+                {!empDetails.isAdmin && (
+                  <Button
+                    disabled={
+                      election.election_status !== LIVE ||
+                      isDateValid(election.voting_end_date)
+                    }
+                  >
+                    Vote
+                  </Button>
+                )}
+              </Group>
+            </Group>
+          )
+        )}
       </Paper>
       <NominationForm
+        electionDetails={currentElectionDetails}
         isOpened={isCreateNominationModal}
         onClose={closeCreateNominationModal}
       />
@@ -93,6 +160,7 @@ const Dashboard: React.FC = () => {
         onClose={closeCreateElectionModal}
       />
       <PublishNominationElectionForm
+        electionDetails={currentElectionDetails}
         isOpened={
           isRenderNominationModal
             ? isPublishNominationModal

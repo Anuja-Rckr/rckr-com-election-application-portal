@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from common import constants as ct
 from election_process.models.nominations.nominations_serializer import NominationsSerializer
+from election_process.models.nominations.nominations_model import NominationsModel
 
 @api_view(['POST'])
 def create_emp_nomination(request, election_id):
@@ -13,6 +14,9 @@ def create_emp_nomination(request, election_id):
            'error': ct.NOMINATION_DETAILS_EMPTY
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
+        is_nomination_exists = NominationsModel.objects.filter(election_id=election_id,emp_id=nomination_details['emp_id'])
+        if is_nomination_exists:
+            return JsonResponse({'error': f'{ct.NOMINATION_ALREADY_EXISTS} with Emp ID {nomination_details['emp_id']}'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = NominationsSerializer(data=nomination_details)
         if serializer.is_valid():
             created_nomination = serializer.save()

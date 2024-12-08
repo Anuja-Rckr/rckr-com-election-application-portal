@@ -73,12 +73,14 @@ export interface resultsTableData {
 export interface NominationFormProps {
   isOpened: boolean;
   onClose: () => void;
+  electionDetails?: DashboardElectionDetails | null;
 }
 
 export interface PublishNominationElectionProps {
   isOpened: boolean;
   onClose: () => void;
   renderNominationModal: boolean;
+  electionDetails: DashboardElectionDetails | null;
 }
 
 export interface createElectionInterface {
@@ -108,4 +110,14 @@ export interface CreateNominationForm {
   emp_name: string;
   emp_role: string;
   appeal: string;
+}
+
+export interface DashboardElectionDetails {
+  election_id: number;
+  election_title: string;
+  election_status: string;
+  nomination_start_date: string | null;
+  nomination_end_date: string | null;
+  voting_start_date: string | null;
+  voting_end_date: string | null;
 }

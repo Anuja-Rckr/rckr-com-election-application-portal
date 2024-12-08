@@ -29,6 +29,7 @@ import {
   formatDate,
   getActiveNumber,
   getColorForStatus,
+  isDateValid,
 } from "../../../common/utils";
 import {
   ElectionDetailsInterface,
@@ -152,16 +153,25 @@ const ElectionDetails = () => {
                   </Text>
                 </>
               )}
-              {electionStatus === NOMINATIONS && (
-                <>
-                  <Text c="dimmed" size="sm">
-                    Nomination Process is LIVE
-                  </Text>
-                </>
-              )}
+              {electionStatus === NOMINATIONS &&
+                !isDateValid(
+                  electionTimelineDetails?.election_details.nomination_end_date
+                ) && (
+                  <>
+                    <Text c="dimmed" size="sm">
+                      Nomination Process is LIVE
+                    </Text>
+                  </>
+                )}
+
               {(electionStatus === COMPLETED ||
                 electionStatus === CLOSED ||
-                electionStatus === LIVE) && (
+                electionStatus === LIVE ||
+                (electionStatus === NOMINATIONS &&
+                  isDateValid(
+                    electionTimelineDetails?.election_details
+                      .nomination_end_date
+                  ))) && (
                 <>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
@@ -214,14 +224,23 @@ const ElectionDetails = () => {
                   </Text>
                 </>
               )}
-              {electionStatus === LIVE && (
+              {(electionStatus === LIVE ||
+                isDateValid(
+                  electionTimelineDetails?.election_details.voting_end_date
+                )) && (
                 <>
                   <Text c="dimmed" size="sm">
-                    Voting Process is in LIVE
+                    Voting Process is LIVE
                   </Text>
                 </>
               )}
-              {(electionStatus === COMPLETED || electionStatus === CLOSED) && (
+              {(electionStatus === COMPLETED ||
+                electionStatus === CLOSED ||
+                (electionStatus === LIVE &&
+                  !isDateValid(
+                    electionTimelineDetails?.election_details
+                      .nomination_end_date
+                  ))) && (
                 <>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
