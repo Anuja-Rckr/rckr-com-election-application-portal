@@ -1,13 +1,21 @@
-import { Button, Group, Paper, Text } from "@mantine/core";
+import { Badge, Button, Group, Paper, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import NominationForm from "./ElectionForms/CreateNomination";
 import CreateElectionForm from "./ElectionForms/CreateElection";
 import PublishNominationElectionForm from "./ElectionForms/PublishNominationElectionForm";
 import { EmpDetailsInterface } from "../../interfaces/common.interface";
-import { getUserDetails, isDateValid } from "../../common/utils";
+import {
+  getColorForStatus,
+  getUserDetails,
+  isDateValid,
+} from "../../common/utils";
 import { getDashboardElectionList } from "../../services/ApiService";
 import { COMPLETED, DECLARED, LIVE, NOMINATIONS } from "../../common/constants";
-import { DashboardElectionDetails } from "../../interfaces/election.interface";
+import {
+  DashboardElectionDetails,
+  VotingList,
+} from "../../interfaces/election.interface";
+import Voting from "./ElectionForms/Voting";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -21,6 +29,7 @@ const Dashboard: React.FC = () => {
     useState<boolean>(false);
   const [isRenderNominationModal, setIsRenderNominationModal] =
     useState<boolean>(false);
+  const [isVotingModal, setIsVotingModal] = useState<boolean>(false);
 
   const [currentElectionDetails, setCurrentElectionDetails] =
     useState<DashboardElectionDetails | null>(null);
@@ -70,9 +79,18 @@ const Dashboard: React.FC = () => {
     setIsPublishElectionModal(false);
   };
 
+  const triggerVotingModal = async (election: DashboardElectionDetails) => {
+    setCurrentElectionDetails(election);
+    setIsVotingModal(true);
+  };
+
   const fetchDashboardElectionList = async () => {
     const response = await getDashboardElectionList();
     setDashboardElectionList(response);
+  };
+
+  const closeVotingModal = () => {
+    setIsVotingModal(false);
   };
 
   useEffect(() => {
@@ -101,6 +119,13 @@ const Dashboard: React.FC = () => {
           (election: DashboardElectionDetails, index: number) => (
             <Group justify="space-between" mt="md" key={index}>
               <Text>Title: {election.election_title}</Text>
+              {"    "}
+              <Text>
+                Status:{" "}
+                <Badge color={getColorForStatus(election.election_status)}>
+                  {election.election_status}
+                </Badge>
+              </Text>
               <Group>
                 {empDetails.isAdmin && (
                   <Button
@@ -141,6 +166,7 @@ const Dashboard: React.FC = () => {
                       election.election_status !== LIVE ||
                       isDateValid(election.voting_end_date)
                     }
+                    onClick={() => triggerVotingModal(election)}
                   >
                     Vote
                   </Button>
@@ -172,6 +198,11 @@ const Dashboard: React.FC = () => {
             : closePublishElectionModal
         }
         renderNominationModal={isRenderNominationModal}
+      />
+      <Voting
+        electionDetails={currentElectionDetails}
+        isOpened={isVotingModal}
+        onClose={closeVotingModal}
       />
     </>
   );

@@ -91,3 +91,7 @@ code {
 .no-data-available {
   height: 250px;
 }
+
+.highlight_name {
+  color: var(--mantine-color-orange-6);
+}

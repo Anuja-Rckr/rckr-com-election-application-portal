@@ -121,3 +121,19 @@ export interface DashboardElectionDetails {
   voting_start_date: string | null;
   voting_end_date: string | null;
 }
+
+export interface VotingList {
+  nomination_id: number;
+  election_id: number;
+  emp_id: number;
+  emp_name: string;
+  emp_role: string;
+  appeal: string;
+  created_at: Date;
+}
+
+export interface VotingListProps {
+  electionDetails: DashboardElectionDetails | null;
+  isOpened: boolean;
+  onClose: () => void;
+}

@@ -185,3 +185,12 @@ export const getDashboardElectionList = async () => {
     throw error;
   }
 };
+
+export const getVotingList = async (electionId: number) => {
+  try {
+    const response = await api.get(`election/voting/list/${electionId}`);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

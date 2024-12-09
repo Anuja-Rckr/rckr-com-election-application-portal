@@ -243,3 +243,23 @@ def get_your_nominations_cards_list(total_nominations,active_nominations,schedul
         },
     ]
     return result
+
+def get_voting_list_column_data():
+    result = [
+        {
+            'title': 'Emp ID',
+            'field': 'emp_id',
+            'type': 'data'
+        },
+        {
+            'title': 'Emp Name',
+            'field': 'emp_name',
+            'type': 'data'
+        },
+        {
+            'title': 'Emp Role',
+            'field': 'emp_role',
+            'type': 'data'
+        },
+    ]
+    return result

@@ -17,6 +17,7 @@ import {
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
 import { createNomination } from "../../../services/ApiService";
+import { RED } from "../../../common/constants";
 
 const NominationForm = ({
   isOpened,
@@ -139,7 +140,7 @@ const NominationForm = ({
         >
           <div>Are you sure you want to create this nomination?</div>
 
-          <Text color="red" size="sm" mt="sm">
+          <Text color={RED} size="sm" mt="sm">
             Once the nomination is submitted, it cannot be changed or withdrawn.
           </Text>
 
