@@ -95,3 +95,14 @@ code {
 .highlight_name {
   color: var(--mantine-color-orange-6);
 }
+
+.timer {
+  background: var(--mantine-color-orange-6);
+  color: #ffffff;
+  width: fit-content;
+  border-radius: 5px;
+}
+
+.timer-font {
+  font-size: 30px;
+}

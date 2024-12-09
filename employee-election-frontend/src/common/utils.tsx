@@ -177,3 +177,15 @@ export const isDateValid = (date: string | null | undefined): boolean => {
   const nominationEndDate = new Date(date);
   return new Date() > nominationEndDate;
 };
+
+export const convertToLocalTime = (votingEndTime: string) => {
+  // Create a Date object from the UTC time
+  const utcDate = new Date(votingEndTime);
+
+  // Convert UTC to local time (IST in your case, UTC+5:30)
+  const localDate = new Date(
+    utcDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+  );
+
+  return localDate.toLocaleString(); // Display the local date-time as a string
+};

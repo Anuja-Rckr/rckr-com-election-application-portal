@@ -7,15 +7,15 @@ import { getVotingList } from "../../../services/ApiService";
 import { Button, Drawer, Group, Modal, Table, Text } from "@mantine/core";
 import { ColumnData } from "../../../interfaces/common.interface";
 import { DATA, RED } from "../../../common/constants";
+import Timer from "../../common/Timer";
 
 const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
   const [votingList, setVotingList] = useState<VotingList[]>([]);
   const [votingListColumnData, setVotingListColumnData] = useState<
     ColumnData[]
   >([]);
-
+  const [isVotingDisabled, setIsVotingDisabled] = useState<boolean>(false);
   const [currentVote, setCurrentVote] = useState<VotingList | null>(null);
-
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
 
   const fetchVotingList = async () => {
@@ -35,6 +35,10 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
     onClose();
   };
 
+  const handleTimerExpire = () => {
+    setIsVotingDisabled(true);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchVotingList();
@@ -50,7 +54,12 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
         title={<Text fw={700}>Vote</Text>}
         position="right"
       >
-        <p>Timer</p>
+        {electionDetails?.voting_end_date && (
+          <Timer
+            votingEndTime={electionDetails?.voting_end_date}
+            onExpire={handleTimerExpire}
+          />
+        )}
         <Table stickyHeader stickyHeaderOffset={60} verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
@@ -71,7 +80,10 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
                   </Table.Td>
                 ))}
                 <Table.Td>
-                  <Button onClick={() => triggerConfirmVoteModal(row)}>
+                  <Button
+                    onClick={() => triggerConfirmVoteModal(row)}
+                    disabled={isVotingDisabled}
+                  >
                     Vote
                   </Button>
                 </Table.Td>

@@ -131,7 +131,7 @@ export const getYourNominationsTable = async (
 
 export const createElection = async (requestBody: createElectionInterface) => {
   try {
-    const response = await api.post("election/", requestBody);
+    const response = await api.post("election", requestBody);
     return response.data.data;
   } catch (error) {
     throw error;

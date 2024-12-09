@@ -137,3 +137,8 @@ export interface VotingListProps {
   isOpened: boolean;
   onClose: () => void;
 }
+
+export interface TimerProps {
+  votingEndTime: string;
+  onExpire: () => void;
+}
