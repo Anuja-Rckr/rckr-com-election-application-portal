@@ -103,6 +103,7 @@ export interface UpdateElection {
   nomination_end_date?: Date | null;
   voting_start_date?: Date | null;
   voting_end_date?: Date | null;
+  election_status: string;
 }
 
 export interface CreateNominationForm {
@@ -141,4 +142,5 @@ export interface VotingListProps {
 export interface TimerProps {
   votingEndTime: string;
   onExpire: () => void;
+  isValidDate: boolean;
 }

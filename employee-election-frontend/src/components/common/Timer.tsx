@@ -6,19 +6,23 @@ import { TimerProps } from "../../interfaces/election.interface";
 const Timer = ({
   votingEndTime,
   onExpire,
+  isValidDate,
 }: TimerProps & { onExpire: () => void }) => {
   const [timeLeft, setTimeLeft] = useState("");
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const calculateTimeLeft = () => {
     const utcDate = new Date(votingEndTime);
-    const istEndTime = new Date(utcDate.getTime() + (5 * 60 + 30) * 60000);
 
     const currentTime = new Date();
 
-    const difference = istEndTime.getTime() - currentTime.getTime();
+    const difference = utcDate.getTime() - currentTime.getTime();
 
     if (difference <= 0) {
       onExpire();
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
       return "00 : 00 : 00 : 00";
     }
 
@@ -41,13 +45,16 @@ const Timer = ({
     const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
+    setIntervalId(interval);
 
     return () => clearInterval(interval);
   }, [votingEndTime]);
 
   return (
     <Group justify="center" mb="md">
-      <Text color={RED}>Voting ends in</Text>
+      <Text color={RED}>
+        {isValidDate ? "Voting ends in" : "Voting starts in"}
+      </Text>
       <Stack className="timer" p="sm">
         <Text>Days : Hours : Mins : Seconds</Text>
         <Text className="timer-font">{timeLeft}</Text>

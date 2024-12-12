@@ -27,8 +27,7 @@ def create_election(request):
 
 @api_view(['PUT'])
 def update_election(request, election_id): 
-    nomination_details = request.data
-    nomination_details['election_status'] = ct.NOMINATIONS
+    election_details = request.data
     if not election_id:
         return JsonResponse({
            'error': ct.ELECTION_DETAILS_EMPTY
@@ -40,7 +39,7 @@ def update_election(request, election_id):
             return JsonResponse({
                 'error': ct.ELECTION_NOT_FOUND
             }, status=status.HTTP_404_NOT_FOUND)
-        serializer = ElectionSerializer(election, data=nomination_details, partial=True)
+        serializer = ElectionSerializer(election, data=election_details, partial=True)
         if serializer.is_valid():
             updated_election_details = serializer.save()
             return JsonResponse({

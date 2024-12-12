@@ -3,13 +3,36 @@ import {
   VotingList,
   VotingListProps,
 } from "../../../interfaces/election.interface";
-import { getVotingList } from "../../../services/ApiService";
-import { Button, Drawer, Group, Modal, Table, Text } from "@mantine/core";
-import { ColumnData } from "../../../interfaces/common.interface";
-import { DATA, RED } from "../../../common/constants";
+import {
+  castVote,
+  getEmpVoteStatus,
+  getVotingList,
+} from "../../../services/ApiService";
+import {
+  Alert,
+  Button,
+  Drawer,
+  Group,
+  Modal,
+  Table,
+  Text,
+} from "@mantine/core";
+import {
+  ColumnData,
+  EmpDetailsInterface,
+} from "../../../interfaces/common.interface";
+import { DATA, GREEN, RED } from "../../../common/constants";
 import Timer from "../../common/Timer";
+import { getUserDetails, isDateValid } from "../../../common/utils";
+import {
+  IconCircleCheck,
+  IconInfoCircle,
+  IconSquareRoundedX,
+} from "@tabler/icons-react";
+import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 
 const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
+  const empDetails: EmpDetailsInterface = getUserDetails();
   const [votingList, setVotingList] = useState<VotingList[]>([]);
   const [votingListColumnData, setVotingListColumnData] = useState<
     ColumnData[]
@@ -17,6 +40,7 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
   const [isVotingDisabled, setIsVotingDisabled] = useState<boolean>(false);
   const [currentVote, setCurrentVote] = useState<VotingList | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [isTimerCompleted, setIsTimerCompleted] = useState<boolean>(false);
 
   const fetchVotingList = async () => {
     if (electionDetails?.election_id) {
@@ -37,10 +61,36 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
 
   const handleTimerExpire = () => {
     setIsVotingDisabled(true);
+    setIsTimerCompleted(true);
+  };
+
+  const onConfirmVote = async () => {
+    if (electionDetails?.election_id) {
+      const requestBody = {
+        emp_id: empDetails.empId,
+        emp_name: empDetails.empName,
+        emp_role: empDetails.empRole,
+        nominee_emp_id: currentVote?.emp_id,
+      };
+      const response = castVote(requestBody, electionDetails?.election_id);
+      setIsConfirmModalOpen(false);
+      setIsVotingDisabled(true);
+    }
+  };
+
+  const fetchEmpVoteStatus = async () => {
+    if (electionDetails?.election_id) {
+      const response = await getEmpVoteStatus(
+        empDetails.empId,
+        electionDetails?.election_id
+      );
+      setIsVotingDisabled(response.is_emp_voted);
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      await fetchEmpVoteStatus();
       await fetchVotingList();
     };
     fetchData();
@@ -54,11 +104,49 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
         title={<Text fw={700}>Vote</Text>}
         position="right"
       >
-        {electionDetails?.voting_end_date && (
-          <Timer
-            votingEndTime={electionDetails?.voting_end_date}
-            onExpire={handleTimerExpire}
-          />
+        {isDateValid(
+          electionDetails?.voting_start_date,
+          electionDetails?.voting_end_date
+        ) &&
+          electionDetails?.voting_end_date && (
+            <Timer
+              isValidDate={isDateValid(
+                electionDetails.voting_start_date,
+                electionDetails.voting_end_date
+              )}
+              votingEndTime={electionDetails.voting_end_date}
+              onExpire={handleTimerExpire}
+            />
+          )}
+        {!isDateValid(
+          electionDetails?.voting_start_date,
+          electionDetails?.voting_end_date
+        ) &&
+          electionDetails?.voting_start_date && (
+            <Timer
+              isValidDate={isDateValid(
+                electionDetails.voting_start_date,
+                electionDetails.voting_end_date
+              )}
+              votingEndTime={electionDetails.voting_start_date}
+              onExpire={handleTimerExpire}
+            />
+          )}
+        {isVotingDisabled && !isTimerCompleted && (
+          <Alert
+            variant="light"
+            color={GREEN}
+            title="You have already cast your vote"
+            icon={<IconCircleCheck size={50} />}
+          ></Alert>
+        )}
+        {isVotingDisabled && isTimerCompleted && (
+          <Alert
+            variant="light"
+            color={RED}
+            title="The voting period has ended"
+            icon={<IconSquareRoundedX size={50} />}
+          ></Alert>
         )}
         <Table stickyHeader stickyHeaderOffset={60} verticalSpacing="sm">
           <Table.Thead>
@@ -82,7 +170,13 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
                 <Table.Td>
                   <Button
                     onClick={() => triggerConfirmVoteModal(row)}
-                    disabled={isVotingDisabled}
+                    disabled={
+                      isVotingDisabled ||
+                      !isDateValid(
+                        electionDetails?.voting_start_date,
+                        electionDetails?.voting_end_date
+                      )
+                    }
                   >
                     Vote
                   </Button>
@@ -116,7 +210,7 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
           >
             Cancel
           </Button>
-          <Button>Confirm</Button>
+          <Button onClick={onConfirmVote}>Confirm</Button>
         </Group>
       </Modal>
     </>

@@ -194,3 +194,37 @@ export const getVotingList = async (electionId: number) => {
     throw error;
   }
 };
+
+export const castVote = async (requestBody: any, electionId: number) => {
+  try {
+    const response = await api.post(`election/${electionId}/vote`, requestBody);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getEmpVoteStatus = async (empId: number, electionId: number) => {
+  try {
+    const response = await api.get(
+      `election/vote/status/${empId}/${electionId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getEmpNominationStatus = async (
+  empId: number,
+  electionId: number
+) => {
+  try {
+    const response = await api.get(
+      `election/nomination/status/${empId}/${electionId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

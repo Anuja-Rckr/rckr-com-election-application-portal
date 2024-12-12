@@ -172,10 +172,20 @@ export const getIcon = (icon: any) => {
   }
 };
 
-export const isDateValid = (date: string | null | undefined): boolean => {
-  if (!date) return false;
-  const nominationEndDate = new Date(date);
-  return new Date() > nominationEndDate;
+export const isDateValid = (
+  startDate: string | null | undefined,
+  endDate: string | null | undefined
+): boolean => {
+  if (!startDate || !endDate) {
+    return false;
+  }
+
+  const start = new Date(startDate).getTime();
+  const end = new Date(endDate).getTime();
+  const now = new Date().getTime();
+
+  const isValid = now >= start && now <= end;
+  return isValid;
 };
 
 export const convertToLocalTime = (votingEndTime: string) => {

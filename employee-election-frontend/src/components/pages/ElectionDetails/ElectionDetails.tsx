@@ -154,12 +154,50 @@ const ElectionDetails = () => {
                 </>
               )}
               {electionStatus === NOMINATIONS &&
-                !isDateValid(
+                isDateValid(
+                  electionTimelineDetails?.election_details
+                    .nomination_start_date,
                   electionTimelineDetails?.election_details.nomination_end_date
                 ) && (
                   <>
                     <Text c="dimmed" size="sm">
                       Nomination Process is LIVE
+                    </Text>
+                  </>
+                )}
+              {electionStatus === NOMINATIONS &&
+                !isDateValid(
+                  electionTimelineDetails?.election_details
+                    .nomination_start_date,
+                  electionTimelineDetails?.election_details.nomination_end_date
+                ) && (
+                  <>
+                    <Text c="dimmed" size="sm" mb="xs">
+                      Nominations will be live from:
+                    </Text>
+                    <Text c="dimmed" size="sm">
+                      Start Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .nomination_start_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .nomination_start_date
+                            )
+                          : ""}
+                      </b>
+                    </Text>
+                    <Text c="dimmed" size="sm" mt="xs" mb="xs">
+                      End Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .nomination_end_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .nomination_end_date
+                            )
+                          : ""}
+                      </b>
                     </Text>
                   </>
                 )}
@@ -169,6 +207,8 @@ const ElectionDetails = () => {
                 electionStatus === LIVE ||
                 (electionStatus === NOMINATIONS &&
                   isDateValid(
+                    electionTimelineDetails?.election_details
+                      .nomination_start_date,
                     electionTimelineDetails?.election_details
                       .nomination_end_date
                   ))) && (
@@ -226,6 +266,7 @@ const ElectionDetails = () => {
               )}
               {(electionStatus === LIVE ||
                 isDateValid(
+                  electionTimelineDetails?.election_details.voting_start_date,
                   electionTimelineDetails?.election_details.voting_end_date
                 )) && (
                 <>
@@ -237,7 +278,9 @@ const ElectionDetails = () => {
               {(electionStatus === COMPLETED ||
                 electionStatus === CLOSED ||
                 (electionStatus === LIVE &&
-                  !isDateValid(
+                  isDateValid(
+                    electionTimelineDetails?.election_details
+                      .nomination_start_date,
                     electionTimelineDetails?.election_details
                       .nomination_end_date
                   ))) && (
@@ -328,7 +371,15 @@ const ElectionDetails = () => {
           <Tabs.Tab
             value={NOMINATIONS}
             leftSection={<IconUsers />}
-            disabled={electionStatus === DECLARED}
+            disabled={
+              electionStatus === DECLARED ||
+              (electionStatus === NOMINATIONS &&
+                !isDateValid(
+                  electionTimelineDetails?.election_details
+                    .nomination_start_date,
+                  electionTimelineDetails?.election_details.nomination_end_date
+                ))
+            }
           >
             Nominations
           </Tabs.Tab>

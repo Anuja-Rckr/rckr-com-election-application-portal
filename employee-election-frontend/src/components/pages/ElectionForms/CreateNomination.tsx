@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, isNotEmpty } from "@mantine/form";
 import {
   Button,
@@ -9,15 +9,21 @@ import {
   Textarea,
   Modal,
   Text,
+  Alert,
 } from "@mantine/core";
 import {
   generateRandomColor,
   getInitials,
   getUserDetails,
+  isDateValid,
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
-import { createNomination } from "../../../services/ApiService";
-import { RED } from "../../../common/constants";
+import {
+  createNomination,
+  getEmpNominationStatus,
+} from "../../../services/ApiService";
+import { GREEN, RED } from "../../../common/constants";
+import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 
 const NominationForm = ({
   isOpened,
@@ -26,6 +32,25 @@ const NominationForm = ({
 }: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [submittedValues, setSubmittedValues] = useState<any>(null);
+  const [isEmpNominated, setIsEmpNominated] = useState<boolean>(false);
+
+  const fetchNominationStatus = async () => {
+    if (electionDetails?.election_id) {
+      const response = await getEmpNominationStatus(
+        empDetails.emp_id,
+        electionDetails?.election_id
+      );
+      setIsEmpNominated(response);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchNominationStatus();
+    };
+
+    fetchData();
+  }, []);
 
   const empDetails = getUserDetails();
   const form = useForm({
@@ -55,9 +80,9 @@ const NominationForm = ({
   };
 
   const handleConfirm = () => {
+    console.log("ddd reached");
     if (submittedValues) {
       setIsConfirmModalOpen(false);
-      onClose();
       const requestBody = {
         emp_id: submittedValues.empId,
         emp_name: submittedValues.empName,
@@ -82,6 +107,32 @@ const NominationForm = ({
         title="Create Nomination"
         position="right"
       >
+        {isEmpNominated &&
+          isDateValid(
+            electionDetails?.nomination_start_date,
+            electionDetails?.nomination_end_date
+          ) && (
+            <Alert
+              mb="md"
+              variant="light"
+              color={GREEN}
+              title="You have already nominated"
+              icon={<IconCircleCheck size={50} />}
+            ></Alert>
+          )}
+        {!isEmpNominated &&
+          isDateValid(
+            electionDetails?.nomination_start_date,
+            electionDetails?.nomination_end_date
+          ) && (
+            <Alert
+              mb="md"
+              variant="light"
+              color={RED}
+              title="The Nominations are closed"
+              icon={<IconSquareRoundedX size={50} />}
+            ></Alert>
+          )}
         <form onSubmit={form.onSubmit(onCreateNomination)}>
           <Group justify="center">
             <Avatar
@@ -127,9 +178,37 @@ const NominationForm = ({
             maxRows={8}
             mt="md"
             key={form.key("appeal")}
+            disabled={
+              (isEmpNominated &&
+                isDateValid(
+                  electionDetails?.nomination_start_date,
+                  electionDetails?.nomination_end_date
+                )) ||
+              (!isEmpNominated &&
+                isDateValid(
+                  electionDetails?.nomination_start_date,
+                  electionDetails?.nomination_end_date
+                ))
+            }
             {...form.getInputProps("appeal")}
           />
-          <Button fullWidth mt="xl" type="submit">
+          <Button
+            fullWidth
+            mt="xl"
+            type="submit"
+            disabled={
+              (isEmpNominated &&
+                isDateValid(
+                  electionDetails?.nomination_start_date,
+                  electionDetails?.nomination_end_date
+                )) ||
+              (!isEmpNominated &&
+                isDateValid(
+                  electionDetails?.nomination_start_date,
+                  electionDetails?.nomination_end_date
+                ))
+            }
+          >
             Submit
           </Button>
         </form>
@@ -145,10 +224,7 @@ const NominationForm = ({
           </Text>
 
           <Group mt="md">
-            <Button
-              variant="default"
-              onClick={() => setIsConfirmModalOpen(false)}
-            >
+            <Button variant="default" onClick={handleConfirm}>
               Cancel
             </Button>
             <Button onClick={handleConfirm}>Confirm</Button>

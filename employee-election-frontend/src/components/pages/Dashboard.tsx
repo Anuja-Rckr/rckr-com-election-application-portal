@@ -16,6 +16,7 @@ import {
   VotingList,
 } from "../../interfaces/election.interface";
 import Voting from "./ElectionForms/Voting";
+import ElectionDetails from "./ElectionDetails/ElectionDetails";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -39,7 +40,8 @@ const Dashboard: React.FC = () => {
   >([]);
 
   // Handlers for Create Nomination Modal
-  const triggerCreateNominationModal = () => {
+  const triggerCreateNominationModal = (election: DashboardElectionDetails) => {
+    setCurrentElectionDetails(election);
     setIsCreateNominationModal(true);
   };
 
@@ -70,7 +72,8 @@ const Dashboard: React.FC = () => {
   };
 
   // Handlers for Publish Election Modal
-  const triggerPublishElectionModal = () => {
+  const triggerPublishElectionModal = (election: DashboardElectionDetails) => {
+    setCurrentElectionDetails(election);
     setIsRenderNominationModal(false);
     setIsPublishElectionModal(true);
   };
@@ -114,68 +117,77 @@ const Dashboard: React.FC = () => {
           </Group>
         </Paper>
       )}
-      <Paper p="md">
-        {dashboardElectionList.map(
-          (election: DashboardElectionDetails, index: number) => (
-            <Group justify="space-between" mt="md" key={index}>
-              <Text>Title: {election.election_title}</Text>
-              {"    "}
-              <Text>
-                Status:{" "}
-                <Badge color={getColorForStatus(election.election_status)}>
-                  {election.election_status}
-                </Badge>
-              </Text>
-              <Group>
-                {empDetails.isAdmin && (
-                  <Button
-                    onClick={() => triggerPublishNominationModal(election)}
-                    disabled={election.election_status !== DECLARED}
-                  >
-                    Publish Nomination
-                  </Button>
-                )}
-                {empDetails.isAdmin && (
-                  <Button
-                    onClick={triggerPublishElectionModal}
-                    disabled={election.election_status !== NOMINATIONS}
-                  >
-                    Publish Voting
-                  </Button>
-                )}
-                {empDetails.isAdmin && (
-                  <Button disabled={election.election_status !== COMPLETED}>
-                    Publish Result
-                  </Button>
-                )}
-                {!empDetails.isAdmin && (
-                  <Button
-                    onClick={triggerCreateNominationModal}
-                    disabled={
-                      election.election_status !== NOMINATIONS ||
-                      isDateValid(election.nomination_end_date)
-                    }
-                  >
-                    Create Nomination
-                  </Button>
-                )}
+      {dashboardElectionList.length > 0 && (
+        <Paper p="md">
+          {dashboardElectionList.map(
+            (election: DashboardElectionDetails, index: number) => (
+              <Group justify="space-between" mt="md" key={index}>
+                <Text>Title: {election.election_title}</Text>
+                {"    "}
+                <Text>
+                  Status:{" "}
+                  <Badge color={getColorForStatus(election.election_status)}>
+                    {election.election_status}
+                  </Badge>
+                </Text>
+                <Group>
+                  {empDetails.isAdmin && (
+                    <Button
+                      onClick={() => triggerPublishNominationModal(election)}
+                      disabled={election.election_status !== DECLARED}
+                    >
+                      Publish Nomination
+                    </Button>
+                  )}
+                  {empDetails.isAdmin && (
+                    <Button
+                      onClick={() => triggerPublishElectionModal(election)}
+                      disabled={election.election_status !== NOMINATIONS}
+                    >
+                      Publish Voting
+                    </Button>
+                  )}
+                  {empDetails.isAdmin && (
+                    <Button disabled={election.election_status !== COMPLETED}>
+                      Publish Result
+                    </Button>
+                  )}
+                  {!empDetails.isAdmin && (
+                    <Button
+                      onClick={() => triggerCreateNominationModal(election)}
+                      disabled={
+                        election.election_status !== NOMINATIONS ||
+                        !isDateValid(
+                          election.nomination_start_date,
+                          election.nomination_end_date
+                        )
+                      }
+                    >
+                      Create Nomination
+                    </Button>
+                  )}
 
-                {!empDetails.isAdmin && (
-                  <Button
-                    disabled={
-                      election.election_status !== LIVE ||
-                      isDateValid(election.voting_end_date)
-                    }
-                    onClick={() => triggerVotingModal(election)}
-                  >
-                    Vote
-                  </Button>
-                )}
+                  {!empDetails.isAdmin && (
+                    <Button
+                      disabled={
+                        election.election_status !== LIVE ||
+                        (election.election_status === LIVE &&
+                          !isDateValid(
+                            election.voting_start_date,
+                            election.voting_end_date
+                          ))
+                      }
+                      onClick={() => triggerVotingModal(election)}
+                    >
+                      Vote
+                    </Button>
+                  )}
+                </Group>
               </Group>
-            </Group>
-          )
-        )}
-      </Paper>
+            )
+          )}
+        </Paper>
+      )}
       <NominationForm
         electionDetails={currentElectionDetails}
         isOpened={isCreateNominationModal}

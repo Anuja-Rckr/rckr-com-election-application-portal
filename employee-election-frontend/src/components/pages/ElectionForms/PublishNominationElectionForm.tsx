@@ -1,9 +1,9 @@
-import React from "react";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { Button, Drawer, Text, TextInput } from "@mantine/core";
 import { DatePickerInput, DateTimePicker } from "@mantine/dates";
 import { PublishNominationElectionProps } from "../../../interfaces/election.interface";
 import { updateElectionDetails } from "../../../services/ApiService";
+import { LIVE, NOMINATIONS } from "../../../common/constants";
 
 const PublishNominationElectionForm = ({
   isOpened,
@@ -48,6 +48,7 @@ const PublishNominationElectionForm = ({
       requestBody = {
         nomination_start_date: values.nominationStartDate,
         nomination_end_date: values.nominationEndDate,
+        election_status: NOMINATIONS,
       };
       if (electionDetails?.election_id) {
         updateElectionDetails(requestBody, electionDetails?.election_id);
@@ -56,6 +57,7 @@ const PublishNominationElectionForm = ({
       requestBody = {
         voting_start_date: values.votingStartDate,
         voting_end_date: values.votingEndDate,
+        election_status: LIVE,
       };
       if (electionDetails?.election_id) {
         updateElectionDetails(requestBody, electionDetails?.election_id);
