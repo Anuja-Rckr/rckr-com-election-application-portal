@@ -5,7 +5,8 @@ ELECTION_TABLE_COLUMN_DATA = [
         'title': 'Election',
         'field': 'election_id',
         'type': 'link',
-        'path': 'election-details/'
+        'path': 'election-details/',
+        'name': 'View election'
     },
     {
         'title': 'Election Title',
@@ -170,11 +171,6 @@ def get_results_overview_list(overview_details):
             'value': overview_details['election_reward'],
             'type': 'data'
         },
-        {
-            'title': 'Election Status',
-            'value': overview_details['election_status'],
-            'type': 'status'
-        },
     ]
     return result
 
@@ -184,7 +180,8 @@ def get_nomination_list_col_data():
             'title': 'Election ID',
             'field': 'election_id',
             'type': 'link',
-            'path': 'election-details/'
+            'path': 'election-details/',
+            'name': 'View election'
         },
          {
             'title': 'Election Title',

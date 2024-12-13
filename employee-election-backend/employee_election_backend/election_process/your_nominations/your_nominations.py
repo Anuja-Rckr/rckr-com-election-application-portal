@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from common import constants as ct
@@ -15,16 +16,20 @@ def get_your_nominations_cards(request, emp_id):
            'error': ct.EMP_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
+        now = datetime.now()
         total_nominations = NominationsModel.objects.filter(emp_id=emp_id).count()
         active_nominations = (
             ElectionModel.objects
-            .filter(nominationsmodel__emp_id=emp_id, election_status=ct.NOMINATIONS)
+            .filter(nominationsmodel__emp_id=emp_id,
+                nomination_start_date__lte=now,
+                nomination_end_date__gte=now)
             .select_related('nominationsmodel')
             .count()
         )
         scheduled_nominations = (
             ElectionModel.objects
-            .filter(nominationsmodel__emp_id=emp_id, election_status__in=[ct.LIVE, ct.COMPLETED, ct.CLOSED])
+            .filter(nominationsmodel__emp_id=emp_id,
+                voting_start_date__gte=now)
             .select_related('nominationsmodel')
             .count()
         )

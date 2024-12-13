@@ -6,17 +6,14 @@ import PublishNominationElectionForm from "./ElectionForms/PublishNominationElec
 import { EmpDetailsInterface } from "../../interfaces/common.interface";
 import {
   getColorForStatus,
+  getElectionStatus,
   getUserDetails,
   isDateValid,
 } from "../../common/utils";
 import { getDashboardElectionList } from "../../services/ApiService";
 import { COMPLETED, DECLARED, LIVE, NOMINATIONS } from "../../common/constants";
-import {
-  DashboardElectionDetails,
-  VotingList,
-} from "../../interfaces/election.interface";
+import { DashboardElectionDetails } from "../../interfaces/election.interface";
 import Voting from "./ElectionForms/Voting";
-import ElectionDetails from "./ElectionDetails/ElectionDetails";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -102,7 +99,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isCreateElectionModal, isPublishNominationModal, isPublishElectionModal]);
 
   return (
     <>
@@ -126,8 +123,8 @@ const Dashboard: React.FC = () => {
                 {"    "}
                 <Text>
                   Status:{" "}
-                  <Badge color={getColorForStatus(election.election_status)}>
-                    {election.election_status}
+                  <Badge color={getColorForStatus(getElectionStatus(election))}>
+                    {getElectionStatus(election)}
                   </Badge>
                 </Text>
                 <Group>

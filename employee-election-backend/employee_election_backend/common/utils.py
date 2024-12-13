@@ -8,11 +8,11 @@ import bisect
 
 def get_count_data(count_db_data):
     result = []
-    for index, (status, count) in enumerate(count_db_data.items()):
+    for key, value in count_db_data.items():
         temp_dict = {
-            'title': status.replace("_", " ").title(), 
-            'value': count,
-            'icon': getIconForCard(status)
+            'title': key, 
+            'value': value,
+            'icon': getIconForCard(key)
         }
         result.append(temp_dict)
     return result

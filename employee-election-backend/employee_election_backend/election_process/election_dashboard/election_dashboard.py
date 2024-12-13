@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework import status
@@ -15,13 +16,16 @@ from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
 @api_view(['GET'])
 def get_dashboard_election_list(request):
     try:
+        now = datetime.now()
+
         election_list = list(
             ElectionModel.objects.exclude(
-                election_status__in=[ct.CLOSED]
+                results_published_date__isnull=False
             ).values(
                 *ct.DASHBOARD_ELECTION_LIST
             )
         )
+
         return JsonResponse({'data': election_list}, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

@@ -188,14 +188,55 @@ export const isDateValid = (
   return isValid;
 };
 
-export const convertToLocalTime = (votingEndTime: string) => {
-  // Create a Date object from the UTC time
-  const utcDate = new Date(votingEndTime);
+export const getElectionStatus = (election: any): string => {
+  const now = new Date();
 
-  // Convert UTC to local time (IST in your case, UTC+5:30)
-  const localDate = new Date(
-    utcDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-  );
+  const nominationStartDate = election.nomination_start_date
+    ? new Date(election.nomination_start_date)
+    : null;
+  const nominationEndDate = election.nomination_end_date
+    ? new Date(election.nomination_end_date)
+    : null;
+  const votingStartDate = election.voting_start_date
+    ? new Date(election.voting_start_date)
+    : null;
+  const votingEndDate = election.voting_end_date
+    ? new Date(election.voting_end_date)
+    : null;
 
-  return localDate.toLocaleString(); // Display the local date-time as a string
+  if (nominationStartDate && now < nominationStartDate) {
+    return DECLARED;
+  }
+
+  if (
+    nominationStartDate &&
+    nominationEndDate &&
+    now >= nominationStartDate &&
+    now <= nominationEndDate
+  ) {
+    return NOMINATIONS;
+  }
+
+  if (
+    votingStartDate &&
+    votingEndDate &&
+    now >= votingStartDate &&
+    now <= votingEndDate
+  ) {
+    return LIVE;
+  }
+
+  if (
+    votingEndDate &&
+    now > votingEndDate &&
+    !election.results_published_date
+  ) {
+    return COMPLETED;
+  }
+
+  if (election.results_published_date) {
+    return CLOSED;
+  }
+
+  return DECLARED;
 };

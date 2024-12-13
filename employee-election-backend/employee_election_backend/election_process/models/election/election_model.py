@@ -8,13 +8,6 @@ class ElectionModel(models.Model):
     election_cutoff = models.IntegerField(blank=True, null=True)
     election_reward = models.TextField(blank=True, null=True)
     election_eligibility = models.JSONField(blank=True, null=True)
-    election_status = models.CharField(
-        max_length=ct.CHAR_MEDIUM_LIMIT,
-        choices=ct.ELECTION_STATUS_CHOICES,  
-        default='Declared',  
-        blank=True, 
-        null=True
-    )
     nomination_start_date = models.DateTimeField(blank=True, null=True)
     nomination_end_date = models.DateTimeField(blank=True, null=True)
     voting_start_date = models.DateTimeField(blank=True, null=True)

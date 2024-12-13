@@ -164,7 +164,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
                       )
                     }
                   >
-                    {row[col.field]}
+                    {col.name}
                   </Anchor>
                 )}
                 {col.type === STATUS && (

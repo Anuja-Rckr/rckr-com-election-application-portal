@@ -11,6 +11,7 @@ export interface ColumnData {
   field: string;
   type: string;
   path?: string;
+  name?: string;
 }
 
 export interface ElectionRowData {
