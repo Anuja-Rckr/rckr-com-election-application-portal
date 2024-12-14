@@ -74,6 +74,7 @@ export interface NominationFormProps {
   isOpened: boolean;
   onClose: () => void;
   electionDetails?: DashboardElectionDetails | null;
+  activeModalType?: string;
 }
 
 export interface PublishNominationElectionProps {
@@ -135,6 +136,7 @@ export interface VotingListProps {
   electionDetails: DashboardElectionDetails | null;
   isOpened: boolean;
   onClose: () => void;
+  activeModalType: string;
 }
 
 export interface TimerProps {

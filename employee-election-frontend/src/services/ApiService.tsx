@@ -157,10 +157,7 @@ export const createNomination = async (
   try {
     const response = await api.post(
       `election/${electionId}/nomination`,
-      requestBody,
-      {
-        params: { election_id: electionId },
-      }
+      requestBody
     );
     return response.data.data;
   } catch (error) {

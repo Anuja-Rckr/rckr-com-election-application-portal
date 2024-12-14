@@ -210,6 +210,9 @@ export const isDateValid = (
 };
 
 export const getElectionStatus = (election: any): string => {
+  if (!election) {
+    return ELECTION_ANNOUNCED;
+  }
   const now = new Date();
 
   const nominationStartDate = election.nomination_start_date

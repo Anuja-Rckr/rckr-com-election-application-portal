@@ -24,14 +24,14 @@ import {
 import { DATA, GREEN, RED } from "../../../common/constants";
 import Timer from "../../common/Timer";
 import { getUserDetails, isDateValid } from "../../../common/utils";
-import {
-  IconCircleCheck,
-  IconInfoCircle,
-  IconSquareRoundedX,
-} from "@tabler/icons-react";
-import { isValidDateValue } from "@testing-library/user-event/dist/utils";
+import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 
-const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
+const Voting = ({
+  electionDetails,
+  isOpened,
+  onClose,
+  activeModalType,
+}: VotingListProps) => {
   const empDetails: EmpDetailsInterface = getUserDetails();
   const [votingList, setVotingList] = useState<VotingList[]>([]);
   const [votingListColumnData, setVotingListColumnData] = useState<
@@ -93,8 +93,10 @@ const Voting = ({ electionDetails, isOpened, onClose }: VotingListProps) => {
       await fetchEmpVoteStatus();
       await fetchVotingList();
     };
-    fetchData();
-  }, [electionDetails]);
+    if (isOpened && activeModalType === "voting") {
+      fetchData();
+    }
+  }, [isOpened, electionDetails, activeModalType]);
 
   return (
     <>

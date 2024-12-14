@@ -116,7 +116,7 @@ def get_election_nomination_status(request, emp_id, election_id):
         if election_nomination_status:
             is_emp_nominated = True
         return JsonResponse({ 
-                'data': {'is_emp_voted': is_emp_nominated}, 
+                'data': {'is_emp_nominated': is_emp_nominated}, 
             }, status=status.HTTP_200_OK) 
     except Exception as error: 
         return JsonResponse({ 

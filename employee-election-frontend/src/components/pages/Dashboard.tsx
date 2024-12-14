@@ -8,12 +8,10 @@ import {
   getColorForStatus,
   getElectionStatus,
   getUserDetails,
-  isDateValid,
 } from "../../common/utils";
 import { getDashboardElectionList } from "../../services/ApiService";
 import {
   ELECTION_ANNOUNCED,
-  NOMINATIONS,
   NOMINATIONS_ANNOUNCED,
   NOMINATIONS_COMPLETED,
   NOMINATIONS_LIVE,
@@ -25,16 +23,24 @@ import Voting from "./ElectionForms/Voting";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
-  const [isCreateNominationModal, setIsCreateNominationModal] =
-    useState<boolean>(false);
+  const [activeModalType, setActiveModalType] = useState<string>("");
+
+  // Create Election
   const [isCreateElectionModal, setIsCreateElectionModal] =
+    useState<boolean>(false);
+  // Publish Nomination and Publish Voting
+  const [isRenderNominationModal, setIsRenderNominationModal] =
     useState<boolean>(false);
   const [isPublishNominationModal, setIsPublishNominationModal] =
     useState<boolean>(false);
-  const [isPublishElectionModal, setIsPublishElectionModal] =
+  const [isPublishVotingModal, setIsPublishVotingModal] =
     useState<boolean>(false);
-  const [isRenderNominationModal, setIsRenderNominationModal] =
+
+  // Create Nomination
+  const [isCreateNominationModal, setIsCreateNominationModal] =
     useState<boolean>(false);
+
+  // Vote Modal
   const [isVotingModal, setIsVotingModal] = useState<boolean>(false);
 
   const [currentElectionDetails, setCurrentElectionDetails] =
@@ -43,17 +49,6 @@ const Dashboard: React.FC = () => {
   const [dashboardElectionList, setDashboardElectionList] = useState<
     DashboardElectionDetails[]
   >([]);
-
-  // Handlers for Create Nomination Modal
-  const triggerCreateNominationModal = (election: DashboardElectionDetails) => {
-    setCurrentElectionDetails(election);
-    setIsCreateNominationModal(true);
-  };
-
-  const closeCreateNominationModal = () => {
-    setIsCreateNominationModal(false);
-    // fetchDashboardElectionList();
-  };
 
   // Handlers for Create Election Modal
   const triggerCreateElectionModal = () => {
@@ -75,31 +70,48 @@ const Dashboard: React.FC = () => {
 
   const closePublishNominationModal = () => {
     setIsPublishNominationModal(false);
+    setIsRenderNominationModal(false);
   };
 
-  // Handlers for Publish Election Modal
-  const triggerPublishElectionModal = (election: DashboardElectionDetails) => {
+  // Handlers for Publish Voting Modal
+  const triggerPublishVotingModal = (election: DashboardElectionDetails) => {
     setCurrentElectionDetails(election);
     setIsRenderNominationModal(false);
-    setIsPublishElectionModal(true);
+    setIsPublishVotingModal(true);
   };
 
-  const closePublishElectionModal = () => {
-    setIsPublishElectionModal(false);
+  const closePublishVotingModal = () => {
+    setIsPublishVotingModal(false);
+    setIsRenderNominationModal(false);
   };
 
+  // Handlers for Create Nomination Modal
+  const triggerCreateNominationModal = (election: DashboardElectionDetails) => {
+    setCurrentElectionDetails(election);
+    setIsCreateNominationModal(true);
+    setActiveModalType("nomination");
+  };
+
+  const closeCreateNominationModal = () => {
+    setIsCreateNominationModal(false);
+    setActiveModalType("");
+  };
+
+  // Handlers for Voting Modal
   const triggerVotingModal = async (election: DashboardElectionDetails) => {
     setCurrentElectionDetails(election);
     setIsVotingModal(true);
+    setActiveModalType("voting");
+  };
+
+  const closeVotingModal = () => {
+    setIsVotingModal(false);
+    setActiveModalType("");
   };
 
   const fetchDashboardElectionList = async () => {
     const response = await getDashboardElectionList();
     setDashboardElectionList(response);
-  };
-
-  const closeVotingModal = () => {
-    setIsVotingModal(false);
   };
 
   useEffect(() => {
@@ -112,7 +124,7 @@ const Dashboard: React.FC = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [isCreateElectionModal, isPublishNominationModal, isPublishElectionModal]);
+  }, [isCreateElectionModal, isPublishNominationModal, isPublishVotingModal]);
 
   return (
     <>
@@ -153,7 +165,7 @@ const Dashboard: React.FC = () => {
                   )}
                   {empDetails.isAdmin && (
                     <Button
-                      onClick={() => triggerPublishElectionModal(election)}
+                      onClick={() => triggerPublishVotingModal(election)}
                       disabled={
                         ![
                           NOMINATIONS_ANNOUNCED,
@@ -199,11 +211,6 @@ const Dashboard: React.FC = () => {
           )}
         </Paper>
       )}
-      <NominationForm
-        electionDetails={currentElectionDetails}
-        isOpened={isCreateNominationModal}
-        onClose={closeCreateNominationModal}
-      />
       <CreateElectionForm
         isOpened={isCreateElectionModal}
         onClose={closeCreateElectionModal}
@@ -213,19 +220,26 @@ const Dashboard: React.FC = () => {
         isOpened={
           isRenderNominationModal
             ? isPublishNominationModal
-            : isPublishElectionModal
+            : isPublishVotingModal
         }
         onClose={
           isRenderNominationModal
             ? closePublishNominationModal
-            : closePublishElectionModal
+            : closePublishVotingModal
         }
         renderNominationModal={isRenderNominationModal}
+      />
+      <NominationForm
+        electionDetails={currentElectionDetails}
+        isOpened={isCreateNominationModal}
+        onClose={closeCreateNominationModal}
+        activeModalType={activeModalType}
       />
       <Voting
         electionDetails={currentElectionDetails}
         isOpened={isVotingModal}
         onClose={closeVotingModal}
+        activeModalType={activeModalType}
       />
     </>
   );

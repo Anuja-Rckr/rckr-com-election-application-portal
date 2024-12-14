@@ -13,22 +13,28 @@ import {
 } from "@mantine/core";
 import {
   generateRandomColor,
+  getElectionStatus,
   getInitials,
   getUserDetails,
-  isDateValid,
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
 import {
   createNomination,
   getEmpNominationStatus,
 } from "../../../services/ApiService";
-import { GREEN, RED } from "../../../common/constants";
+import {
+  GREEN,
+  NOMINATIONS_COMPLETED,
+  NOMINATIONS_LIVE,
+  RED,
+} from "../../../common/constants";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 
 const NominationForm = ({
   isOpened,
   onClose,
   electionDetails,
+  activeModalType,
 }: NominationFormProps) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [submittedValues, setSubmittedValues] = useState<any>(null);
@@ -37,20 +43,22 @@ const NominationForm = ({
   const fetchNominationStatus = async () => {
     if (electionDetails?.election_id) {
       const response = await getEmpNominationStatus(
-        empDetails.emp_id,
+        empDetails.empId,
         electionDetails?.election_id
       );
-      setIsEmpNominated(response);
+      setIsEmpNominated(response.is_emp_nominated);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchNominationData = async () => {
       await fetchNominationStatus();
     };
 
-    fetchData();
-  }, []);
+    if (isOpened && activeModalType === "nomination") {
+      fetchNominationData();
+    }
+  }, [isOpened, electionDetails?.election_id, activeModalType]);
 
   const empDetails = getUserDetails();
   const form = useForm({
@@ -80,7 +88,6 @@ const NominationForm = ({
   };
 
   const handleConfirm = () => {
-    console.log("ddd reached");
     if (submittedValues) {
       setIsConfirmModalOpen(false);
       const requestBody = {
@@ -108,10 +115,7 @@ const NominationForm = ({
         position="right"
       >
         {isEmpNominated &&
-          isDateValid(
-            electionDetails?.nomination_start_date,
-            electionDetails?.nomination_end_date
-          ) && (
+          getElectionStatus(electionDetails) === NOMINATIONS_LIVE && (
             <Alert
               mb="md"
               variant="light"
@@ -120,19 +124,15 @@ const NominationForm = ({
               icon={<IconCircleCheck size={50} />}
             ></Alert>
           )}
-        {!isEmpNominated &&
-          isDateValid(
-            electionDetails?.nomination_start_date,
-            electionDetails?.nomination_end_date
-          ) && (
-            <Alert
-              mb="md"
-              variant="light"
-              color={RED}
-              title="The Nominations are closed"
-              icon={<IconSquareRoundedX size={50} />}
-            ></Alert>
-          )}
+        {getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED && (
+          <Alert
+            mb="md"
+            variant="light"
+            color={RED}
+            title="The Nominations are closed"
+            icon={<IconSquareRoundedX size={50} />}
+          ></Alert>
+        )}
         <form onSubmit={form.onSubmit(onCreateNomination)}>
           <Group justify="center">
             <Avatar
@@ -180,15 +180,8 @@ const NominationForm = ({
             key={form.key("appeal")}
             disabled={
               (isEmpNominated &&
-                isDateValid(
-                  electionDetails?.nomination_start_date,
-                  electionDetails?.nomination_end_date
-                )) ||
-              (!isEmpNominated &&
-                isDateValid(
-                  electionDetails?.nomination_start_date,
-                  electionDetails?.nomination_end_date
-                ))
+                getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
+              getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
             }
             {...form.getInputProps("appeal")}
           />
@@ -198,15 +191,8 @@ const NominationForm = ({
             type="submit"
             disabled={
               (isEmpNominated &&
-                isDateValid(
-                  electionDetails?.nomination_start_date,
-                  electionDetails?.nomination_end_date
-                )) ||
-              (!isEmpNominated &&
-                isDateValid(
-                  electionDetails?.nomination_start_date,
-                  electionDetails?.nomination_end_date
-                ))
+                getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
+              getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
             }
           >
             Submit
