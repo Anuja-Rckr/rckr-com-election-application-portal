@@ -1,4 +1,4 @@
-import { getUserDetails } from "../common/utils";
+import { getElectionStatus, getUserDetails } from "../common/utils";
 import {
   createElectionInterface,
   CreateNominationForm,
@@ -30,7 +30,18 @@ export const getElectionList = async (
         sort_direction: sortDirection ? "asc" : "desc",
       },
     });
-    return response.data.data;
+
+    const colData = response.data.data.col_data;
+    const rowData = response.data.data.row_data.map((election: any) => ({
+      ...election,
+      election_status: getElectionStatus(election),
+    }));
+
+    return {
+      col_data: colData,
+      row_data: rowData,
+      total_rows: response.data.data.total_rows,
+    };
   } catch (error) {
     throw error;
   }
@@ -123,7 +134,17 @@ export const getYourNominationsTable = async (
         },
       }
     );
-    return response.data.data;
+    const colData = response.data.data.col_data;
+    const rowData = response.data.data.row_data.map((election: any) => ({
+      ...election,
+      election_status: getElectionStatus(election),
+    }));
+
+    return {
+      col_data: colData,
+      row_data: rowData,
+      total_rows: response.data.data.total_rows,
+    };
   } catch (error) {
     throw error;
   }

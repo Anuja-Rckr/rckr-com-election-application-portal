@@ -21,9 +21,13 @@ import {
   ColumnData,
   EmpDetailsInterface,
 } from "../../../interfaces/common.interface";
-import { DATA, GREEN, RED } from "../../../common/constants";
+import { DATA, GREEN, RED, VOTING_LIVE } from "../../../common/constants";
 import Timer from "../../common/Timer";
-import { getUserDetails, isDateValid } from "../../../common/utils";
+import {
+  getElectionStatus,
+  getUserDetails,
+  isDateValid,
+} from "../../../common/utils";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 
 const Voting = ({
@@ -75,6 +79,7 @@ const Voting = ({
       const response = castVote(requestBody, electionDetails?.election_id);
       setIsConfirmModalOpen(false);
       setIsVotingDisabled(true);
+      handleClose();
     }
   };
 
@@ -138,7 +143,7 @@ const Voting = ({
           <Alert
             variant="light"
             color={GREEN}
-            title="You have already cast your vote"
+            title="Your vote recorded successfully"
             icon={<IconCircleCheck size={50} />}
           ></Alert>
         )}
@@ -174,10 +179,7 @@ const Voting = ({
                     onClick={() => triggerConfirmVoteModal(row)}
                     disabled={
                       isVotingDisabled ||
-                      !isDateValid(
-                        electionDetails?.voting_start_date,
-                        electionDetails?.voting_end_date
-                      )
+                      !(getElectionStatus(electionDetails) === VOTING_LIVE)
                     }
                   >
                     Vote

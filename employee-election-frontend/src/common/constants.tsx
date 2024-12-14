@@ -104,6 +104,6 @@ export const NOMINATIONS_ANNOUNCED = "Nominations Announced";
 export const NOMINATIONS_LIVE = "Nominations Live";
 export const NOMINATIONS_COMPLETED = "Nominations Completed";
 export const VOTING_ANNOUNCED = "Voting Announced";
-export const VOTING_LIVE = "Votinf Live";
+export const VOTING_LIVE = "Voting Live";
 export const VOTING_COMPLETED = "Voting Completed";
 export const CLOSED = "Closed";

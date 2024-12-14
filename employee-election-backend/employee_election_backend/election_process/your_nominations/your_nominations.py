@@ -43,7 +43,7 @@ def get_your_nominations_cards(request, emp_id):
     
 
 @api_view(['GET'])
-def get_your_notifications(request, emp_id):
+def get_your_nominations_list(request, emp_id):
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')
     search_input = request.GET.get(ct.SEARCH_INPUT, '')
@@ -60,7 +60,7 @@ def get_your_notifications(request, emp_id):
             .filter(nominationsmodel__emp_id=emp_id)  
             .select_related('nominationsmodel') 
             .annotate(nomination_created_at=F('nominationsmodel__created_at'))
-            .values('nomination_created_at', *ct.NOMINATION_LIST_FIELDS)  
+            .values()  
         )
         total_rows = len(row_data)
         row_data = apply_search_sort_pagination(row_data, search_input, sort_field, sort_direction, page, limit)

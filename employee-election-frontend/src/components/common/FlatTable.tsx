@@ -23,11 +23,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import { DATA, DATETIME, LIGHT, LINK, STATUS } from "../../common/constants";
-import {
-  formatDate,
-  getColorForStatus,
-  getElectionStatus,
-} from "../../common/utils";
+import { formatDate, getColorForStatus } from "../../common/utils";
 import { FlatTablePropsInterface } from "../../interfaces/common.interface";
 import { useNavigate } from "react-router-dom";
 
@@ -174,10 +170,10 @@ const FlatTable = (props: FlatTablePropsInterface) => {
                 {col.type === STATUS && (
                   <Badge
                     variant={LIGHT}
-                    color={getColorForStatus(getElectionStatus(row[col.field]))}
+                    color={getColorForStatus(row[col.field])}
                     size="sm"
                   >
-                    {getElectionStatus(row[col.field])}
+                    {row[col.field]}
                   </Badge>
                 )}
                 {col.type === DATETIME && formatDate(row[col.field])}
@@ -220,7 +216,7 @@ const FlatTable = (props: FlatTablePropsInterface) => {
                       )
                     }
                   >
-                    View Profile
+                    {col.name}
                   </Anchor>
                 )}
                 {col.type === STATUS && (
