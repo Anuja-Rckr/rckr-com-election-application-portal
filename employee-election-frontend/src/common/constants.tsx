@@ -19,6 +19,10 @@ export const ORANGE = "orange";
 export const PINK = "pink";
 export const INDIGO = "indigo";
 export const GRAPE = "grape";
+export const BLUE = "blue";
+export const CYAN = "cyan";
+export const TEAL = "teal";
+export const LIME = "lime";
 
 // Route constants
 export const DASHBOARD = "/dashboard";
@@ -95,7 +99,11 @@ export const NOMINATIONS = "Nominations";
 export const RESULTS = "Results";
 
 // Status Constants
-export const DECLARED = "Declared";
-export const LIVE = "Live";
-export const COMPLETED = "Completed";
+export const ELECTION_ANNOUNCED = "Election Announced";
+export const NOMINATIONS_ANNOUNCED = "Nominations Announced";
+export const NOMINATIONS_LIVE = "Nominations Live";
+export const NOMINATIONS_COMPLETED = "Nominations Completed";
+export const VOTING_ANNOUNCED = "Voting Announced";
+export const VOTING_LIVE = "Votinf Live";
+export const VOTING_COMPLETED = "Voting Completed";
 export const CLOSED = "Closed";

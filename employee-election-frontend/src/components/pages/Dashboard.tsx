@@ -11,7 +11,15 @@ import {
   isDateValid,
 } from "../../common/utils";
 import { getDashboardElectionList } from "../../services/ApiService";
-import { COMPLETED, DECLARED, LIVE, NOMINATIONS } from "../../common/constants";
+import {
+  ELECTION_ANNOUNCED,
+  NOMINATIONS,
+  NOMINATIONS_ANNOUNCED,
+  NOMINATIONS_COMPLETED,
+  NOMINATIONS_LIVE,
+  VOTING_COMPLETED,
+  VOTING_LIVE,
+} from "../../common/constants";
 import { DashboardElectionDetails } from "../../interfaces/election.interface";
 import Voting from "./ElectionForms/Voting";
 
@@ -44,6 +52,7 @@ const Dashboard: React.FC = () => {
 
   const closeCreateNominationModal = () => {
     setIsCreateNominationModal(false);
+    // fetchDashboardElectionList();
   };
 
   // Handlers for Create Election Modal
@@ -98,7 +107,11 @@ const Dashboard: React.FC = () => {
       await fetchDashboardElectionList();
     };
 
-    fetchData();
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [isCreateElectionModal, isPublishNominationModal, isPublishElectionModal]);
 
   return (
@@ -131,7 +144,9 @@ const Dashboard: React.FC = () => {
                   {empDetails.isAdmin && (
                     <Button
                       onClick={() => triggerPublishNominationModal(election)}
-                      disabled={election.election_status !== DECLARED}
+                      disabled={
+                        getElectionStatus(election) !== ELECTION_ANNOUNCED
+                      }
                     >
                       Publish Nomination
                     </Button>
@@ -139,13 +154,23 @@ const Dashboard: React.FC = () => {
                   {empDetails.isAdmin && (
                     <Button
                       onClick={() => triggerPublishElectionModal(election)}
-                      disabled={election.election_status !== NOMINATIONS}
+                      disabled={
+                        ![
+                          NOMINATIONS_ANNOUNCED,
+                          NOMINATIONS_LIVE,
+                          NOMINATIONS_COMPLETED,
+                        ].includes(getElectionStatus(election))
+                      }
                     >
                       Publish Voting
                     </Button>
                   )}
                   {empDetails.isAdmin && (
-                    <Button disabled={election.election_status !== COMPLETED}>
+                    <Button
+                      disabled={
+                        getElectionStatus(election) !== VOTING_COMPLETED
+                      }
+                    >
                       Publish Result
                     </Button>
                   )}
@@ -153,11 +178,7 @@ const Dashboard: React.FC = () => {
                     <Button
                       onClick={() => triggerCreateNominationModal(election)}
                       disabled={
-                        election.election_status !== NOMINATIONS ||
-                        !isDateValid(
-                          election.nomination_start_date,
-                          election.nomination_end_date
-                        )
+                        getElectionStatus(election) !== NOMINATIONS_LIVE
                       }
                     >
                       Create Nomination
@@ -166,14 +187,7 @@ const Dashboard: React.FC = () => {
 
                   {!empDetails.isAdmin && (
                     <Button
-                      disabled={
-                        election.election_status !== LIVE ||
-                        (election.election_status === LIVE &&
-                          !isDateValid(
-                            election.voting_start_date,
-                            election.voting_end_date
-                          ))
-                      }
+                      disabled={getElectionStatus(election) !== VOTING_LIVE}
                       onClick={() => triggerVotingModal(election)}
                     >
                       Vote

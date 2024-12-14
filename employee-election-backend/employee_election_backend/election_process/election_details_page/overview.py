@@ -17,9 +17,10 @@ def get_election_overview_details(request, election_id):
    
    try:
        election_overview_details = list(ElectionModel.objects.filter(election_id=election_id).values(*ct.OVERVIEW_DETAILS_FIELDS))[0]
+       election_details = list(ElectionModel.objects.filter(election_id=election_id).values())[0]
        election_overview_details_list = get_results_overview_list(election_overview_details)
        return JsonResponse({
-           'data': election_overview_details_list
+           'data': {'overview_list': election_overview_details_list, 'election_details': election_details}
        }, status=status.HTTP_200_OK)
    
    except Exception as err:

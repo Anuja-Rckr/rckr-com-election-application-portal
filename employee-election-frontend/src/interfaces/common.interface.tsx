@@ -22,7 +22,6 @@ export interface ElectionRowData {
   voting_start_date: string;
   voting_end_date: string;
   created_by_name: string;
-  election_status: string;
   created_at: string;
 }
 
@@ -72,7 +71,6 @@ export interface ElectionDetailsINTimeline {
   election_cutoff: number;
   election_reward: string;
   election_eligibility: any;
-  election_status: string;
   nomination_start_date: string;
   nomination_end_date: string;
   voting_start_date: string;

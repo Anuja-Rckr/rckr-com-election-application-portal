@@ -8,21 +8,30 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import {
+  BLUE,
   CLOSED,
   colorsArray,
-  COMPLETED,
+  CYAN,
   DARK,
   DATETIME,
-  DECLARED,
+  ELECTION_ANNOUNCED,
   GRAPE,
   GREEN,
   INDIGO,
-  LIVE,
+  LIME,
   NOMINATIONS,
+  NOMINATIONS_ANNOUNCED,
+  NOMINATIONS_COMPLETED,
+  NOMINATIONS_LIVE,
   ORANGE,
   pageNames,
   PINK,
+  RED,
+  TEAL,
   VIOLET,
+  VOTING_ANNOUNCED,
+  VOTING_COMPLETED,
+  VOTING_LIVE,
   YELLOW,
 } from "./constants";
 
@@ -49,16 +58,22 @@ export const generateRandomColor = (input: string) => {
 // Generate color for status
 export const getColorForStatus = (status: string) => {
   switch (status) {
-    case DECLARED:
+    case ELECTION_ANNOUNCED:
       return YELLOW;
-    case NOMINATIONS:
+    case NOMINATIONS_ANNOUNCED:
       return INDIGO;
-    case LIVE:
-      return PINK;
-    case COMPLETED:
-      return GREEN;
-    case CLOSED:
+    case NOMINATIONS_LIVE:
+      return RED;
+    case NOMINATIONS_COMPLETED:
+      return TEAL;
+    case VOTING_ANNOUNCED:
       return GRAPE;
+    case VOTING_LIVE:
+      return PINK;
+    case VOTING_COMPLETED:
+      return CYAN;
+    case CLOSED:
+      return LIME;
     default:
       return DARK;
   }
@@ -116,13 +131,19 @@ export const getPageName = (path: string) => {
 // Get Active
 export const getActiveNumber = (status: string) => {
   switch (status) {
-    case DECLARED:
+    case ELECTION_ANNOUNCED:
       return -1;
-    case NOMINATIONS:
+    case NOMINATIONS_ANNOUNCED:
       return 0;
-    case LIVE:
+    case NOMINATIONS_LIVE:
+      return 0;
+    case NOMINATIONS_COMPLETED:
+      return 0;
+    case VOTING_ANNOUNCED:
       return 1;
-    case COMPLETED:
+    case VOTING_LIVE:
+      return 1;
+    case VOTING_COMPLETED:
       return 1;
     case CLOSED:
       return 2;
@@ -204,8 +225,12 @@ export const getElectionStatus = (election: any): string => {
     ? new Date(election.voting_end_date)
     : null;
 
+  if (!nominationStartDate && !nominationEndDate) {
+    return ELECTION_ANNOUNCED;
+  }
+
   if (nominationStartDate && now < nominationStartDate) {
-    return DECLARED;
+    return NOMINATIONS_ANNOUNCED;
   }
 
   if (
@@ -214,7 +239,24 @@ export const getElectionStatus = (election: any): string => {
     now >= nominationStartDate &&
     now <= nominationEndDate
   ) {
-    return NOMINATIONS;
+    return NOMINATIONS_LIVE;
+  }
+
+  if (
+    nominationEndDate &&
+    now >= nominationEndDate &&
+    votingStartDate === null
+  ) {
+    return NOMINATIONS_COMPLETED;
+  }
+
+  if (
+    nominationEndDate &&
+    votingStartDate &&
+    now >= nominationEndDate &&
+    now <= votingStartDate
+  ) {
+    return VOTING_ANNOUNCED;
   }
 
   if (
@@ -223,7 +265,7 @@ export const getElectionStatus = (election: any): string => {
     now >= votingStartDate &&
     now <= votingEndDate
   ) {
-    return LIVE;
+    return VOTING_LIVE;
   }
 
   if (
@@ -231,12 +273,12 @@ export const getElectionStatus = (election: any): string => {
     now > votingEndDate &&
     !election.results_published_date
   ) {
-    return COMPLETED;
+    return VOTING_COMPLETED;
   }
 
   if (election.results_published_date) {
     return CLOSED;
   }
 
-  return DECLARED;
+  return ELECTION_ANNOUNCED;
 };

@@ -15,26 +15,27 @@ import {
 } from "@tabler/icons-react";
 import {
   CLOSED,
-  COMPLETED,
   DATA,
   DATETIME,
-  DECLARED,
-  LIVE,
+  ELECTION_ANNOUNCED,
   NOMINATIONS,
+  NOMINATIONS_ANNOUNCED,
+  NOMINATIONS_COMPLETED,
+  NOMINATIONS_LIVE,
   OVERVIEW,
   RESULTS,
   STATUS,
+  VOTING_COMPLETED,
+  VOTING_LIVE,
 } from "../../../common/constants";
 import {
   formatDate,
   getActiveNumber,
   getColorForStatus,
+  getElectionStatus,
   isDateValid,
 } from "../../../common/utils";
-import {
-  ElectionDetailsInterface,
-  overviewData,
-} from "../../../interfaces/election.interface";
+import { overviewData } from "../../../interfaces/election.interface";
 import NominationTab from "../ElectionDetails/NominationTab";
 import Results from "./Results";
 import { useEffect, useState } from "react";
@@ -53,16 +54,14 @@ const ElectionDetails = () => {
   >([]);
   const [electionTimelineDetails, setElectionTimelineDetails] =
     useState<ElectionTimelineDetails | null>(null);
-  const [electionStatus, setElectionStatus] = useState<string>("Declared");
+  const [electionStatus, setElectionStatus] =
+    useState<string>(ELECTION_ANNOUNCED);
 
   const fetchElectionOverviewDetails = async () => {
     if (electionId) {
       const response = await getElectionOverview(electionId);
-      setElectionOverviewDetails(response);
-      const status = response.find(
-        (item: overviewData) => item.type === "status"
-      );
-      setElectionStatus(status.value);
+      setElectionOverviewDetails(response.overview_list);
+      setElectionStatus(getElectionStatus(response.election_details));
     }
   };
 
@@ -141,78 +140,35 @@ const ElectionDetails = () => {
               bullet={<IconUsers size={15} />}
               title="Nomination Phase"
               lineVariant={
-                electionStatus === DECLARED || electionStatus === NOMINATIONS
+                [
+                  ELECTION_ANNOUNCED,
+                  NOMINATIONS_ANNOUNCED,
+                  NOMINATIONS_LIVE,
+                  NOMINATIONS_COMPLETED,
+                ].includes(electionStatus)
                   ? "dashed"
                   : "solid"
               }
             >
-              {electionStatus === DECLARED && (
+              {electionStatus === ELECTION_ANNOUNCED && (
                 <>
                   <Text c="dimmed" size="sm">
                     Nomination Process is yet to be scheduled
                   </Text>
                 </>
               )}
-              {electionStatus === NOMINATIONS &&
-                isDateValid(
-                  electionTimelineDetails?.election_details
-                    .nomination_start_date,
-                  electionTimelineDetails?.election_details.nomination_end_date
-                ) && (
-                  <>
-                    <Text c="dimmed" size="sm">
-                      Nomination Process is LIVE
-                    </Text>
-                  </>
-                )}
-              {electionStatus === NOMINATIONS &&
-                !isDateValid(
-                  electionTimelineDetails?.election_details
-                    .nomination_start_date,
-                  electionTimelineDetails?.election_details.nomination_end_date
-                ) && (
-                  <>
-                    <Text c="dimmed" size="sm" mb="xs">
-                      Nominations will be live from:
-                    </Text>
-                    <Text c="dimmed" size="sm">
-                      Start Date:{" "}
-                      <b>
-                        {electionTimelineDetails?.election_details
-                          .nomination_start_date
-                          ? formatDate(
-                              electionTimelineDetails?.election_details
-                                .nomination_start_date
-                            )
-                          : ""}
-                      </b>
-                    </Text>
-                    <Text c="dimmed" size="sm" mt="xs" mb="xs">
-                      End Date:{" "}
-                      <b>
-                        {electionTimelineDetails?.election_details
-                          .nomination_end_date
-                          ? formatDate(
-                              electionTimelineDetails?.election_details
-                                .nomination_end_date
-                            )
-                          : ""}
-                      </b>
-                    </Text>
-                  </>
-                )}
-
-              {(electionStatus === COMPLETED ||
-                electionStatus === CLOSED ||
-                electionStatus === LIVE ||
-                (electionStatus === NOMINATIONS &&
-                  isDateValid(
-                    electionTimelineDetails?.election_details
-                      .nomination_start_date,
-                    electionTimelineDetails?.election_details
-                      .nomination_end_date
-                  ))) && (
+              {electionStatus === NOMINATIONS_LIVE && (
                 <>
+                  <Text c="dimmed" size="sm">
+                    Nomination Process is LIVE
+                  </Text>
+                </>
+              )}
+              {electionStatus === NOMINATIONS_ANNOUNCED && (
+                <>
+                  <Text c="dimmed" size="sm" mb="xs">
+                    Nominations will be live from:
+                  </Text>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
                     <b>
@@ -237,18 +193,52 @@ const ElectionDetails = () => {
                         : ""}
                     </b>
                   </Text>
-                  <Text c="dimmed" size="sm">
-                    Total Nominations:{" "}
-                    <b>
-                      {
-                        electionTimelineDetails?.election_count_data
-                          .total_nominations
-                      }{" "}
-                      Nominations
-                    </b>
-                  </Text>
                 </>
               )}
+
+              {electionStatus !== ELECTION_ANNOUNCED &&
+                isDateValid(
+                  electionTimelineDetails?.election_details
+                    .nomination_start_date,
+                  electionTimelineDetails?.election_details.nomination_end_date
+                ) && (
+                  <>
+                    <Text c="dimmed" size="sm">
+                      Start Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .nomination_start_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .nomination_start_date
+                            )
+                          : ""}
+                      </b>
+                    </Text>
+                    <Text c="dimmed" size="sm" mt="xs" mb="xs">
+                      End Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .nomination_end_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .nomination_end_date
+                            )
+                          : ""}
+                      </b>
+                    </Text>
+                    <Text c="dimmed" size="sm">
+                      Total Nominations:{" "}
+                      <b>
+                        {
+                          electionTimelineDetails?.election_count_data
+                            .total_nominations
+                        }{" "}
+                        Nominations
+                      </b>
+                    </Text>
+                  </>
+                )}
             </Timeline.Item>
 
             <Timeline.Item
@@ -256,34 +246,22 @@ const ElectionDetails = () => {
               title="Voting Phase"
               lineVariant={electionStatus === CLOSED ? "solid" : "dashed"}
             >
-              {(electionStatus === DECLARED ||
-                electionStatus === NOMINATIONS) && (
+              {(electionStatus === ELECTION_ANNOUNCED ||
+                electionStatus === NOMINATIONS_COMPLETED) && (
                 <>
                   <Text c="dimmed" size="sm">
                     Voting Process yet to scheduled
                   </Text>
                 </>
               )}
-              {(electionStatus === LIVE ||
-                isDateValid(
-                  electionTimelineDetails?.election_details.voting_start_date,
-                  electionTimelineDetails?.election_details.voting_end_date
-                )) && (
+              {electionStatus === VOTING_LIVE && (
                 <>
                   <Text c="dimmed" size="sm">
                     Voting Process is LIVE
                   </Text>
                 </>
               )}
-              {(electionStatus === COMPLETED ||
-                electionStatus === CLOSED ||
-                (electionStatus === LIVE &&
-                  isDateValid(
-                    electionTimelineDetails?.election_details
-                      .nomination_start_date,
-                    electionTimelineDetails?.election_details
-                      .nomination_end_date
-                  ))) && (
+              {electionStatus === VOTING_COMPLETED && (
                 <>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
@@ -325,14 +303,15 @@ const ElectionDetails = () => {
               title="Results"
               bullet={<IconReportAnalytics size={15} />}
             >
-              {electionStatus !== COMPLETED && electionStatus !== CLOSED && (
-                <>
-                  <Text c="dimmed" size="sm">
-                    Once above phases are completed results will be published
-                  </Text>
-                </>
-              )}
-              {electionStatus === COMPLETED && (
+              {electionStatus !== VOTING_COMPLETED &&
+                electionStatus !== CLOSED && (
+                  <>
+                    <Text c="dimmed" size="sm">
+                      Once above phases are completed results will be published
+                    </Text>
+                  </>
+                )}
+              {electionStatus === VOTING_COMPLETED && (
                 <>
                   <Text c="dimmed" size="sm">
                     Results are yet to publish
@@ -372,7 +351,7 @@ const ElectionDetails = () => {
             value={NOMINATIONS}
             leftSection={<IconUsers />}
             disabled={
-              electionStatus === DECLARED ||
+              electionStatus === ELECTION_ANNOUNCED ||
               (electionStatus === NOMINATIONS &&
                 !isDateValid(
                   electionTimelineDetails?.election_details
@@ -398,7 +377,7 @@ const ElectionDetails = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value={NOMINATIONS}>
-          {electionStatus !== DECLARED && <NominationTab />}
+          {electionStatus !== ELECTION_ANNOUNCED && <NominationTab />}
         </Tabs.Panel>
 
         <Tabs.Panel value={RESULTS}>
