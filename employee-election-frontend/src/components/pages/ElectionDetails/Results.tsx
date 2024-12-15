@@ -17,6 +17,7 @@ import CountCard from "../../common/CountCard";
 import { ColumnData } from "../../../interfaces/common.interface";
 import FlatTable from "../../common/FlatTable";
 import { getUserDetails } from "../../../common/utils";
+import DownloadReportButton from "./DownloadReport";
 
 const Results = () => {
   console.log("rrrr");
@@ -100,7 +101,14 @@ const Results = () => {
               ))}
             </Group>
           </Paper>
-          {empDetails.isAdmin && <Button>Download Report</Button>}
+          {empDetails.isAdmin && (
+            <DownloadReportButton
+              StatCards={StatCards}
+              resultsColData={resultsColData}
+              resultsRowData={resultsRowData}
+              winnerDetails={winnerDetails}
+            />
+          )}
         </Group>
       </>
     );
