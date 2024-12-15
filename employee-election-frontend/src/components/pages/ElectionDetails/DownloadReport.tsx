@@ -134,9 +134,18 @@ const DownloadReportButton: React.FC<DownloadReportButtonProps> = ({
         yOffset += lineHeight;
       }
 
-      if (electionDetails.created_by_empname) {
+      if (electionDetails.created_by_empid) {
         doc.text(
-          `Created By: ${safeString(electionDetails.created_by_empname)}`,
+          `Created by emp ID: ${safeString(electionDetails.created_by_empid)}`,
+          margin,
+          yOffset
+        );
+        yOffset += lineHeight;
+      }
+
+      if (electionDetails.created_by_name) {
+        doc.text(
+          `Created By emp name: ${safeString(electionDetails.created_by_name)}`,
           margin,
           yOffset
         );

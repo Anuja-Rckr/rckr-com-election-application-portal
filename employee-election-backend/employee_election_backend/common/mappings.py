@@ -14,11 +14,6 @@ ELECTION_TABLE_COLUMN_DATA = [
         'type': 'data'
     },
     {
-        'title': 'Cut off',
-        'field': 'election_cutoff',
-        'type': 'data'
-    },
-    {
         'title': 'Created By',
         'field': 'created_by_name',
         'type': 'data'
@@ -75,7 +70,7 @@ def getIconForCard(title):
     elif(title == 'Active'):
         return 'IconCircleFilled'
     
-def get_results_stat_cards(total_election_votes, total_nominations, election_cut_off):
+def get_results_stat_cards(total_election_votes, total_nominations):
     result = [
         {
             'title': 'Total Votes',
@@ -88,10 +83,10 @@ def get_results_stat_cards(total_election_votes, total_nominations, election_cut
             'icon': getIconForCard('Nominations')
         },
         {
-            'title': 'Election Cutoff',
-            'value': election_cut_off,
-            'icon': getIconForCard('Cut Off')
-        }
+            'title': 'Election Status',
+            'value': 'Closed',
+            'icon': getIconForCard('Closed')
+        },
     ]
     return result
 
@@ -122,11 +117,6 @@ def results_winner_table_col_data():
             'type': 'data'
         },
         {
-            'title': 'Role',
-            'field': 'emp_role',
-            'type': 'data'
-        },
-        {
             'title': 'Total Votes',
             'field': 'total_votes',
             'type': 'data'
@@ -135,11 +125,6 @@ def results_winner_table_col_data():
             'title': 'Total Votes(%)',
             'field': 'total_votes_%',
             'type': 'data'
-        },
-        {
-            'title': 'Created At',
-            'field': 'created_at',
-            'type': 'datetime'
         },
     ]
     return col_data
@@ -160,11 +145,6 @@ def get_results_overview_list(overview_details):
             'title': 'Created At',
             'value': overview_details['created_at'],
             'type': 'datetime'
-        },
-        {
-            'title': 'Cut off',
-            'value': overview_details['election_cutoff'],
-            'type': 'data'
         },
         {
             'title': 'Reward',
@@ -188,11 +168,6 @@ def get_nomination_list_col_data():
             'field': 'election_title',
             'type': 'data',
         }, 
-        {
-            'title': 'Election Cutoff',
-            'field': 'election_cutoff',
-            'type': 'data',
-        },
         {
             'title': 'Election Status',
             'field': 'election_status',
@@ -251,11 +226,6 @@ def get_voting_list_column_data():
         {
             'title': 'Emp Name',
             'field': 'emp_name',
-            'type': 'data'
-        },
-        {
-            'title': 'Emp Role',
-            'field': 'emp_role',
             'type': 'data'
         },
     ]

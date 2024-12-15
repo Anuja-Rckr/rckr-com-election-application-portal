@@ -156,11 +156,6 @@ def get_winner_details_list(winner_details, total_votes):
             'type': 'data'
         },
         {
-            'title': 'Role',
-            'value': winner_details['emp_role'],
-            'type': 'data'
-        },
-        {
             'title': 'Total Votes',
             'value': winner_details['total_votes'],
             'type': 'data'

@@ -159,6 +159,11 @@ const Dashboard: React.FC = () => {
           </Group>
         </Paper>
       )}
+      {dashboardElectionList.length === 0 && (
+        <Paper p="md">
+          <Text className="text-center">No Election is in progress</Text>
+        </Paper>
+      )}
       {dashboardElectionList.length > 0 && (
         <Paper p="md">
           {dashboardElectionList.map(

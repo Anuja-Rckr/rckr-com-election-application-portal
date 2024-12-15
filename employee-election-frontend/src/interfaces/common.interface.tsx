@@ -68,7 +68,6 @@ export interface ElectionDetailsINTimeline {
   election_id: number;
   election_title: string;
   election_description: string;
-  election_cutoff: number;
   election_reward: string;
   election_eligibility: any;
   nomination_start_date: string;

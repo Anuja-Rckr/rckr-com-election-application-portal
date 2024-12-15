@@ -67,13 +67,11 @@ const NominationForm = ({
     initialValues: {
       empId: empDetails.empId,
       empName: empDetails.empName,
-      empRole: empDetails.empRole,
       appeal: "",
     },
     validate: {
       empId: isNotEmpty("Emp ID is required"),
       empName: isNotEmpty("Emp name is required"),
-      empRole: isNotEmpty("Emp role is required"),
       appeal: isNotEmpty("Appeal is required"),
     },
   });
@@ -94,7 +92,6 @@ const NominationForm = ({
       const requestBody = {
         emp_id: submittedValues.empId,
         emp_name: submittedValues.empName,
-        emp_role: submittedValues.empRole,
         appeal: submittedValues.appeal,
       };
       if (electionDetails?.election_id) {
@@ -158,15 +155,6 @@ const NominationForm = ({
             disabled
             key={form.key("empName")}
             {...form.getInputProps("empName")}
-          />
-          <TextInput
-            label="Emp Role"
-            placeholder="Enter Emp role"
-            withAsterisk
-            mt="md"
-            disabled
-            key={form.key("empRole")}
-            {...form.getInputProps("empRole")}
           />
           <Textarea
             label="Appeal"

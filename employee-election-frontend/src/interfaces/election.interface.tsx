@@ -34,7 +34,6 @@ export interface NominationCardDetails {
   election_id: number;
   emp_id: number;
   emp_name: string;
-  emp_role: string;
   appeal: string;
   created_at: Date;
 }
@@ -65,7 +64,6 @@ export interface StatCard {
 export interface resultsTableData {
   total_votes: number;
   emp_name: string;
-  emp_role: string;
   created_at: Date;
   "total_votes_%": number;
 }
@@ -87,7 +85,6 @@ export interface PublishNominationElectionProps {
 export interface createElectionInterface {
   election_title: string;
   election_description: string;
-  election_cutoff: number;
   election_reward: string;
   election_eligibility: ElectionEligibility;
   created_by_name: string;
@@ -110,7 +107,6 @@ export interface UpdateElection {
 export interface CreateNominationForm {
   emp_id: number;
   emp_name: string;
-  emp_role: string;
   appeal: string;
 }
 
@@ -124,7 +120,7 @@ export interface DashboardElectionDetails {
   results_published_date: string | null;
   created_at?: string;
   created_by_empid?: number;
-  created_by_empname?: string;
+  created_by_name?: string;
 }
 
 export interface VotingList {
@@ -132,7 +128,6 @@ export interface VotingList {
   election_id: number;
   emp_id: number;
   emp_name: string;
-  emp_role: string;
   appeal: string;
   created_at: Date;
 }

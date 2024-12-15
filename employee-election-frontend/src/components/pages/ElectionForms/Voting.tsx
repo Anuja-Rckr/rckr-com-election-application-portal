@@ -74,7 +74,6 @@ const Voting = ({
       const requestBody = {
         emp_id: empDetails.empId,
         emp_name: empDetails.empName,
-        emp_role: empDetails.empRole,
         nominee_emp_id: currentVote?.emp_id,
       };
       castVote(requestBody, electionDetails?.election_id);

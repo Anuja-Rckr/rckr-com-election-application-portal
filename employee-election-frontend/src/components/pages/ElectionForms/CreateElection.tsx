@@ -1,12 +1,5 @@
 import { useForm, isNotEmpty } from "@mantine/form";
-import {
-  Button,
-  TextInput,
-  Drawer,
-  Textarea,
-  Text,
-  NumberInput,
-} from "@mantine/core";
+import { Button, TextInput, Drawer, Textarea, Text } from "@mantine/core";
 import {
   createElectionInterface,
   NominationFormProps,
@@ -23,7 +16,6 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
     initialValues: {
       electionTitle: "",
       electionDescription: "",
-      electionCutoff: 0,
       electionReward: "",
       electionNominationEligibility: "",
       electionVotingEligibility: "",
@@ -31,8 +23,6 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
     validate: {
       electionTitle: isNotEmpty("Election title is required"),
       electionDescription: isNotEmpty("Election description is required"),
-      electionCutoff: isNotEmpty("Cutoff is required"),
-      electionReward: isNotEmpty("Reward is required"),
     },
   });
 
@@ -40,7 +30,6 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
     const electionDetails: createElectionInterface = {
       election_title: values.electionTitle,
       election_description: values.electionDescription,
-      election_cutoff: values.electionCutoff,
       election_reward: values.electionReward,
       election_eligibility: {
         nomination_eligibility: values.electionNominationEligibility,
@@ -82,17 +71,9 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
           mt="md"
           {...form.getInputProps("electionDescription")}
         />
-        <NumberInput
-          label="Cutoff"
-          placeholder="Enter election cutoff"
-          withAsterisk
-          mt="md"
-          {...form.getInputProps("electionCutoff")}
-        />
         <TextInput
           label="Reward"
           placeholder="Enter election reward"
-          withAsterisk
           mt="md"
           {...form.getInputProps("electionReward")}
         />

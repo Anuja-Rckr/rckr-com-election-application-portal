@@ -5,7 +5,6 @@ class ElectionModel(models.Model):
     election_id = models.AutoField(primary_key=True)  
     election_title = models.CharField(max_length=ct.CHAR_MEDIUM_LIMIT, blank=False, null=False)
     election_description = models.TextField(blank=True, null=True)
-    election_cutoff = models.IntegerField(blank=True, null=True)
     election_reward = models.TextField(blank=True, null=True)
     election_eligibility = models.JSONField(blank=True, null=True)
     nomination_start_date = models.DateTimeField(blank=True, null=True)

@@ -55,11 +55,6 @@ def get_distribution_of_votes_percentage(election_id, distribution_of_votes_numb
         result.append(result_obj)
     return result
 
-def get_election_stats_cards(election_id):
-    total_nominations = get_total_nominations(election_id)
-    election_cut_off = list(ElectionModel.objects.filter(election_id=election_id).values('election_cutoff'))[0]
-    return total_nominations, election_cut_off['election_cutoff']
-
 @api_view(['GET'])
 def get_results_chart_data(request, election_id):
     if not election_id:
@@ -70,11 +65,11 @@ def get_results_chart_data(request, election_id):
         total_election_votes = get_total_election_votes(election_id)
         distribution_of_votes_number = get_distribution_of_votes_number(election_id)
         distribution_of_votes_percentage = get_distribution_of_votes_percentage(election_id, distribution_of_votes_number, total_election_votes)
-        total_nominations, election_cut_off = get_election_stats_cards(election_id)
+        total_nominations = get_total_nominations(election_id)
         response_obj = {
             'distribution_of_votes_number': distribution_of_votes_number,
             'distribution_of_votes_percentage': distribution_of_votes_percentage,
-            'stat_cards': get_results_stat_cards(total_election_votes, total_nominations, election_cut_off)
+            'stat_cards': get_results_stat_cards(total_election_votes, total_nominations)
         }
         return JsonResponse({
             'data': response_obj
@@ -87,8 +82,8 @@ def get_results_table_row_data(election_id):
         NomineeVoteCountModel.objects
         .filter(election_id=election_id)  
         .select_related('nomination')
-        .annotate(emp_name=F('nomination__emp_name'), emp_role=F('nomination__emp_role'), created_at=F('nomination__created_at'))
-        .values('emp_name', 'emp_role', 'total_votes', 'created_at')  
+        .annotate(emp_name=F('nomination__emp_name'))
+        .values('emp_name','total_votes', )  
     )
     total_election_votes = get_total_election_votes(election_id)
     for index, item in enumerate(results):

@@ -20,7 +20,7 @@ ELECTION_STATUS_CHOICES = [
 ]
 
 ELECTION_LIST_FIELDS = [
-            'election_id', 'election_title', 'election_cutoff', 
+            'election_id', 'election_title', 
             'nomination_start_date', 
             'nomination_end_date', 'voting_start_date', 
             'voting_end_date', 'created_by_name', 'created_at', 
@@ -30,7 +30,6 @@ ELECTION_LIST_FIELDS = [
 NOMINATION_LIST_FIELDS = [
     'election_id',
     'election_title',
-    'election_cutoff',
     'nomination_start_date',
     'nomination_end_date'
 ]
@@ -39,7 +38,6 @@ OVERVIEW_DETAILS_FIELDS = [
     'election_title',
     'created_by_name',
     'created_at',
-    'election_cutoff',
     'election_reward',
 ]
 
@@ -51,7 +49,6 @@ NOMINATION_DETAILS_FIELDS = [
 WINNER_DETAILS_LIST = [
     'emp_id',
     'emp_name',
-    'emp_role',
 ]
 
 DASHBOARD_ELECTION_LIST = [

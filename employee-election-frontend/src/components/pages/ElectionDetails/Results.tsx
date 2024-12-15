@@ -58,10 +58,6 @@ const Results = () => {
       setDistributionOfVotesNumber(response.distribution_of_votes_number);
       setDistributionOfVotesPercent(response.distribution_of_votes_percentage);
       setStatCards(response.stat_cards);
-      const cutoff = response.stat_cards.find(
-        (item: any) => item.title === "Election Cutoff"
-      );
-      setElectionCutOff(cutoff.value);
     }
   };
 

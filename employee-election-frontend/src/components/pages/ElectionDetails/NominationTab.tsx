@@ -90,21 +90,9 @@ const NavigationTab = () => {
                 <div>
                   <Group justify="apart" align="center">
                     <Text className="text-center" fw={500}>
-                      Emp Id:
-                    </Text>
-                    <Text className="text-center">{item.emp_id}</Text>
-                  </Group>
-                  <Group justify="apart" align="center">
-                    <Text className="text-center" fw={500}>
                       Name:
                     </Text>
-                    <Text className="text-center">{item.emp_id}</Text>
-                  </Group>
-                  <Group justify="apart" align="center">
-                    <Text className="text-center" fw={500}>
-                      Role:
-                    </Text>
-                    <Text className="text-center">{item.emp_role}</Text>
+                    <Text className="text-center">{item.emp_name}</Text>
                   </Group>
                 </div>
               </Stack>
