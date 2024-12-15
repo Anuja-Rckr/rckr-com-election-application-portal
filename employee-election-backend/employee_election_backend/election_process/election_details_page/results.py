@@ -9,6 +9,7 @@ from election_process.models.nominee_vote_count.nominee_vote_count_model import 
 from common.utils import get_total_election_votes, get_total_nominations, get_vote_percentage, get_winner_details_list
 from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_stat_cards, results_winner_table_col_data
+from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
 
 @api_view(['GET'])
 def get_winner_details(request, election_id, emp_id):
@@ -109,6 +110,21 @@ def get_results_table(request,election_id):
         }
         return JsonResponse({
             'data': response_obj
+        }, status=status.HTTP_200_OK)
+    except Exception as error:
+        return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def get_emp_voted_list(request,election_id):
+    if not election_id:
+       return JsonResponse({
+           'error': ct.ELECTION_ID_REQUIRED
+       }, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        row_data = list(EmpVotingModel.objects.filter(election_id=election_id).values('emp_id', 'emp_name'))
+        election_details = list(ElectionModel.objects.filter(election_id=election_id).values(*ct.ELECTION_REPORT_LISt))[0]
+        return JsonResponse({
+            'data': {'emp_vote_list': row_data, 'election_details': election_details}
         }, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

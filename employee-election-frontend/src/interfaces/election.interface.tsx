@@ -122,6 +122,9 @@ export interface DashboardElectionDetails {
   voting_start_date: string | null;
   voting_end_date: string | null;
   results_published_date: string | null;
+  created_at?: string;
+  created_by_empid?: number;
+  created_by_empname?: string;
 }
 
 export interface VotingList {
@@ -145,4 +148,33 @@ export interface TimerProps {
   votingEndTime: string;
   onExpire: () => void;
   isValidDate: boolean;
+}
+
+export interface StatCard {
+  title: string;
+  value: number;
+}
+
+export interface WinnerDetail {
+  title: string;
+  value: string | number;
+}
+
+export interface ColumnData {
+  title: string;
+  field: string;
+}
+
+export interface DownloadReportButtonProps {
+  StatCards: StatCard[];
+  resultsColData: ColumnData[];
+  resultsRowData: Record<string, any>[];
+  winnerDetails: WinnerDetail[];
+  empVoteList: EmpVoteList[];
+  electionDetails: DashboardElectionDetails | null;
+}
+
+export interface EmpVoteList {
+  emp_id: number;
+  emp_name: string;
 }

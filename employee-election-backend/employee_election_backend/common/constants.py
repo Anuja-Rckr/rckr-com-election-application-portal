@@ -64,6 +64,19 @@ DASHBOARD_ELECTION_LIST = [
     'results_published_date'
     ]
 
+ELECTION_REPORT_LISt = [
+    'election_id', 
+    'election_title', 
+    'nomination_start_date', 
+    'nomination_end_date',
+    'voting_start_date',
+    'voting_end_date',
+    'created_by_empid',
+    'created_by_name',
+    'created_at',
+    'results_published_date'
+    ]
+
 # Field constants
 ELECTION_ID = 'election_id'
 NOMINATION_ID = 'nomination_id'

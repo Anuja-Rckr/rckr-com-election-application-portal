@@ -21,7 +21,7 @@ from election_process.election_list_page.elections_list import get_elections_lis
 from election_process.election_list_page.elections_card import get_elections_card
 from election_process.election_details_page.overview import get_election_overview_details, get_election_timeline_details
 from election_process.election_details_page.nominations import get_nomination_candidates_list, get_nominations_details
-from election_process.election_details_page.results import get_results_chart_data, get_results_table, get_winner_details
+from election_process.election_details_page.results import get_emp_voted_list, get_results_chart_data, get_results_table, get_winner_details
 from election_process.your_nominations.your_nominations import get_your_nominations_cards, get_your_nominations_list
 from election_process.election_forms.election_forms import create_election, update_election
 from election_process.election_forms.create_nomination import create_emp_nomination
@@ -55,4 +55,5 @@ urlpatterns = [
     path('election/<int:election_id>/vote', create_vote),
     path('election/vote/status/<int:emp_id>/<int:election_id>', get_election_vote_status),
     path('election/nomination/status/<int:emp_id>/<int:election_id>', get_election_nomination_status),
+    path('election/emp/vote/list/<int:election_id>', get_emp_voted_list)
 ]

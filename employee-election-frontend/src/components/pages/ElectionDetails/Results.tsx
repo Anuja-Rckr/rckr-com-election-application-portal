@@ -1,7 +1,9 @@
 import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
 import {
+  DashboardElectionDetails,
   DistributionOfVotesNumber,
   DistributionOfVotesPercentage,
+  EmpVoteList,
   overviewData,
   resultsTableData,
 } from "../../../interfaces/election.interface";
@@ -12,6 +14,7 @@ import {
   getElectionResultsCharts,
   getElectionResultsTable,
   getElectionWinnerDetails,
+  getEmpVoteList,
 } from "../../../services/ApiService";
 import CountCard from "../../common/CountCard";
 import { ColumnData } from "../../../interfaces/common.interface";
@@ -35,6 +38,9 @@ const Results = () => {
   const [electionCutOff, setElectionCutOff] = useState();
   const [resultsColData, setResultsColData] = useState<ColumnData[]>([]);
   const [resultsRowData, setResultsRowData] = useState<resultsTableData[]>([]);
+  const [empVoteList, setEmpVoteList] = useState<EmpVoteList[]>([]);
+  const [electionDetails, setElectionDetails] =
+    useState<DashboardElectionDetails | null>(null);
 
   const fetchWinnerDetails = async () => {
     if (electionId) {
@@ -67,11 +73,20 @@ const Results = () => {
     }
   };
 
+  const fetchEmpVoteList = async () => {
+    if (electionId) {
+      const response = await getEmpVoteList(electionId);
+      setEmpVoteList(response.emp_vote_list);
+      setElectionDetails(response.election_details);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchWinnerDetails();
       await fetchChartData();
       await fetchResultsTable();
+      await fetchEmpVoteList();
     };
 
     fetchData();
@@ -107,6 +122,8 @@ const Results = () => {
               resultsColData={resultsColData}
               resultsRowData={resultsRowData}
               winnerDetails={winnerDetails}
+              empVoteList={empVoteList}
+              electionDetails={electionDetails}
             />
           )}
         </Group>

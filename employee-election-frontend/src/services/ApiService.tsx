@@ -250,3 +250,12 @@ export const getEmpNominationStatus = async (
     toast.error(error.response.data.error);
   }
 };
+
+export const getEmpVoteList = async (electionId: string) => {
+  try {
+    const response = await api.get(`election/emp/vote/list/${electionId}`);
+    return response.data.data;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
+  }
+};
