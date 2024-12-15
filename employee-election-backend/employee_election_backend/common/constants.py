@@ -23,7 +23,8 @@ ELECTION_LIST_FIELDS = [
             'election_id', 'election_title', 'election_cutoff', 
             'nomination_start_date', 
             'nomination_end_date', 'voting_start_date', 
-            'voting_end_date', 'created_by_name', 'created_at'
+            'voting_end_date', 'created_by_name', 'created_at', 
+            'results_published_date'
         ]
 
 NOMINATION_LIST_FIELDS = [
@@ -47,13 +48,20 @@ NOMINATION_DETAILS_FIELDS = [
     'nomination_end_date'
 ]
 
+WINNER_DETAILS_LIST = [
+    'emp_id',
+    'emp_name',
+    'emp_role',
+]
+
 DASHBOARD_ELECTION_LIST = [
     'election_id', 
     'election_title', 
     'nomination_start_date', 
     'nomination_end_date',
     'voting_start_date',
-    'voting_end_date'
+    'voting_end_date',
+    'results_published_date'
     ]
 
 # Field constants

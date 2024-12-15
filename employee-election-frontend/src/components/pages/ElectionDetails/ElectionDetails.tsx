@@ -86,41 +86,38 @@ const ElectionDetails = () => {
       <>
         <Paper className="bg-overview" p="sm" mb="lg" mt="lg">
           <Group justify="space-around">
-            {electionOverviewDetails.map((item, index) =>
-              item.type === DATA ? (
-                <Stack gap={0} className="border-right" pr="sm" key={index}>
-                  <Text fw={700} className="text-center">
-                    {item.title}
-                  </Text>
-                  <Text className="text-center">{item.value}</Text>
-                </Stack>
-              ) : item.type === DATETIME ? (
-                <Stack gap={0} className="border-right" pr="sm" key={index}>
-                  <Text fw={700} className="text-center">
-                    {item.title}
-                  </Text>
-                  <Text className="text-center">{formatDate(item.value)}</Text>
-                </Stack>
-              ) : item.type === STATUS ? (
-                <Stack
-                  gap={0}
-                  className={
-                    electionOverviewDetails.length === index
-                      ? "border-right"
-                      : ""
-                  }
-                  pr="sm"
-                  key={index}
-                >
-                  <Text fw={700} className="text-center">
-                    {item.title}
-                  </Text>
-                  <Badge color={getColorForStatus(item.value)}>
-                    {item.value}
-                  </Badge>
-                </Stack>
-              ) : null
-            )}
+            {electionOverviewDetails.map((item, index) => {
+              if (item.type === DATA) {
+                return (
+                  <Stack gap={0} className="border-right" pr="sm" key={index}>
+                    <Text fw={700} className="text-center">
+                      {item.title}
+                    </Text>
+                    <Text className="text-center">{item.value}</Text>
+                  </Stack>
+                );
+              } else if (item.type === DATETIME) {
+                return (
+                  <Stack gap={0} className="border-right" pr="sm" key={index}>
+                    <Text fw={700} className="text-center">
+                      {item.title}
+                    </Text>
+                    <Text className="text-center">
+                      {formatDate(item.value)}
+                    </Text>
+                  </Stack>
+                );
+              }
+            })}
+
+            <Stack gap={0} pr="sm">
+              <Text fw={700} className="text-center">
+                Election Status
+              </Text>
+              <Badge color={getColorForStatus(electionStatus)}>
+                {electionStatus}
+              </Badge>
+            </Stack>
           </Group>
         </Paper>
       </>
@@ -197,11 +194,7 @@ const ElectionDetails = () => {
               )}
 
               {electionStatus !== ELECTION_ANNOUNCED &&
-                isDateValid(
-                  electionTimelineDetails?.election_details
-                    .nomination_start_date,
-                  electionTimelineDetails?.election_details.nomination_end_date
-                ) && (
+                electionStatus !== NOMINATIONS_LIVE && (
                   <>
                     <Text c="dimmed" size="sm">
                       Start Date:{" "}
@@ -246,11 +239,48 @@ const ElectionDetails = () => {
               title="Voting Phase"
               lineVariant={electionStatus === CLOSED ? "solid" : "dashed"}
             >
+              {[
+                NOMINATIONS_ANNOUNCED,
+                NOMINATIONS_LIVE,
+                NOMINATIONS_COMPLETED,
+              ].includes(electionStatus) &&
+                electionTimelineDetails?.election_details.voting_start_date &&
+                electionTimelineDetails.election_details.voting_end_date && (
+                  <>
+                    <Text c="dimmed" size="sm" mb="xs">
+                      Voting starts from:
+                    </Text>
+                    <Text c="dimmed" size="sm">
+                      Start Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .voting_start_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .voting_start_date
+                            )
+                          : ""}
+                      </b>
+                    </Text>
+                    <Text c="dimmed" size="sm" mt="xs" mb="xs">
+                      End Date:{" "}
+                      <b>
+                        {electionTimelineDetails?.election_details
+                          .voting_end_date
+                          ? formatDate(
+                              electionTimelineDetails?.election_details
+                                .voting_end_date
+                            )
+                          : ""}
+                      </b>
+                    </Text>
+                  </>
+                )}
               {(electionStatus === ELECTION_ANNOUNCED ||
                 electionStatus === NOMINATIONS_COMPLETED) && (
                 <>
                   <Text c="dimmed" size="sm">
-                    Voting Process yet to scheduled
+                    Voting Process yet to be scheduled
                   </Text>
                 </>
               )}
@@ -261,20 +291,18 @@ const ElectionDetails = () => {
                   </Text>
                 </>
               )}
-              {electionStatus === VOTING_COMPLETED && (
+              {[VOTING_COMPLETED, CLOSED].includes(electionStatus) && (
                 <>
                   <Text c="dimmed" size="sm">
                     Start Date:{" "}
                     <b>
-                      <b>
-                        {electionTimelineDetails?.election_details
-                          .voting_start_date
-                          ? formatDate(
-                              electionTimelineDetails?.election_details
-                                .voting_start_date
-                            )
-                          : ""}
-                      </b>
+                      {electionTimelineDetails?.election_details
+                        .voting_start_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .voting_start_date
+                          )
+                        : ""}
                     </b>
                   </Text>
                   <Text c="dimmed" size="sm" mt="xs" mb="xs">
@@ -288,11 +316,10 @@ const ElectionDetails = () => {
                         : ""}
                     </b>
                   </Text>
-                  <Text c="dimmed" size="sm">
+                  <Text c="dimmed" size="sm" mt="xs">
                     Total Votes:{" "}
                     <b>
-                      {electionTimelineDetails?.election_count_data.total_votes}{" "}
-                      Votes
+                      {electionTimelineDetails?.election_count_data.total_votes}
                     </b>
                   </Text>
                 </>

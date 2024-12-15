@@ -11,26 +11,23 @@ from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_stat_cards, results_winner_table_col_data
 
 @api_view(['GET'])
-def get_winner_details(request, election_id):
+def get_winner_details(request, election_id, emp_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        winner = NominationsModel.objects.filter(
-            election_id=election_id
-        ).values('emp_id', 'emp_name', 'emp_role').annotate(
-            total_votes=Sum('nomineevotecountmodel__total_votes')
-        ).order_by('-total_votes').first()
-       
+        winner_votes = NomineeVoteCountModel.objects.filter(election_id=election_id).values('total_votes', 'nomination_id').order_by('-total_votes').first()
+        winner_details = NominationsModel.objects.filter(nomination_id=winner_votes['nomination_id']).values(*ct.WINNER_DETAILS_LIST).first()
+        if winner_details:
+            winner_details = {**winner_details, 'total_votes': winner_votes['total_votes']}
         total_election_votes = get_total_election_votes(election_id)
-        if not winner:
+        if not winner_details or not winner_votes:
             return JsonResponse({
                 'error': ct.NO_WINNER_FOR_ELECTION
             }, status=status.HTTP_404_NOT_FOUND)
-        
         return JsonResponse({
-            'data': get_winner_details_list(winner, total_election_votes)
+            'data': get_winner_details_list(winner_details, total_election_votes)
         }, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

@@ -104,6 +104,7 @@ export interface UpdateElection {
   nomination_end_date?: Date | null;
   voting_start_date?: Date | null;
   voting_end_date?: Date | null;
+  results_published_date?: Date | null;
 }
 
 export interface CreateNominationForm {
@@ -120,6 +121,7 @@ export interface DashboardElectionDetails {
   nomination_end_date: string | null;
   voting_start_date: string | null;
   voting_end_date: string | null;
+  results_published_date: string | null;
 }
 
 export interface VotingList {

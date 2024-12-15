@@ -19,11 +19,11 @@ def get_dashboard_election_list(request):
         now = datetime.now()
 
         election_list = list(
-            ElectionModel.objects.exclude(
-                results_published_date__isnull=False
-            ).values(
-                *ct.DASHBOARD_ELECTION_LIST
-            )
+        ElectionModel.objects.exclude(
+            results_published_date__isnull=False
+        ).values(
+            *ct.DASHBOARD_ELECTION_LIST
+        ).order_by('-created_at')
         )
 
         return JsonResponse({'data': election_list}, status=status.HTTP_200_OK)
@@ -55,7 +55,7 @@ def create_vote(request, election_id):
      
     try: 
         with transaction.atomic(): 
-            # Validate serializer first
+            # Validate serializer
             is_emp_voted = list(EmpVotingModel.objects.filter(election_id=election_id,emp_id=vote_details['emp_id']).values())
             if is_emp_voted:
                 return JsonResponse({ 
@@ -68,11 +68,16 @@ def create_vote(request, election_id):
                     emp_vote_status_serializer.errors,  
                     status=status.HTTP_400_BAD_REQUEST 
                 )             
-            
+            nomination = NominationsModel.objects.get(
+            emp_id=vote_details['nominee_emp_id'], 
+            election_id=election_id
+            )
+            nomination_id = nomination.nomination_id
             # Attempt to get existing record or create new
             nominee_vote_count_obj, created = NomineeVoteCountModel.objects.get_or_create(
                 election_id=election_id, 
                 emp_id=vote_details.get('nominee_emp_id'),
+                nomination_id=nomination_id,
                 defaults={'total_votes': 1}
             )
             

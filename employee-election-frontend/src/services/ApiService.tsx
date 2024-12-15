@@ -76,9 +76,12 @@ export const getElectionNominationCandidateList = async (
   }
 };
 
-export const getElectionWinnerDetails = async (electionId: string) => {
+export const getElectionWinnerDetails = async (
+  electionId: string,
+  empId: number
+) => {
   try {
-    const response = await api.get(`election/winner/${electionId}`);
+    const response = await api.get(`election/winner/${electionId}/${empId}`);
     return response.data.data;
   } catch (error) {
     throw error;

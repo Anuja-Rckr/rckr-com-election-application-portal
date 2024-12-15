@@ -37,7 +37,10 @@ const Results = () => {
 
   const fetchWinnerDetails = async () => {
     if (electionId) {
-      const response = await getElectionWinnerDetails(electionId);
+      const response = await getElectionWinnerDetails(
+        electionId,
+        empDetails.empId
+      );
       setWinnerDetails(response);
     }
   };

@@ -37,7 +37,7 @@ urlpatterns = [
     path('election/nomination-details/<int:election_id>', get_nominations_details),
     path('election/nomination/list/<int:election_id>', get_nomination_candidates_list),
 
-    path('election/winner/<int:election_id>', get_winner_details),
+    path('election/winner/<int:election_id>/<int:emp_id>', get_winner_details),
     path('election/charts/<int:election_id>',get_results_chart_data),
     path('election/results/<int:election_id>', get_results_table),
 

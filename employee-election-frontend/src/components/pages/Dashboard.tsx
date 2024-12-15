@@ -9,12 +9,16 @@ import {
   getElectionStatus,
   getUserDetails,
 } from "../../common/utils";
-import { getDashboardElectionList } from "../../services/ApiService";
+import {
+  getDashboardElectionList,
+  updateElectionDetails,
+} from "../../services/ApiService";
 import {
   ELECTION_ANNOUNCED,
   NOMINATIONS_ANNOUNCED,
   NOMINATIONS_COMPLETED,
   NOMINATIONS_LIVE,
+  VOTING_ANNOUNCED,
   VOTING_COMPLETED,
   VOTING_LIVE,
 } from "../../common/constants";
@@ -114,6 +118,20 @@ const Dashboard: React.FC = () => {
     setDashboardElectionList(response);
   };
 
+  const onPublishResult = async (election: DashboardElectionDetails) => {
+    setCurrentElectionDetails(election);
+    const requestBody = {
+      results_published_date: new Date(),
+    };
+    const response = await updateElectionDetails(
+      requestBody,
+      election?.election_id
+    );
+    if (response) {
+      fetchDashboardElectionList();
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchDashboardElectionList();
@@ -171,7 +189,10 @@ const Dashboard: React.FC = () => {
                           NOMINATIONS_ANNOUNCED,
                           NOMINATIONS_LIVE,
                           NOMINATIONS_COMPLETED,
-                        ].includes(getElectionStatus(election))
+                        ].includes(getElectionStatus(election)) ||
+                        (election.voting_start_date && election.voting_end_date)
+                          ? true
+                          : false
                       }
                     >
                       Publish Voting
@@ -179,6 +200,7 @@ const Dashboard: React.FC = () => {
                   )}
                   {empDetails.isAdmin && (
                     <Button
+                      onClick={() => onPublishResult(election)}
                       disabled={
                         getElectionStatus(election) !== VOTING_COMPLETED
                       }
