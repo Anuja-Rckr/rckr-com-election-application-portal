@@ -6,14 +6,18 @@ import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/dates/styles.css";
 import { theme } from "./theme";
+import { ToastProvider } from "./common/toast/ToastService";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <MantineProvider theme={theme} defaultColorScheme="light">
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </MantineProvider>
   </React.StrictMode>
 );

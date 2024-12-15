@@ -14,6 +14,7 @@ import {
 import { EmpDetailsInterface } from "../../../interfaces/common.interface";
 import { getUserDetails } from "../../../common/utils";
 import { createElection } from "../../../services/ApiService";
+import { toast } from "../../../common/toast/ToastService";
 
 const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -48,7 +49,8 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
       created_by_name: empDetails.empName,
       created_by_empid: empDetails.empId,
     };
-    const response = createElection(electionDetails);
+    createElection(electionDetails);
+    toast.success("Election created successfully");
     handleClose();
   };
 

@@ -3,6 +3,7 @@ import { Button, Drawer, Text, TextInput } from "@mantine/core";
 import { DatePickerInput, DateTimePicker } from "@mantine/dates";
 import { PublishNominationElectionProps } from "../../../interfaces/election.interface";
 import { updateElectionDetails } from "../../../services/ApiService";
+import { toast } from "../../../common/toast/ToastService";
 
 const PublishNominationElectionForm = ({
   isOpened,
@@ -50,6 +51,7 @@ const PublishNominationElectionForm = ({
       };
       if (electionDetails?.election_id) {
         updateElectionDetails(requestBody, electionDetails?.election_id);
+        toast.success("Election updated successfully");
       }
     } else {
       requestBody = {
@@ -58,6 +60,7 @@ const PublishNominationElectionForm = ({
       };
       if (electionDetails?.election_id) {
         updateElectionDetails(requestBody, electionDetails?.election_id);
+        toast.success("Election updated successfully");
       }
     }
     handleClose();

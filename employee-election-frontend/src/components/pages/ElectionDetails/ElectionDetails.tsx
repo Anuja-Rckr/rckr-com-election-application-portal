@@ -24,7 +24,7 @@ import {
   NOMINATIONS_LIVE,
   OVERVIEW,
   RESULTS,
-  STATUS,
+  VOTING_ANNOUNCED,
   VOTING_COMPLETED,
   VOTING_LIVE,
 } from "../../../common/constants";
@@ -243,6 +243,7 @@ const ElectionDetails = () => {
                 NOMINATIONS_ANNOUNCED,
                 NOMINATIONS_LIVE,
                 NOMINATIONS_COMPLETED,
+                VOTING_ANNOUNCED,
               ].includes(electionStatus) &&
                 electionTimelineDetails?.election_details.voting_start_date &&
                 electionTimelineDetails.election_details.voting_end_date && (
@@ -277,13 +278,20 @@ const ElectionDetails = () => {
                   </>
                 )}
               {(electionStatus === ELECTION_ANNOUNCED ||
-                electionStatus === NOMINATIONS_COMPLETED) && (
-                <>
-                  <Text c="dimmed" size="sm">
-                    Voting Process yet to be scheduled
-                  </Text>
-                </>
-              )}
+                [
+                  NOMINATIONS_ANNOUNCED,
+                  NOMINATIONS_LIVE,
+                  NOMINATIONS_COMPLETED,
+                ].includes(electionStatus)) &&
+                !electionTimelineDetails?.election_details?.voting_start_date &&
+                !electionTimelineDetails?.election_details?.voting_end_date && (
+                  <>
+                    <Text c="dimmed" size="sm">
+                      Voting Process yet to be scheduled
+                    </Text>
+                  </>
+                )}
+
               {electionStatus === VOTING_LIVE && (
                 <>
                   <Text c="dimmed" size="sm">

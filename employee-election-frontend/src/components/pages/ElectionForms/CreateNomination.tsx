@@ -29,6 +29,7 @@ import {
   RED,
 } from "../../../common/constants";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
+import { toast } from "../../../common/toast/ToastService";
 
 const NominationForm = ({
   isOpened,
@@ -97,10 +98,8 @@ const NominationForm = ({
         appeal: submittedValues.appeal,
       };
       if (electionDetails?.election_id) {
-        const response = createNomination(
-          requestBody,
-          electionDetails?.election_id
-        );
+        createNomination(requestBody, electionDetails?.election_id);
+        toast.success("Nomination created successfully");
       }
       handleClose();
     }

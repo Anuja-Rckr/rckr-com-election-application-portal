@@ -34,7 +34,7 @@ const Elections = () => {
   };
 
   const fetchElectionList = async () => {
-    const response: ElectionInterface = await getElectionList(
+    const response: any = await getElectionList(
       searchInput,
       sortField,
       sortDirection,

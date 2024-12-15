@@ -1,3 +1,4 @@
+import { toast } from "../common/toast/ToastService";
 import { getElectionStatus, getUserDetails } from "../common/utils";
 import {
   createElectionInterface,
@@ -10,8 +11,8 @@ export const getElectionCards = async () => {
   try {
     const response = await api.get("election/cards");
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -42,8 +43,8 @@ export const getElectionList = async (
       row_data: rowData,
       total_rows: response.data.data.total_rows,
     };
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -51,8 +52,8 @@ export const getElectionOverview = async (electionId: string) => {
   try {
     const response = await api.get(`election/overview/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -60,8 +61,8 @@ export const getElectionNominationDetails = async (electionId: string) => {
   try {
     const response = await api.get(`election/nomination-details/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -71,8 +72,8 @@ export const getElectionNominationCandidateList = async (
   try {
     const response = await api.get(`election/nomination/list/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -83,8 +84,8 @@ export const getElectionWinnerDetails = async (
   try {
     const response = await api.get(`election/winner/${electionId}/${empId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -92,8 +93,8 @@ export const getElectionResultsCharts = async (electionId: string) => {
   try {
     const response = await api.get(`election/charts/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -101,8 +102,8 @@ export const getElectionResultsTable = async (electionId: string) => {
   try {
     const response = await api.get(`election/results/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -113,8 +114,8 @@ export const getYourNominationsCards = async () => {
       `your-nominations/cards/${empDetails.empId}`
     );
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -148,8 +149,8 @@ export const getYourNominationsTable = async (
       row_data: rowData,
       total_rows: response.data.data.total_rows,
     };
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -157,8 +158,8 @@ export const createElection = async (requestBody: createElectionInterface) => {
   try {
     const response = await api.post("election", requestBody);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -169,8 +170,8 @@ export const updateElectionDetails = async (
   try {
     const response = await api.put(`election/${electionId}`, requestBody);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -184,8 +185,8 @@ export const createNomination = async (
       requestBody
     );
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -193,8 +194,8 @@ export const getElectionTimeline = async (electionId: string) => {
   try {
     const response = await api.get(`election-timeline/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -202,8 +203,8 @@ export const getDashboardElectionList = async () => {
   try {
     const response = await api.get(`dashboard/election/list`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -211,8 +212,8 @@ export const getVotingList = async (electionId: number) => {
   try {
     const response = await api.get(`election/voting/list/${electionId}`);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -220,8 +221,8 @@ export const castVote = async (requestBody: any, electionId: number) => {
   try {
     const response = await api.post(`election/${electionId}/vote`, requestBody);
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -231,8 +232,8 @@ export const getEmpVoteStatus = async (empId: number, electionId: number) => {
       `election/vote/status/${empId}/${electionId}`
     );
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };
 
@@ -245,7 +246,7 @@ export const getEmpNominationStatus = async (
       `election/nomination/status/${empId}/${electionId}`
     );
     return response.data.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
   }
 };

@@ -29,6 +29,7 @@ import {
   isDateValid,
 } from "../../../common/utils";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
+import { toast } from "../../../common/toast/ToastService";
 
 const Voting = ({
   electionDetails,
@@ -76,7 +77,8 @@ const Voting = ({
         emp_role: empDetails.empRole,
         nominee_emp_id: currentVote?.emp_id,
       };
-      const response = castVote(requestBody, electionDetails?.election_id);
+      castVote(requestBody, electionDetails?.election_id);
+      toast.success("Your vote recorded successfully");
       setIsConfirmModalOpen(false);
       setIsVotingDisabled(true);
       handleClose();

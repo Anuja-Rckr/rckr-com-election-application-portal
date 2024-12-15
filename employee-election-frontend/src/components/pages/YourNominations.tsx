@@ -33,7 +33,7 @@ const YourNominations = () => {
   };
 
   const fetchNominationList = async () => {
-    const response: ElectionInterface = await getYourNominationsTable(
+    const response: any = await getYourNominationsTable(
       searchInput,
       sortField,
       sortDirection,

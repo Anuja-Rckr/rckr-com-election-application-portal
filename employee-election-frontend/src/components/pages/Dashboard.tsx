@@ -24,6 +24,7 @@ import {
 } from "../../common/constants";
 import { DashboardElectionDetails } from "../../interfaces/election.interface";
 import Voting from "./ElectionForms/Voting";
+import { toast } from "../../common/toast/ToastService";
 
 const Dashboard: React.FC = () => {
   const empDetails: EmpDetailsInterface = getUserDetails();
@@ -127,6 +128,7 @@ const Dashboard: React.FC = () => {
       requestBody,
       election?.election_id
     );
+    toast.success("Results published successfully");
     if (response) {
       fetchDashboardElectionList();
     }
