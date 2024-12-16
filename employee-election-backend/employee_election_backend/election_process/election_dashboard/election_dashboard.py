@@ -101,7 +101,7 @@ def create_vote(request, election_id):
 @api_view(['GET'])
 def get_election_vote_status(request, emp_id, election_id):
     try:
-        election_vote_status = list(EmpVotingModel.objects.filter(election_id=election_id, emp_id=emp_id).values())
+        election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, emp_id=emp_id).exists()
         is_emp_voted = False
         if election_vote_status:
             is_emp_voted = True

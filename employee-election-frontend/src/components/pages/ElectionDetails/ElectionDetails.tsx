@@ -193,45 +193,48 @@ const ElectionDetails = () => {
                 </>
               )}
 
-              {electionStatus !== ELECTION_ANNOUNCED &&
-                electionStatus !== NOMINATIONS_LIVE && (
-                  <>
-                    <Text c="dimmed" size="sm">
-                      Start Date:{" "}
-                      <b>
-                        {electionTimelineDetails?.election_details
-                          .nomination_start_date
-                          ? formatDate(
-                              electionTimelineDetails?.election_details
-                                .nomination_start_date
-                            )
-                          : ""}
-                      </b>
-                    </Text>
-                    <Text c="dimmed" size="sm" mt="xs" mb="xs">
-                      End Date:{" "}
-                      <b>
-                        {electionTimelineDetails?.election_details
-                          .nomination_end_date
-                          ? formatDate(
-                              electionTimelineDetails?.election_details
-                                .nomination_end_date
-                            )
-                          : ""}
-                      </b>
-                    </Text>
-                    <Text c="dimmed" size="sm">
-                      Total Nominations:{" "}
-                      <b>
-                        {
-                          electionTimelineDetails?.election_count_data
-                            .total_nominations
-                        }{" "}
-                        Nominations
-                      </b>
-                    </Text>
-                  </>
-                )}
+              {![
+                NOMINATIONS_ANNOUNCED,
+                ELECTION_ANNOUNCED,
+                NOMINATIONS_ANNOUNCED,
+              ].includes(electionStatus) && (
+                <>
+                  <Text c="dimmed" size="sm">
+                    Start Date:{" "}
+                    <b>
+                      {electionTimelineDetails?.election_details
+                        .nomination_start_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .nomination_start_date
+                          )
+                        : ""}
+                    </b>
+                  </Text>
+                  <Text c="dimmed" size="sm" mt="xs" mb="xs">
+                    End Date:{" "}
+                    <b>
+                      {electionTimelineDetails?.election_details
+                        .nomination_end_date
+                        ? formatDate(
+                            electionTimelineDetails?.election_details
+                              .nomination_end_date
+                          )
+                        : ""}
+                    </b>
+                  </Text>
+                  <Text c="dimmed" size="sm">
+                    Total Nominations:{" "}
+                    <b>
+                      {
+                        electionTimelineDetails?.election_count_data
+                          .total_nominations
+                      }{" "}
+                      Nominations
+                    </b>
+                  </Text>
+                </>
+              )}
             </Timeline.Item>
 
             <Timeline.Item

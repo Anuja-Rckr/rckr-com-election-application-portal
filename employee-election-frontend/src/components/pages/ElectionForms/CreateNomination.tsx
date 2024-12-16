@@ -65,18 +65,19 @@ const NominationForm = ({
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      empId: empDetails.empId,
+      rckrEmpId: "",
       empName: empDetails.empName,
       appeal: "",
     },
     validate: {
-      empId: isNotEmpty("Emp ID is required"),
+      rckrEmpId: isNotEmpty("Emp ID is required"),
       empName: isNotEmpty("Emp name is required"),
       appeal: isNotEmpty("Appeal is required"),
     },
   });
 
   const onCreateNomination = (values: typeof form.values) => {
+    console.log("ddd", values);
     setSubmittedValues(values);
     setIsConfirmModalOpen(true);
   };
@@ -90,7 +91,8 @@ const NominationForm = ({
     if (submittedValues) {
       setIsConfirmModalOpen(false);
       const requestBody = {
-        emp_id: submittedValues.empId,
+        emp_id: empDetails.empId,
+        rckr_emp_id: submittedValues.rckrEmpId,
         emp_name: submittedValues.empName,
         appeal: submittedValues.appeal,
       };
@@ -143,9 +145,8 @@ const NominationForm = ({
             label="Emp ID"
             placeholder="Enter Emp ID"
             withAsterisk
-            disabled
-            key={form.key("empId")}
-            {...form.getInputProps("empId")}
+            key={form.key("rckrEmpId")}
+            {...form.getInputProps("rckrEmpId")}
           />
           <TextInput
             label="Enter Name"
