@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
                         getElectionStatus(election) !== ELECTION_ANNOUNCED
                       }
                     >
-                      Publish Nomination
+                      Schedule Nomination
                     </Button>
                   )}
                   {empDetails.isAdmin && (
@@ -202,7 +202,7 @@ const Dashboard: React.FC = () => {
                           : false
                       }
                     >
-                      Publish Voting
+                      Schedule polling
                     </Button>
                   )}
                   {empDetails.isAdmin && (
@@ -222,7 +222,7 @@ const Dashboard: React.FC = () => {
                         getElectionStatus(election) !== NOMINATIONS_LIVE
                       }
                     >
-                      Create Nomination
+                      Nominate yourself
                     </Button>
                   )}
 

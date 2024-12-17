@@ -77,7 +77,6 @@ const NominationForm = ({
   });
 
   const onCreateNomination = (values: typeof form.values) => {
-    console.log("ddd", values);
     setSubmittedValues(values);
     setIsConfirmModalOpen(true);
   };
@@ -142,8 +141,8 @@ const NominationForm = ({
             </Avatar>
           </Group>
           <TextInput
-            label="Emp ID"
-            placeholder="Enter Emp ID"
+            label="Employee ID"
+            placeholder="Enter Employee ID"
             withAsterisk
             key={form.key("rckrEmpId")}
             {...form.getInputProps("rckrEmpId")}
@@ -191,10 +190,15 @@ const NominationForm = ({
           onClose={() => setIsConfirmModalOpen(false)}
           title="Confirm Submission"
         >
-          <div>Are you sure you want to create this nomination?</div>
+          <Text>
+            You have nominated yourself for{"  "}
+            <span className="highlight_name">
+              <b>{electionDetails?.election_title}</b>
+            </span>
+          </Text>
 
-          <Text color={RED} size="sm" mt="sm">
-            Once the nomination is submitted, it cannot be changed or withdrawn.
+          <Text size="sm" mt="sm">
+            Do you want to proceed?
           </Text>
 
           <Group mt="md">

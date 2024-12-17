@@ -39,7 +39,7 @@ def get_voting_list(request, election_id):
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
         voting_list_column_data = get_voting_list_column_data()
-        voting_list_row_data = list(NominationsModel.objects.filter(election_id=election_id).values())
+        voting_list_row_data = list(NominationsModel.objects.filter(election_id=election_id).values().order_by('-rckr_emp_id'))
         return JsonResponse({'data': {'column_data': voting_list_column_data, 'row_data': voting_list_row_data}}, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

@@ -219,13 +219,18 @@ def get_your_nominations_cards_list(total_nominations,active_nominations,schedul
 def get_voting_list_column_data():
     result = [
         {
-            'title': 'Emp ID',
+            'title': 'RCKR Employee ID',
             'field': 'emp_id',
             'type': 'data'
         },
         {
             'title': 'Emp Name',
             'field': 'emp_name',
+            'type': 'data'
+        },
+        {
+            'title': 'Appeal',
+            'field': 'appeal',
             'type': 'data'
         },
     ]

@@ -24,6 +24,7 @@ import {
 import { DATA, GREEN, RED, VOTING_LIVE } from "../../../common/constants";
 import Timer from "../../common/Timer";
 import {
+  formatDate,
   getElectionStatus,
   getUserDetails,
   isDateValid,
@@ -46,6 +47,7 @@ const Voting = ({
   const [currentVote, setCurrentVote] = useState<VotingList | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [isTimerCompleted, setIsTimerCompleted] = useState<boolean>(false);
+  const [empVoteStatus, setEmpVoteStatus] = useState<boolean>(false);
 
   const fetchVotingList = async () => {
     if (electionDetails?.election_id) {
@@ -90,6 +92,7 @@ const Voting = ({
         empDetails.empId,
         electionDetails?.election_id
       );
+      setEmpVoteStatus(response.is_emp_voted);
       setIsVotingDisabled(response.is_emp_voted);
     }
   };
@@ -144,9 +147,15 @@ const Voting = ({
           <Alert
             variant="light"
             color={GREEN}
-            title="Your vote recorded successfully"
+            title={`You have already voted on ${
+              empVoteStatus
+                ? formatDate(
+                    electionDetails?.created_at || new Date().toISOString()
+                  )
+                : formatDate(new Date().toISOString())
+            }`}
             icon={<IconCircleCheck size={50} />}
-          ></Alert>
+          />
         )}
         {isVotingDisabled && isTimerCompleted && (
           <Alert
@@ -197,13 +206,15 @@ const Voting = ({
         title="Confirm Submission"
       >
         <Text>
-          Are you sure you want to vote to{" "}
+          You have voted to{" "}
           <span className="highlight_name">
             <b>{currentVote?.emp_name}</b>
           </span>
           ?
         </Text>
-
+        <Text color={RED} size="sm" mt="sm">
+          Do you confirm?
+        </Text>
         <Text color={RED} size="sm" mt="sm">
           Once the vote is submitted, it cannot be modified.
         </Text>

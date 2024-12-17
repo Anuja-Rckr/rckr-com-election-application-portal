@@ -9,7 +9,7 @@ import {
   Text,
   Menu,
   Tooltip,
-  Button,
+  Image,
   Paper,
   Burger,
 } from "@mantine/core";
@@ -32,7 +32,7 @@ import {
   getInitials,
   getPageName,
 } from "../../common/utils";
-
+import Logo from "../../assets/rckr-logo.svg";
 const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme(LIGHT);
@@ -107,10 +107,13 @@ const Main = () => {
               hiddenFrom="md"
               size="sm"
             />
-            <Avatar radius="xl" size="md" color={ORANGE} />
-            <Text c={ORANGE} fw={700}>
-              LOGO
-            </Text>
+            <Image
+              src={Logo}
+              alt="Logo"
+              height={30}
+              width="auto"
+              fit="contain"
+            />
           </Group>
 
           <Group>
