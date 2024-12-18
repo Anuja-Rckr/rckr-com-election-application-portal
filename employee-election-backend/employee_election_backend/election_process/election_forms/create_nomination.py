@@ -1,12 +1,19 @@
 from django.http import JsonResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from common import constants as ct
 from election_process.models.nominations.nominations_serializer import NominationsSerializer
 from election_process.models.nominations.nominations_model import NominationsModel
+from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_emp_nomination(request, election_id):
+    if not request.user.groups.filter(name=ct.USER).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN) 
     nomination_details = request.data
     nomination_details['election'] = election_id
     if not nomination_details:

@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from datetime import datetime
 from common import constants as ct
@@ -8,6 +9,7 @@ from election_process.models.election.election_model import ElectionModel
 from common.utils import get_count_data
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_elections_card(request):
     try:
         now = datetime.now()
@@ -30,28 +32,3 @@ def get_elections_card(request):
         return JsonResponse({'data':count_data }, status=status.HTTP_200_OK)
     except Exception as error:
        return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
-
-# def get_elections_card(request):
-#     try:
-#         now = datetime.now()
-        
-#         # Calculate counts dynamically
-#         count_data = {
-#             'Declared': ElectionModel.objects.filter(nomination_start_date__gt=now).count(),
-#             'Nominations': ElectionModel.objects.filter(
-#                 nomination_start_date__lte=now, nomination_end_date__gte=now
-#             ).count(),
-#             'Live': ElectionModel.objects.filter(
-#                 voting_start_date__lte=now, voting_end_date__gte=now
-#             ).count(),
-#             'Completed': ElectionModel.objects.filter(
-#                 voting_end_date__lt=now, results_published_date__isnull=True
-#             ).count(),
-#             'Closed': ElectionModel.objects.filter(
-#                 results_published_date__isnull=False
-#             ).count(),
-#         }
-
-#         return JsonResponse({'data': count_data}, status=status.HTTP_200_OK)
-#     except Exception as error:
-#         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

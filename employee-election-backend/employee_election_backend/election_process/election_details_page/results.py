@@ -1,17 +1,18 @@
 from django.http import JsonResponse
 from rest_framework import status
 from common import constants as ct
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.db.models import F, Sum, OuterRef, Subquery
-
 from election_process.models.nominations.nominations_model import NominationsModel
 from election_process.models.nominee_vote_count.nominee_vote_count_model import NomineeVoteCountModel
 from common.utils import get_total_election_votes, get_total_nominations, get_vote_percentage, get_winner_details_list
 from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_stat_cards, results_winner_table_col_data
 from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_winner_details(request, election_id, emp_id):
     if not election_id:
        return JsonResponse({
@@ -56,6 +57,7 @@ def get_distribution_of_votes_percentage(election_id, distribution_of_votes_numb
     return result
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_results_chart_data(request, election_id):
     if not election_id:
        return JsonResponse({
@@ -91,6 +93,7 @@ def get_results_table_row_data(election_id):
     return results
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_results_table(request,election_id):
     if not election_id:
        return JsonResponse({
@@ -110,6 +113,7 @@ def get_results_table(request,election_id):
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_emp_voted_list(request,election_id):
     if not election_id:
        return JsonResponse({

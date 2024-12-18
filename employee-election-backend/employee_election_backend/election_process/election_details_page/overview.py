@@ -6,9 +6,11 @@ from common import constants as ct
 from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_overview_list
 from common.utils import get_total_election_votes, get_total_nominations
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_election_overview_details(request, election_id):   
    if not election_id:
        return JsonResponse({
@@ -29,6 +31,7 @@ def get_election_overview_details(request, election_id):
        }, status=status.HTTP_400_BAD_REQUEST)
    
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_election_timeline_details(request, election_id):
 
     if not election_id:

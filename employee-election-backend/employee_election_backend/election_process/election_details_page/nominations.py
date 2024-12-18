@@ -1,12 +1,15 @@
 from django.http import JsonResponse
 from common import constants as ct
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from election_process.models.election.election_model import ElectionModel
 from election_process.models.nominations.nominations_model import NominationsModel
 from common.utils import get_nominations_details_list
+from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_nominations_details(request, election_id):
     if not election_id:
        return JsonResponse({
@@ -22,6 +25,7 @@ def get_nominations_details(request, election_id):
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_nomination_candidates_list(request, election_id):
     if not election_id:
         return JsonResponse({

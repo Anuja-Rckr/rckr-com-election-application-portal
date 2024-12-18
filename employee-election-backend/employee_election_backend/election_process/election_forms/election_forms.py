@@ -1,12 +1,19 @@
 from django.http import JsonResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from common import constants as ct
 from election_process.models.election.election_serializer import ElectionSerializer
 from election_process.models.election.election_model import ElectionModel
+from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_election(request):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN)
     election_details = request.data
     if not election_details:
        return JsonResponse({
@@ -26,7 +33,12 @@ def create_election(request):
     
 
 @api_view(['PUT'])
-def update_election(request, election_id): 
+@permission_classes([IsAuthenticated])
+def update_election(request, election_id):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN) 
     election_details = request.data
     if not election_id:
         return JsonResponse({

@@ -92,6 +92,8 @@ NOMINATION_DETAILS_EMPTY = 'Nominations details are missing'
 NOMINATION_ALREADY_EXISTS = 'Nomination Already Exists'
 ELECTION_CREATED_SUCCESSFULLY = 'Election created successfully'
 ELECTION_NOT_FOUND = "Election not found"
+USER_NOT_FOUND = "User not found"
+ACCESS_DENIED= "Access Denied."
 
 # Colors Array
 COLORS_LIST = [
@@ -108,3 +110,7 @@ COLORS_LIST = [
     'yellow.4',
     'yellow.5',
 ]
+
+# Roles
+ADMIN = 'Admin'
+USER = 'User'

@@ -1,12 +1,14 @@
 from django.http import JsonResponse
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from common import constants as ct
 from common import mappings as mp
 from election_process.models.election.election_model import ElectionModel
 from common.utils import apply_search_sort_pagination
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_elections_list(request):
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')

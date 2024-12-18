@@ -1,5 +1,5 @@
 from datetime import datetime
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from django.http import JsonResponse
 from rest_framework import status
 from common import constants as ct
@@ -10,10 +10,11 @@ from election_process.models.emp_voting.emp_voting_serializer import EmpVotingSe
 from django.db import transaction
 from election_process.models.nominee_vote_count.nominee_vote_count_model import NomineeVoteCountModel
 from django.db.models import F
-
+from rest_framework.permissions import IsAuthenticated
 from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_dashboard_election_list(request):
     try:
         now = datetime.now()
@@ -32,6 +33,7 @@ def get_dashboard_election_list(request):
     
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_voting_list(request, election_id):
     if not election_id:
        return JsonResponse({
@@ -45,6 +47,7 @@ def get_voting_list(request, election_id):
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST']) 
+@permission_classes([IsAuthenticated])
 def create_vote(request, election_id): 
     vote_details = request.data 
     vote_details['election'] = election_id
@@ -99,6 +102,7 @@ def create_vote(request, election_id):
         }, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_election_vote_status(request, emp_id, election_id):
     try:
         election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, emp_id=emp_id).exists()
@@ -114,7 +118,12 @@ def get_election_vote_status(request, emp_id, election_id):
         }, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_election_nomination_status(request, emp_id, election_id):
+    if not request.user.groups.filter(name=ct.USER).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN) 
     try:
         election_nomination_status = list(NominationsModel.objects.filter(election_id=election_id, emp_id=emp_id).values())
         is_emp_nominated = False

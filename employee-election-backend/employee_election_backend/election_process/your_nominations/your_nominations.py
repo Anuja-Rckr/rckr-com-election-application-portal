@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from common import constants as ct
 from rest_framework import status
 from django.db.models import F
@@ -8,8 +8,11 @@ from election_process.models.nominations.nominations_model import NominationsMod
 from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_nomination_list_col_data, get_your_nominations_cards_list
 from common.utils import apply_search_sort_pagination
+from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_your_nominations_cards(request, emp_id):    
     if not emp_id:
        return JsonResponse({
@@ -43,6 +46,7 @@ def get_your_nominations_cards(request, emp_id):
     
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_your_nominations_list(request, emp_id):
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')

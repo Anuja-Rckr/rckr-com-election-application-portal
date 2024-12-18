@@ -26,6 +26,7 @@ from election_process.your_nominations.your_nominations import get_your_nominati
 from election_process.election_forms.election_forms import create_election, update_election
 from election_process.election_forms.create_nomination import create_emp_nomination
 from election_process.election_dashboard.election_dashboard import create_vote, get_dashboard_election_list, get_election_nomination_status, get_election_vote_status, get_voting_list
+from election_process.authentication.auth import emp_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,5 +56,7 @@ urlpatterns = [
     path('election/<int:election_id>/vote', create_vote),
     path('election/vote/status/<int:emp_id>/<int:election_id>', get_election_vote_status),
     path('election/nomination/status/<int:emp_id>/<int:election_id>', get_election_nomination_status),
-    path('election/emp/vote/list/<int:election_id>', get_emp_voted_list)
+    path('election/emp/vote/list/<int:election_id>', get_emp_voted_list),
+
+    path('auth/generate-token', emp_auth_token),
 ]
