@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { theme } from "./theme";
 import {
@@ -13,6 +14,7 @@ import {
   HOME,
   LIGHT,
   YOUR_NOMINATIONS,
+  LOGIN,
 } from "./common/constants";
 import { Suspense, lazy } from "react";
 import Dashboard from "./components/pages/Dashboard";
@@ -26,6 +28,19 @@ const YourNominations = lazy(
 const ElectionDetails = lazy(
   () => import("./components/pages/ElectionDetails/ElectionDetails")
 );
+const Auth = lazy(() => import("./components/pages/auth/Auth"));
+
+// Protected Route Component
+const ProtectedRoute = ({ children }: any) => {
+  const token = sessionStorage.getItem("jwt_token");
+  const location = useLocation();
+
+  if (!token) {
+    return <Navigate to={LOGIN} state={{ from: location }} replace />;
+  }
+
+  return children;
+};
 
 function App() {
   return (
@@ -33,13 +48,27 @@ function App() {
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path={HOME} element={<Main />}>
+            {/* Public Auth Route */}
+            <Route path={LOGIN} element={<Auth />} />
+
+            {/* Protected Routes */}
+            <Route
+              path={HOME}
+              element={
+                <ProtectedRoute>
+                  <Main />
+                </ProtectedRoute>
+              }
+            >
               <Route path={DASHBOARD} element={<Dashboard />} />
               <Route path={ELECTIONS} element={<Elections />} />
               <Route path={ELECTION_DETAILS} element={<ElectionDetails />} />
               <Route path={YOUR_NOMINATIONS} element={<YourNominations />} />
               <Route index element={<Navigate to={ELECTIONS} />} />
             </Route>
+
+            {/* Redirect unknown routes to elections */}
+            <Route path="*" element={<Navigate to={ELECTIONS} replace />} />
           </Routes>
         </Suspense>
       </Router>

@@ -5,7 +5,16 @@ import {
   CreateNominationForm,
   UpdateElection,
 } from "../interfaces/election.interface";
-import { api } from "./axios";
+import { api, authApi } from "./axios";
+
+export const getUserInfo = async () => {
+  try {
+    const response = await authApi.get("/auth/token/");
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getElectionCards = async () => {
   try {
