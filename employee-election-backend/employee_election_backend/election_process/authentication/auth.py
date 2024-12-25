@@ -23,9 +23,9 @@ def set_http_cookie(token_value, user_details):
     api_response.set_cookie( 
         'token',   
         token_value,   
-        httponly=True,   
-        secure=True,   
-        samesite='Strict', 
+        httponly=True,
+        samesite='Lax',
+        secure=False,
     ) 
     return api_response 
 

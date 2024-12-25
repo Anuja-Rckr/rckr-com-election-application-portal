@@ -9,7 +9,7 @@ import { api, authApi } from "./axios";
 
 export const getUserInfo = async () => {
   try {
-    const response = await authApi.get("/auth/token/");
+    const response = await authApi.get("auth/generate-token");
     return response.data.data;
   } catch (error) {
     throw error;

@@ -18,6 +18,7 @@ import {
 } from "./common/constants";
 import { Suspense, lazy } from "react";
 import Dashboard from "./components/pages/Dashboard";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Lazy load the components
 const Main = lazy(() => import("./components/pages/Main"));
@@ -29,18 +30,6 @@ const ElectionDetails = lazy(
   () => import("./components/pages/ElectionDetails/ElectionDetails")
 );
 const Auth = lazy(() => import("./components/pages/auth/Auth"));
-
-// Protected Route Component
-const ProtectedRoute = ({ children }: any) => {
-  const token = sessionStorage.getItem("jwt_token");
-  const location = useLocation();
-
-  if (!token) {
-    return <Navigate to={LOGIN} state={{ from: location }} replace />;
-  }
-
-  return children;
-};
 
 function App() {
   return (

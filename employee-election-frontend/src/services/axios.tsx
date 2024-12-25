@@ -21,24 +21,15 @@ export const authApi = axios.create({
 authApi.interceptors.request.use(
   (config) => {
     const jwtToken = sessionStorage.getItem("authToken");
-
     if (jwtToken) {
-      const parsed_jwt_token = JSON.parse(jwtToken);
-      config.headers.Authorization = `Bearer ${parsed_jwt_token}`;
+      try {
+        const parsed_jwt_token = JSON.parse(jwtToken);
+        config.headers.Authorization = `Bearer ${parsed_jwt_token}`;
+      } catch (error) {
+        console.error("Error parsing JWT token:", error);
+      }
     }
-
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-api.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
