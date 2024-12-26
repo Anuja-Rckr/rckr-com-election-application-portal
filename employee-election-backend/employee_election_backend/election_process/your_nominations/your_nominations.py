@@ -13,17 +13,17 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_your_nominations_cards(request, emp_id):    
-    if not emp_id:
+def get_your_nominations_cards(request, user_id):    
+    if not user_id:
        return JsonResponse({
            'error': ct.EMP_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
         now = datetime.now()
-        total_nominations = NominationsModel.objects.filter(emp_id=emp_id).count()
+        total_nominations = NominationsModel.objects.filter(user_id=user_id).count()
         active_nominations = (
             ElectionModel.objects
-            .filter(nominationsmodel__emp_id=emp_id,
+            .filter(nominationsmodel__user_id=user_id,
                 nomination_start_date__lte=now,
                 nomination_end_date__gte=now)
             .select_related('nominationsmodel')
@@ -31,7 +31,7 @@ def get_your_nominations_cards(request, emp_id):
         )
         scheduled_nominations = (
             ElectionModel.objects
-            .filter(nominationsmodel__emp_id=emp_id,
+            .filter(nominationsmodel__user_id=user_id,
                 voting_start_date__gte=now)
             .select_related('nominationsmodel')
             .count()
@@ -47,13 +47,13 @@ def get_your_nominations_cards(request, emp_id):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_your_nominations_list(request, emp_id):
+def get_your_nominations_list(request, user_id):
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')
     search_input = request.GET.get(ct.SEARCH_INPUT, '')
     sort_field = request.GET.get('sort_field', 'created_at')
     sort_direction = request.GET.get('sort_direction', 'desc')
-    if not emp_id :
+    if not user_id :
        return JsonResponse({
            'error': ct.EMP_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
@@ -61,7 +61,7 @@ def get_your_nominations_list(request, emp_id):
         col_data = get_nomination_list_col_data()
         row_data = list(
             ElectionModel.objects
-            .filter(nominationsmodel__emp_id=emp_id)  
+            .filter(nominationsmodel__user_id=user_id)  
             .select_related('nominationsmodel') 
             .annotate(nomination_created_at=F('nominationsmodel__created_at'))
             .values()  

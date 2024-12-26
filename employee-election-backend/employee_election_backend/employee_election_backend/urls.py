@@ -42,8 +42,8 @@ urlpatterns = [
     path('election/charts/<int:election_id>',get_results_chart_data),
     path('election/results/<int:election_id>', get_results_table),
 
-    path('your-nominations/list/<int:emp_id>', get_your_nominations_list),
-    path('your-nominations/cards/<int:emp_id>', get_your_nominations_cards),
+    path('your-nominations/list/<int:user_id>', get_your_nominations_list),
+    path('your-nominations/cards/<int:user_id>', get_your_nominations_cards),
 
     path('election', create_election),
     path('election/<int:election_id>', update_election),

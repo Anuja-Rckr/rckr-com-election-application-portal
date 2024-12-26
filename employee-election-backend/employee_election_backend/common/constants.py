@@ -85,7 +85,7 @@ SORT = 'sort'
 
 # Error constants
 ELECTION_ID_REQUIRED = 'Election id is required'
-EMP_ID_REQUIRED = 'Emp id is required'
+EMP_ID_REQUIRED = 'User id is required'
 NO_WINNER_FOR_ELECTION = 'No winner found for this election'
 ELECTION_DETAILS_EMPTY = 'Election details are missing'
 NOMINATION_DETAILS_EMPTY = 'Nominations details are missing'
