@@ -45,6 +45,15 @@ export const getUserDetails = () => {
   }
 };
 
+export const fetchUserDetails = () => {
+  const userDetails = sessionStorage.getItem("userDetails");
+  if (userDetails) {
+    return JSON.parse(userDetails);
+  } else {
+    return null;
+  }
+};
+
 // Generate random color for profile
 export const generateRandomColor = (input: string) => {
   const firstLetter = input.charAt(0).toLowerCase();

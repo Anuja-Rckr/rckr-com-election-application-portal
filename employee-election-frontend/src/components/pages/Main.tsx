@@ -12,6 +12,7 @@ import {
   Image,
   Paper,
   Burger,
+  Button,
 } from "@mantine/core";
 import { useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import { IconMoon, IconSun, IconLogout } from "@tabler/icons-react";
@@ -21,24 +22,39 @@ import {
   DARK_8,
   GRAY_1,
   LIGHT,
+  LOGIN,
   menuItems,
   ORANGE,
+  RED,
   WHITE,
 } from "../../common/constants";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "../../index.css";
 import {
+  fetchUserDetails,
   generateRandomColor,
   getInitials,
   getPageName,
 } from "../../common/utils";
 import Logo from "../../assets/rckr-logo.svg";
+import { onLogoutApi } from "../../services/ApiService";
 const Main = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme(LIGHT);
   const location = useLocation();
 
   const [mobileNavOpened, setMobileNavOpened] = useState(false);
+
+  const userDetails = fetchUserDetails();
+
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    // sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("userDetails");
+    onLogoutApi();
+    navigate(LOGIN);
+  };
 
   const renderProfile = () => {
     return (
@@ -66,10 +82,10 @@ const Main = () => {
               </Avatar>
               <Stack gap={0}>
                 <Text fw={500} className="text-center">
-                  Anuja Aliveli
+                  {userDetails.user_name}
                 </Text>
                 <Text c="dimmed" size="sm" className="text-center">
-                  demo.email@gmail.com
+                  {userDetails.email}
                 </Text>
               </Stack>
             </Group>
@@ -77,8 +93,15 @@ const Main = () => {
 
           <Menu.Divider />
 
-          <Menu.Item color="red" leftSection={<IconLogout size={16} />}>
-            Logout
+          <Menu.Item>
+            <Button
+              onClick={onLogout}
+              color={RED}
+              leftSection={<IconLogout size={20} />}
+              className="w-100"
+            >
+              Logout
+            </Button>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

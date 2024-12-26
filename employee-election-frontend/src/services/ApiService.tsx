@@ -268,3 +268,12 @@ export const getEmpVoteList = async (electionId: string) => {
     toast.error(error.response.data.error);
   }
 };
+
+export const onLogoutApi = async () => {
+  try {
+    const response = await api.post(`auth/logout`);
+    return response.data.data;
+  } catch (error: any) {
+    toast.error(error.response.data.error);
+  }
+};

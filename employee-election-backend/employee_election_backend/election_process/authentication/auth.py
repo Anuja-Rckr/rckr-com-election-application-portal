@@ -10,12 +10,13 @@ from common import constants as ct
 from rest_framework.permissions import AllowAny 
 from django.conf import settings 
 from django.contrib.auth.models import Group 
+from rest_framework.permissions import IsAuthenticated
 
 
 def set_http_cookie(token_value, user_details,group_id): 
     """Helper function to set the JWT token as a secure HTTP cookie""" 
     response_obj = { 
-        'emp_name': user_details.username, 
+        'user_name': user_details.username, 
         'email': user_details.email, 
         'user_id': user_details.id,
         'group_id': group_id
@@ -94,3 +95,22 @@ def emp_auth_token(request):
         return JsonResponse({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    response = JsonResponse({'message': 'Logged out successfully'})
+    
+    auth_cookie = next(
+        (cookie for cookie in request.COOKIES if 'token' in cookie.lower()),
+        None
+    )
+    
+    if auth_cookie:
+        response.delete_cookie(
+            auth_cookie,
+            path='/',
+            samesite='Lax'
+        )
+    
+    return response
