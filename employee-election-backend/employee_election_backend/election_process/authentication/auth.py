@@ -12,12 +12,13 @@ from django.conf import settings
 from django.contrib.auth.models import Group 
 
 
-def set_http_cookie(token_value, user_details): 
+def set_http_cookie(token_value, user_details,group_id): 
     """Helper function to set the JWT token as a secure HTTP cookie""" 
     response_obj = { 
         'emp_name': user_details.username, 
         'email': user_details.email, 
-        'user_id': user_details.id 
+        'user_id': user_details.id,
+        'group_id': group_id
     } 
     api_response = JsonResponse({'data': response_obj}, status=status.HTTP_200_OK) 
     api_response.set_cookie( 
@@ -30,63 +31,66 @@ def set_http_cookie(token_value, user_details):
     return api_response 
 
 
-@api_view(['GET']) 
-@permission_classes([AllowAny]) 
-def emp_auth_token(request): 
-    auth_header = request.headers.get('Authorization') 
-    if not auth_header or not auth_header.startswith('Bearer '): 
-        return JsonResponse({'error': 'Authorization token missing or invalid.'}, status=status.HTTP_401_UNAUTHORIZED) 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def emp_auth_token(request):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Authorization token missing or invalid.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    token = auth_header.split(' ')[1] 
+    token = auth_header.split(' ')[1]
 
-    try: 
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=['HS256'], audience=[ct.USER, ct.ADMIN]) 
-        ext_emp_id = payload.get('employeeId') 
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=['HS256'], audience=[ct.USER, ct.ADMIN])
+        ext_emp_id = payload.get('employeeId')
 
-        if not ext_emp_id: 
-            return JsonResponse({'error': 'ext_emp_id not found in token.'}, status=status.HTTP_400_BAD_REQUEST) 
+        if not ext_emp_id:
+            return JsonResponse({'error': 'ext_emp_id not found in token.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try: 
-            user_details = EmpUserModel.objects.get(ext_emp_id=ext_emp_id).user 
-            token, created = Token.objects.get_or_create(user=user_details) 
-            return set_http_cookie(token.key, user_details)
-            
-        except EmpUserModel.DoesNotExist: 
-            api_url = settings.RCKR_LOGIN_URL 
-            headers = { 
-                "Authorization": f'Bearer {token}', 
-                "Content-Type": "application/json", 
-            } 
-            response = requests.get(api_url, headers=headers) 
-            if response.status_code != 200: 
-                return JsonResponse({'error': 'Failed to fetch employee data from login service.'}, status=status.HTTP_400_BAD_REQUEST) 
+        try:
+            emp_user = EmpUserModel.objects.select_related('user').get(ext_emp_id=ext_emp_id)
+            user = emp_user.user
+            group_id = user.groups.values_list('id', flat=True).first()
+            token, created = Token.objects.get_or_create(user=user)
+            return set_http_cookie(token.key, user, group_id)
 
-            employee_data = response.json() 
+        except EmpUserModel.DoesNotExist:
+            api_url = settings.RCKR_LOGIN_URL
+            headers = {
+                "Authorization": f'Bearer {token}',
+                "Content-Type": "application/json",
+            }
+            response = requests.get(api_url, headers=headers)
+            if response.status_code != 200:
+                return JsonResponse({'error': 'Failed to fetch employee data from login service.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            user = User.objects.create_user( 
-                username=employee_data['name'], 
-                password='password_placeholder',   
-                email=employee_data['email'] 
-            ) 
-            emp_user = EmpUserModel.objects.create( 
-                ext_emp_id=ext_emp_id, 
-                user=user 
-            ) 
+            employee_data = response.json()
 
-            group, created = Group.objects.get_or_create(name=ct.USER) 
-            user.groups.add(group) 
-            user.save() 
+            user = User.objects.create_user(
+                username=employee_data['name'],
+                password='password_placeholder',  
+                email=employee_data['email']
+            )
+            emp_user = EmpUserModel.objects.create(
+                ext_emp_id=ext_emp_id,
+                user=user
+            )
 
-            token, created = Token.objects.get_or_create(user=user) 
-            return set_http_cookie(token.key, user)
+            group, created = Group.objects.get_or_create(name=ct.USER)
+            user.groups.add(group)
+            user.save()
+            group_id = user.groups.values_list('id', flat=True).first()
 
-    except jwt.ExpiredSignatureError: 
-        return JsonResponse({'error': 'Token has expired.'}, status=status.HTTP_401_UNAUTHORIZED) 
-    except jwt.InvalidSignatureError: 
-        return JsonResponse({'error': 'Invalid signature. Token might be tampered.'}, status=status.HTTP_401_UNAUTHORIZED) 
-    except jwt.DecodeError: 
-        return JsonResponse({'error': 'Malformed token.'}, status=status.HTTP_401_UNAUTHORIZED) 
-    except jwt.InvalidTokenError: 
-        return JsonResponse({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED) 
-    except Exception as e: 
+            token, created = Token.objects.get_or_create(user=user)
+            return set_http_cookie(token.key, user, group_id)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'error': 'Token has expired.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except jwt.InvalidSignatureError:
+        return JsonResponse({'error': 'Invalid signature. Token might be tampered.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except jwt.DecodeError:
+        return JsonResponse({'error': 'Malformed token.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
