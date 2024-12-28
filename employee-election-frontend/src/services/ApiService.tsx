@@ -1,5 +1,5 @@
 import { toast } from "../common/toast/ToastService";
-import { getElectionStatus, getUserDetails } from "../common/utils";
+import { fetchUserDetails, getElectionStatus } from "../common/utils";
 import {
   createElectionInterface,
   CreateNominationForm,
@@ -88,10 +88,10 @@ export const getElectionNominationCandidateList = async (
 
 export const getElectionWinnerDetails = async (
   electionId: string,
-  empId: number
+  userId: number
 ) => {
   try {
-    const response = await api.get(`election/winner/${electionId}/${empId}`);
+    const response = await api.get(`election/winner/${electionId}/${userId}`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
@@ -118,9 +118,9 @@ export const getElectionResultsTable = async (electionId: string) => {
 
 export const getYourNominationsCards = async () => {
   try {
-    const empDetails = getUserDetails();
+    const userDetails = fetchUserDetails();
     const response = await api.get(
-      `your-nominations/cards/${empDetails.empId}`
+      `your-nominations/cards/${userDetails.user_id}`
     );
     return response.data.data;
   } catch (error: any) {
@@ -135,9 +135,9 @@ export const getYourNominationsTable = async (
   pageNumber: number
 ) => {
   try {
-    const empDetails = getUserDetails();
+    const userDetails = fetchUserDetails();
     const response = await api.get(
-      `your-nominations/list/${empDetails.empId}`,
+      `your-nominations/list/${userDetails.user_id}`,
       {
         params: {
           search_input: searchInput,
@@ -235,10 +235,10 @@ export const castVote = async (requestBody: any, electionId: number) => {
   }
 };
 
-export const getEmpVoteStatus = async (empId: number, electionId: number) => {
+export const getEmpVoteStatus = async (userId: number, electionId: number) => {
   try {
     const response = await api.get(
-      `election/vote/status/${empId}/${electionId}`
+      `election/vote/status/${userId}/${electionId}`
     );
     return response.data.data;
   } catch (error: any) {
@@ -247,12 +247,12 @@ export const getEmpVoteStatus = async (empId: number, electionId: number) => {
 };
 
 export const getEmpNominationStatus = async (
-  empId: number,
+  userId: number,
   electionId: number
 ) => {
   try {
     const response = await api.get(
-      `election/nomination/status/${empId}/${electionId}`
+      `election/nomination/status/${userId}/${electionId}`
     );
     return response.data.data;
   } catch (error: any) {

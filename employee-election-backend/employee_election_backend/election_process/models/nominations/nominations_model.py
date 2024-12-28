@@ -9,7 +9,7 @@ class NominationsModel(models.Model):
     election = models.ForeignKey(ElectionModel, on_delete=models.CASCADE)
     rckr_emp_id = models.IntegerField(blank=False, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    emp_name = models.CharField(max_length=ct.CHAR_MEDIUM_LIMIT, blank=False, null=False)
+    user_name = models.CharField(max_length=ct.CHAR_MEDIUM_LIMIT, blank=False, null=False)
     appeal = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

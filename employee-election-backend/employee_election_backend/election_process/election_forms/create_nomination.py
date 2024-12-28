@@ -5,6 +5,7 @@ from common import constants as ct
 from election_process.models.nominations.nominations_serializer import NominationsSerializer
 from election_process.models.nominations.nominations_model import NominationsModel
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 
 
 @api_view(['POST'])
@@ -14,17 +15,31 @@ def create_emp_nomination(request, election_id):
         return JsonResponse({
             'error': ct.ACCESS_DENIED
         }, status=status.HTTP_403_FORBIDDEN) 
+
     nomination_details = request.data
     nomination_details['election'] = election_id
+
     if not nomination_details:
        return JsonResponse({
            'error': ct.NOMINATION_DETAILS_EMPTY
        }, status=status.HTTP_400_BAD_REQUEST)
+
     try:
-        is_nomination_exists = NominationsModel.objects.filter(election_id=election_id,emp_id=nomination_details['emp_id'])
+        user_id = nomination_details.get('user_id')
+        if not User.objects.filter(id=user_id).exists():
+            return JsonResponse({'error': 'Invalid user ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        is_nomination_exists = NominationsModel.objects.filter(
+            election_id=election_id, user_id=user_id
+        ).exists()
         if is_nomination_exists:
-            return JsonResponse({'error': f'{ct.NOMINATION_ALREADY_EXISTS} with Emp ID {nomination_details['emp_id']}'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({
+                'error': f'{ct.NOMINATION_ALREADY_EXISTS} with Emp ID {user_id}'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        nomination_details['user'] = user_id
         serializer = NominationsSerializer(data=nomination_details)
+
         if serializer.is_valid():
             created_nomination = serializer.save()
             return JsonResponse({
@@ -32,5 +47,6 @@ def create_emp_nomination(request, election_id):
             }, status=status.HTTP_201_CREATED)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

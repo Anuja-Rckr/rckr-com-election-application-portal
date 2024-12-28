@@ -74,11 +74,11 @@ const Main = () => {
           <Menu.Item>
             <Group justify="center" align="center">
               <Avatar
-                color={generateRandomColor("Anuja")}
+                color={generateRandomColor(userDetails.user_name)}
                 radius="xl"
                 size="lg"
               >
-                {getInitials("Anuja Aliveli")}
+                {getInitials(userDetails.user_name)}
               </Avatar>
               <Stack gap={0}>
                 <Text fw={500} className="text-center">

@@ -21,12 +21,18 @@ import {
   ColumnData,
   EmpDetailsInterface,
 } from "../../../interfaces/common.interface";
-import { DATA, GREEN, RED, VOTING_LIVE } from "../../../common/constants";
+import {
+  DATA,
+  DATETIME,
+  GREEN,
+  RED,
+  VOTING_LIVE,
+} from "../../../common/constants";
 import Timer from "../../common/Timer";
 import {
+  fetchUserDetails,
   formatDate,
   getElectionStatus,
-  getUserDetails,
   isDateValid,
 } from "../../../common/utils";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
@@ -38,7 +44,7 @@ const Voting = ({
   onClose,
   activeModalType,
 }: VotingListProps) => {
-  const empDetails: EmpDetailsInterface = getUserDetails();
+  const userDetails: EmpDetailsInterface = fetchUserDetails();
   const [votingList, setVotingList] = useState<VotingList[]>([]);
   const [votingListColumnData, setVotingListColumnData] = useState<
     ColumnData[]
@@ -74,9 +80,9 @@ const Voting = ({
   const onConfirmVote = async () => {
     if (electionDetails?.election_id) {
       const requestBody = {
-        emp_id: empDetails.empId,
-        emp_name: empDetails.empName,
-        nominee_emp_id: currentVote?.emp_id,
+        user_id: userDetails.user_id,
+        user_name: userDetails.user_name,
+        nominee_user_id: currentVote?.user_id,
       };
       castVote(requestBody, electionDetails?.election_id);
       toast.success("Your vote recorded successfully");
@@ -89,7 +95,7 @@ const Voting = ({
   const fetchEmpVoteStatus = async () => {
     if (electionDetails?.election_id) {
       const response = await getEmpVoteStatus(
-        empDetails.empId,
+        userDetails.user_id,
         electionDetails?.election_id
       );
       setEmpVoteStatus(response.is_emp_voted);
@@ -114,6 +120,7 @@ const Voting = ({
         onClose={handleClose}
         title={<Text fw={700}>Vote</Text>}
         position="right"
+        size="xl"
       >
         {isDateValid(
           electionDetails?.voting_start_date,
@@ -150,9 +157,10 @@ const Voting = ({
             title={`You have already voted on ${
               empVoteStatus
                 ? formatDate(
-                    electionDetails?.created_at || new Date().toISOString()
+                    electionDetails?.created_at || new Date().toISOString(),
+                    DATETIME
                   )
-                : formatDate(new Date().toISOString())
+                : formatDate(new Date().toISOString(), DATETIME)
             }`}
             icon={<IconCircleCheck size={50} />}
           />
@@ -208,9 +216,8 @@ const Voting = ({
         <Text>
           You have voted to{" "}
           <span className="highlight_name">
-            <b>{currentVote?.emp_name}</b>
+            <b>{currentVote?.user_name}</b>
           </span>
-          ?
         </Text>
         <Text color={RED} size="sm" mt="sm">
           Do you confirm?

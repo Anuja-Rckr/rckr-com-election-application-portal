@@ -48,10 +48,10 @@ export interface FlatTablePropsInterface {
 }
 
 export interface EmpDetailsInterface {
-  empId: number;
-  empName: string;
-  empRole: string;
-  isAdmin: boolean;
+  user_name: string;
+  email: string;
+  user_id: number;
+  group_id: number;
 }
 
 export interface ElectionTimelineDetails {

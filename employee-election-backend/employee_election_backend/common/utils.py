@@ -147,12 +147,12 @@ def get_winner_details_list(winner_details, total_votes):
     result = [
         {
             'title': 'Emp ID',
-            'value': winner_details['emp_id'],
+            'value': winner_details['user_id'],
             'type': 'data'
         },
         {
             'title': 'Name',
-            'value': winner_details['emp_name'],
+            'value': winner_details['user_name'],
             'type': 'data'
         },
         {

@@ -12,10 +12,10 @@ import {
   Alert,
 } from "@mantine/core";
 import {
+  fetchUserDetails,
   generateRandomColor,
   getElectionStatus,
   getInitials,
-  getUserDetails,
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
 import {
@@ -44,7 +44,7 @@ const NominationForm = ({
   const fetchNominationStatus = async () => {
     if (electionDetails?.election_id) {
       const response = await getEmpNominationStatus(
-        empDetails.empId,
+        userDetails.user_id,
         electionDetails?.election_id
       );
       setIsEmpNominated(response.is_emp_nominated);
@@ -61,17 +61,17 @@ const NominationForm = ({
     }
   }, [isOpened, electionDetails?.election_id, activeModalType]);
 
-  const empDetails = getUserDetails();
+  const userDetails = fetchUserDetails();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       rckrEmpId: "",
-      empName: empDetails.empName,
+      userName: userDetails.user_name,
       appeal: "",
     },
     validate: {
       rckrEmpId: isNotEmpty("Emp ID is required"),
-      empName: isNotEmpty("Emp name is required"),
+      userName: isNotEmpty("Emp name is required"),
       appeal: isNotEmpty("Appeal is required"),
     },
   });
@@ -90,9 +90,9 @@ const NominationForm = ({
     if (submittedValues) {
       setIsConfirmModalOpen(false);
       const requestBody = {
-        emp_id: empDetails.empId,
+        user_id: userDetails.user_id,
         rckr_emp_id: submittedValues.rckrEmpId,
-        emp_name: submittedValues.empName,
+        user_name: submittedValues.userName,
         appeal: submittedValues.appeal,
       };
       if (electionDetails?.election_id) {
@@ -133,17 +133,22 @@ const NominationForm = ({
         <form onSubmit={form.onSubmit(onCreateNomination)}>
           <Group justify="center">
             <Avatar
-              color={generateRandomColor(empDetails.empName)}
+              color={generateRandomColor(userDetails.user_name)}
               radius="xl"
               size="lg"
             >
-              {getInitials(empDetails.empName)}
+              {getInitials(userDetails.user_name)}
             </Avatar>
           </Group>
           <TextInput
-            label="Employee ID"
-            placeholder="Enter Employee ID"
+            label="RCKR employee ID"
+            placeholder="Enter RCKR employee ID"
             withAsterisk
+            disabled={
+              (isEmpNominated &&
+                getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
+              getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
+            }
             key={form.key("rckrEmpId")}
             {...form.getInputProps("rckrEmpId")}
           />
@@ -153,8 +158,8 @@ const NominationForm = ({
             withAsterisk
             mt="md"
             disabled
-            key={form.key("empName")}
-            {...form.getInputProps("empName")}
+            key={form.key("userName")}
+            {...form.getInputProps("userName")}
           />
           <Textarea
             label="Appeal"
@@ -191,7 +196,7 @@ const NominationForm = ({
           title="Confirm Submission"
         >
           <Text>
-            You have nominated yourself for{"  "}
+            You have nominated yourself for election{"  "}
             <span className="highlight_name">
               <b>{electionDetails?.election_title}</b>
             </span>

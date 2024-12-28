@@ -93,8 +93,8 @@ def get_results_stat_cards(total_election_votes, total_nominations):
 def get_winner_details_query():
     query = """
     SELECT 
-        nvc.emp_id, 
-        nm.emp_name, 
+        nvc.user_id, 
+        nm.user_name, 
         nm.emp_role, 
         nvc.total_votes
     FROM 
@@ -113,7 +113,7 @@ def results_winner_table_col_data():
     col_data = [
         {
             'title': 'Name',
-            'field': 'emp_name',
+            'field': 'user_name',
             'type': 'data'
         },
         {
@@ -220,12 +220,12 @@ def get_voting_list_column_data():
     result = [
         {
             'title': 'RCKR Employee ID',
-            'field': 'emp_id',
+            'field': 'user_id',
             'type': 'data'
         },
         {
             'title': 'Emp Name',
-            'field': 'emp_name',
+            'field': 'user_name',
             'type': 'data'
         },
         {

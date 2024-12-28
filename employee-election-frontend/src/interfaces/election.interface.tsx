@@ -32,8 +32,8 @@ export interface overviewData {
 export interface NominationCardDetails {
   nomination_id: number;
   election_id: number;
-  emp_id: number;
-  emp_name: string;
+  user_id: number;
+  user_name: string;
   appeal: string;
   created_at: Date;
 }
@@ -46,11 +46,11 @@ export interface ResultsChart {
 
 export interface DistributionOfVotesNumber {
   total_votes: number;
-  emp_name: string;
+  user_name: string;
 }
 
 export interface DistributionOfVotesPercentage {
-  emp_name: string;
+  user_name: string;
   total_votes: number;
   color: string;
 }
@@ -63,7 +63,7 @@ export interface StatCard {
 
 export interface resultsTableData {
   total_votes: number;
-  emp_name: string;
+  user_name: string;
   created_at: Date;
   "total_votes_%": number;
 }
@@ -106,8 +106,8 @@ export interface UpdateElection {
 
 export interface CreateNominationForm {
   rckr_emp_id: number;
-  emp_id: number;
-  emp_name: string;
+  user_id: number;
+  user_name: string;
   appeal: string;
 }
 
@@ -127,8 +127,8 @@ export interface DashboardElectionDetails {
 export interface VotingList {
   nomination_id: number;
   election_id: number;
-  emp_id: number;
-  emp_name: string;
+  user_id: number;
+  user_name: string;
   appeal: string;
   created_at: Date;
 }
@@ -171,6 +171,10 @@ export interface DownloadReportButtonProps {
 }
 
 export interface EmpVoteList {
-  emp_id: number;
-  emp_name: string;
+  user_id: number;
+  user_name: string;
+}
+
+export interface ElectionDetailsProps {
+  setTab?: string;
 }

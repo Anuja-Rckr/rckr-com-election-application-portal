@@ -136,7 +136,7 @@ const DownloadReportButton: React.FC<DownloadReportButtonProps> = ({
 
       if (electionDetails.created_by_empid) {
         doc.text(
-          `Created by emp ID: ${safeString(electionDetails.created_by_empid)}`,
+          `Created by user ID: ${safeString(electionDetails.created_by_empid)}`,
           margin,
           yOffset
         );
@@ -145,7 +145,9 @@ const DownloadReportButton: React.FC<DownloadReportButtonProps> = ({
 
       if (electionDetails.created_by_name) {
         doc.text(
-          `Created By emp name: ${safeString(electionDetails.created_by_name)}`,
+          `Created By user name: ${safeString(
+            electionDetails.created_by_name
+          )}`,
           margin,
           yOffset
         );
@@ -248,10 +250,9 @@ const DownloadReportButton: React.FC<DownloadReportButtonProps> = ({
     yOffset += 2;
     doc.line(margin, yOffset, pageWidth - margin, yOffset);
     yOffset += 5;
-
     // Draw employee vote table body
     doc.setFont("helvetica", "normal");
-    empVoteList.forEach((emp) => {
+    empVoteList.forEach((user) => {
       if (checkAndAddNewPage(lineHeight + 2)) {
         // Redraw headers on new page
         doc.setFont("helvetica", "bold");
@@ -261,8 +262,8 @@ const DownloadReportButton: React.FC<DownloadReportButtonProps> = ({
         doc.setFont("helvetica", "normal");
       }
 
-      doc.text(safeString(emp.emp_id), margin, yOffset);
-      doc.text(safeString(emp.emp_name), margin + empColWidth, yOffset);
+      doc.text(safeString(user.user_id), margin, yOffset);
+      doc.text(safeString(user.user_name), margin + empColWidth, yOffset);
       yOffset += lineHeight;
     });
 

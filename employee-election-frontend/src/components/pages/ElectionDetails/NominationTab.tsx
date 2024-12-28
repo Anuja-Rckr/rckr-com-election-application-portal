@@ -82,17 +82,17 @@ const NavigationTab = () => {
       <>
         <SimpleGrid cols={{ base: 1, md: 5 }} spacing="md" mt="lg">
           {nominationList.map((item, index) => (
-            <Paper p="md" radius="md" key={item.emp_id}>
+            <Paper p="md" radius="md" key={item.user_id}>
               <Stack justify="center" align="center">
-                <Avatar color={generateRandomColor(item.emp_name)} radius="xl">
-                  {getInitials(item.emp_name)}
+                <Avatar color={generateRandomColor(item.user_name)} radius="xl">
+                  {getInitials(item.user_name)}
                 </Avatar>
                 <div>
                   <Group justify="apart" align="center">
                     <Text className="text-center" fw={500}>
                       Name:
                     </Text>
-                    <Text className="text-center">{item.emp_name}</Text>
+                    <Text className="text-center">{item.user_name}</Text>
                   </Group>
                 </div>
               </Stack>

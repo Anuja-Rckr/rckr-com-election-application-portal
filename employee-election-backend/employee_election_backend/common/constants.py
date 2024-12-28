@@ -47,8 +47,8 @@ NOMINATION_DETAILS_FIELDS = [
 ]
 
 WINNER_DETAILS_LIST = [
-    'emp_id',
-    'emp_name',
+    'user_id',
+    'user_name',
 ]
 
 DASHBOARD_ELECTION_LIST = [
@@ -77,7 +77,7 @@ ELECTION_REPORT_LISt = [
 # Field constants
 ELECTION_ID = 'election_id'
 NOMINATION_ID = 'nomination_id'
-EMP_ID = 'emp_id'
+USER_ID = 'user_id'
 PAGE = 'page'
 LIMIT = 'limit'
 SEARCH_INPUT = 'search_input'

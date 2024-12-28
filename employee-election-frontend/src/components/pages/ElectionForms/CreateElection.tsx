@@ -5,12 +5,12 @@ import {
   NominationFormProps,
 } from "../../../interfaces/election.interface";
 import { EmpDetailsInterface } from "../../../interfaces/common.interface";
-import { getUserDetails } from "../../../common/utils";
+import { fetchUserDetails } from "../../../common/utils";
 import { createElection } from "../../../services/ApiService";
 import { toast } from "../../../common/toast/ToastService";
 
 const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
-  const empDetails: EmpDetailsInterface = getUserDetails();
+  const userDetails: EmpDetailsInterface = fetchUserDetails();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -35,8 +35,8 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
         nomination_eligibility: values.electionNominationEligibility,
         voting_eligibility: values.electionVotingEligibility,
       },
-      created_by_name: empDetails.empName,
-      created_by_empid: empDetails.empId,
+      created_by_name: userDetails.user_name,
+      created_by_empid: userDetails.user_id,
     };
     createElection(electionDetails);
     toast.success("Election created successfully");

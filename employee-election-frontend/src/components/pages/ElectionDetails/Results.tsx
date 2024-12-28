@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
+import { Box, Flex, Group, Paper, Stack, Text } from "@mantine/core";
 import {
   DashboardElectionDetails,
   DistributionOfVotesNumber,
-  DistributionOfVotesPercentage,
   EmpVoteList,
   overviewData,
   resultsTableData,
@@ -19,14 +18,14 @@ import {
 import CountCard from "../../common/CountCard";
 import { ColumnData } from "../../../interfaces/common.interface";
 import FlatTable from "../../common/FlatTable";
-import { getUserDetails } from "../../../common/utils";
+import { fetchUserDetails } from "../../../common/utils";
 import DownloadReportButton from "./DownloadReport";
 
 const Results = () => {
   console.log("rrrr");
   const { id } = useParams<{ id: string }>();
   const electionId = id;
-  const empDetails = getUserDetails();
+  const userDetails = fetchUserDetails();
   const [winnerDetails, setWinnerDetails] = useState<overviewData[]>([]);
   const [distributionOfVotesNumber, setDistributionOfVotesNumber] = useState<
     DistributionOfVotesNumber[]
@@ -35,7 +34,6 @@ const Results = () => {
     []
   );
   const [StatCards, setStatCards] = useState([]);
-  const [electionCutOff, setElectionCutOff] = useState();
   const [resultsColData, setResultsColData] = useState<ColumnData[]>([]);
   const [resultsRowData, setResultsRowData] = useState<resultsTableData[]>([]);
   const [empVoteList, setEmpVoteList] = useState<EmpVoteList[]>([]);
@@ -46,7 +44,7 @@ const Results = () => {
     if (electionId) {
       const response = await getElectionWinnerDetails(
         electionId,
-        empDetails.empId
+        userDetails.user_id
       );
       setWinnerDetails(response);
     }
@@ -112,7 +110,7 @@ const Results = () => {
               ))}
             </Group>
           </Paper>
-          {empDetails.isAdmin && (
+          {userDetails.group_id === 1 && (
             <DownloadReportButton
               StatCards={StatCards}
               resultsColData={resultsColData}
@@ -143,17 +141,9 @@ const Results = () => {
             <BarChart
               h={235}
               data={distributionOfVotesNumber}
-              dataKey="emp_name"
+              dataKey="user_name"
               maxBarWidth={40}
               series={[{ name: "total_votes", color: "url(#barGradient)" }]}
-              referenceLines={[
-                {
-                  y: electionCutOff,
-                  color: "red.5",
-                  label: "Cutoff",
-                  labelPosition: "top",
-                },
-              ]}
               tickLine="y"
               yAxisProps={{ domain: [0, 100] }}
             >

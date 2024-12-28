@@ -35,7 +35,10 @@ import {
   getElectionStatus,
   isDateValid,
 } from "../../../common/utils";
-import { overviewData } from "../../../interfaces/election.interface";
+import {
+  ElectionDetailsProps,
+  overviewData,
+} from "../../../interfaces/election.interface";
 import NominationTab from "../ElectionDetails/NominationTab";
 import Results from "./Results";
 import { useEffect, useState } from "react";
@@ -46,7 +49,7 @@ import {
 import { useParams } from "react-router-dom";
 import { ElectionTimelineDetails } from "../../../interfaces/common.interface";
 
-const ElectionDetails = () => {
+const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
   const { id } = useParams<{ id: string }>();
   const electionId = id;
   const [electionOverviewDetails, setElectionOverviewDetails] = useState<
@@ -56,6 +59,8 @@ const ElectionDetails = () => {
     useState<ElectionTimelineDetails | null>(null);
   const [electionStatus, setElectionStatus] =
     useState<string>(ELECTION_ANNOUNCED);
+
+  const [activeTab, setActiveTab] = useState<string>(OVERVIEW);
 
   const fetchElectionOverviewDetails = async () => {
     if (electionId) {
@@ -74,12 +79,19 @@ const ElectionDetails = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      await setActiveTab(setTab);
       await fetchElectionOverviewDetails();
       await fetchElectionTimelineDetails();
     };
 
     fetchData();
   }, [electionId]);
+
+  const handleTabChange = (value: string | null) => {
+    if (value) {
+      setActiveTab(value);
+    }
+  };
 
   const renderOverview = () => {
     return (
@@ -380,7 +392,11 @@ const ElectionDetails = () => {
   };
   return (
     <>
-      <Tabs defaultValue={OVERVIEW}>
+      <Tabs
+        defaultValue={OVERVIEW}
+        value={activeTab}
+        onChange={handleTabChange}
+      >
         <Tabs.List>
           <Tabs.Tab value={OVERVIEW} leftSection={<IconBook />}>
             Overview

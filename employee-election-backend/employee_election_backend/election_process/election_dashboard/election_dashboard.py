@@ -12,6 +12,7 @@ from election_process.models.nominee_vote_count.nominee_vote_count_model import 
 from django.db.models import F
 from rest_framework.permissions import IsAuthenticated
 from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
+from django.contrib.auth.models import User
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -45,67 +46,77 @@ def get_voting_list(request, election_id):
         return JsonResponse({'data': {'column_data': voting_list_column_data, 'row_data': voting_list_row_data}}, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['POST']) 
+
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_vote(request, election_id): 
-    vote_details = request.data 
+def create_vote(request, election_id):
+    vote_details = request.data
     vote_details['election'] = election_id
-    if not election_id: 
-        return JsonResponse({ 
-            'error': ct.ELECTION_ID_REQUIRED 
-        }, status=status.HTTP_400_BAD_REQUEST) 
-     
-    try: 
-        with transaction.atomic(): 
-            # Validate serializer
-            is_emp_voted = list(EmpVotingModel.objects.filter(election_id=election_id,emp_id=vote_details['emp_id']).values())
-            if is_emp_voted:
-                return JsonResponse({ 
-                'error': 'Employee has already cast their vote' 
+
+    if not election_id:
+        return JsonResponse({
+            'error': ct.ELECTION_ID_REQUIRED
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        with transaction.atomic():
+            user_id = vote_details.get('user_id')
+            if not User.objects.filter(id=user_id).exists():
+                return JsonResponse({
+                    'error': 'Invalid user ID'
                 }, status=status.HTTP_400_BAD_REQUEST)
-            
-            emp_vote_status_serializer = EmpVotingSerializer(data=vote_details) 
-            if not emp_vote_status_serializer.is_valid(): 
-                return JsonResponse( 
-                    emp_vote_status_serializer.errors,  
-                    status=status.HTTP_400_BAD_REQUEST 
-                )             
+
+            is_emp_voted = EmpVotingModel.objects.filter(
+                election_id=election_id,
+                user_id=user_id
+            ).exists()
+            if is_emp_voted:
+                return JsonResponse({
+                    'error': 'Employee has already cast their vote'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            vote_details['user'] = user_id 
+            emp_vote_status_serializer = EmpVotingSerializer(data=vote_details)
+            if not emp_vote_status_serializer.is_valid():
+                return JsonResponse(
+                    emp_vote_status_serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             nomination = NominationsModel.objects.get(
-            emp_id=vote_details['nominee_emp_id'], 
-            election_id=election_id
+                user_id=vote_details['nominee_user_id'],
+                election_id=election_id
             )
             nomination_id = nomination.nomination_id
-            # Attempt to get existing record or create new
+
             nominee_vote_count_obj, created = NomineeVoteCountModel.objects.get_or_create(
-                election_id=election_id, 
-                emp_id=vote_details.get('nominee_emp_id'),
+                election_id=election_id,
+                user_id=vote_details.get('nominee_user_id'),
                 nomination_id=nomination_id,
                 defaults={'total_votes': 1}
             )
-            
-            # If record exists, increment votes
+
             if not created:
                 nominee_vote_count_obj.total_votes = F('total_votes') + 1
                 nominee_vote_count_obj.save()
-            
-            # Save employee vote status
-            emp_vote_status = emp_vote_status_serializer.save() 
-             
-            return JsonResponse({ 
-                'data': 'Vote recorded successfully', 
-            }, status=status.HTTP_200_OK) 
-     
-    except Exception as error: 
-        return JsonResponse({ 
-            'error': str(error) 
+
+            emp_vote_status_serializer.save()
+
+            return JsonResponse({
+                'data': 'Vote recorded successfully',
+            }, status=status.HTTP_200_OK)
+
+    except Exception as error:
+        return JsonResponse({
+            'error': str(error)
         }, status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_election_vote_status(request, emp_id, election_id):
+def get_election_vote_status(request, user_id, election_id):
     try:
-        election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, emp_id=emp_id).exists()
+        election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, user_id=user_id).exists()
         is_emp_voted = False
         if election_vote_status:
             is_emp_voted = True
@@ -119,13 +130,13 @@ def get_election_vote_status(request, emp_id, election_id):
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_election_nomination_status(request, emp_id, election_id):
+def get_election_nomination_status(request, user_id, election_id):
     if not request.user.groups.filter(name=ct.USER).exists():
         return JsonResponse({
             'error': ct.ACCESS_DENIED
         }, status=status.HTTP_403_FORBIDDEN) 
     try:
-        election_nomination_status = list(NominationsModel.objects.filter(election_id=election_id, emp_id=emp_id).values())
+        election_nomination_status = list(NominationsModel.objects.filter(election_id=election_id, user_id=user_id).values())
         is_emp_nominated = False
         if election_nomination_status:
             is_emp_nominated = True

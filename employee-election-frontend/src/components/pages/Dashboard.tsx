@@ -5,9 +5,9 @@ import CreateElectionForm from "./ElectionForms/CreateElection";
 import PublishNominationElectionForm from "./ElectionForms/PublishNominationElectionForm";
 import { EmpDetailsInterface } from "../../interfaces/common.interface";
 import {
+  fetchUserDetails,
   getColorForStatus,
   getElectionStatus,
-  getUserDetails,
 } from "../../common/utils";
 import {
   getDashboardElectionList,
@@ -18,7 +18,6 @@ import {
   NOMINATIONS_ANNOUNCED,
   NOMINATIONS_COMPLETED,
   NOMINATIONS_LIVE,
-  VOTING_ANNOUNCED,
   VOTING_COMPLETED,
   VOTING_LIVE,
 } from "../../common/constants";
@@ -27,7 +26,7 @@ import Voting from "./ElectionForms/Voting";
 import { toast } from "../../common/toast/ToastService";
 
 const Dashboard: React.FC = () => {
-  const empDetails: EmpDetailsInterface = getUserDetails();
+  const userDetails: EmpDetailsInterface = fetchUserDetails();
   const [activeModalType, setActiveModalType] = useState<string>("");
 
   // Create Election
@@ -148,10 +147,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      {empDetails.isAdmin && (
+      {userDetails.group_id === 1 && (
         <Paper p="md" mb="md">
           <Group justify="flex-end">
-            {empDetails.isAdmin && (
+            {userDetails.group_id === 1 && (
               <Button onClick={triggerCreateElectionModal}>
                 Create Election
               </Button>
@@ -178,7 +177,7 @@ const Dashboard: React.FC = () => {
                   </Badge>
                 </Text>
                 <Group>
-                  {empDetails.isAdmin && (
+                  {userDetails.group_id === 1 && (
                     <Button
                       onClick={() => triggerPublishNominationModal(election)}
                       disabled={
@@ -188,7 +187,7 @@ const Dashboard: React.FC = () => {
                       Schedule Nomination
                     </Button>
                   )}
-                  {empDetails.isAdmin && (
+                  {userDetails.group_id === 1 && (
                     <Button
                       onClick={() => triggerPublishVotingModal(election)}
                       disabled={
@@ -205,7 +204,7 @@ const Dashboard: React.FC = () => {
                       Schedule polling
                     </Button>
                   )}
-                  {empDetails.isAdmin && (
+                  {userDetails.group_id === 1 && (
                     <Button
                       onClick={() => onPublishResult(election)}
                       disabled={
@@ -215,7 +214,7 @@ const Dashboard: React.FC = () => {
                       Publish Result
                     </Button>
                   )}
-                  {!empDetails.isAdmin && (
+                  {userDetails.group_id === 2 && (
                     <Button
                       onClick={() => triggerCreateNominationModal(election)}
                       disabled={
@@ -226,7 +225,7 @@ const Dashboard: React.FC = () => {
                     </Button>
                   )}
 
-                  {!empDetails.isAdmin && (
+                  {userDetails.group_id === 2 && (
                     <Button
                       disabled={getElectionStatus(election) !== VOTING_LIVE}
                       onClick={() => triggerVotingModal(election)}

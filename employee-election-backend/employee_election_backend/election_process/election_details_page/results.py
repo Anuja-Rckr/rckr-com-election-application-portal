@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_winner_details(request, election_id, emp_id):
+def get_winner_details(request, election_id, user_id):
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -40,8 +40,8 @@ def get_distribution_of_votes_number(election_id):
         NomineeVoteCountModel.objects
         .filter(election_id=election_id)  
         .select_related('nomination')
-        .annotate(emp_name=F('nomination__emp_name'))
-        .values('emp_name', 'total_votes')  
+        .annotate(user_name=F('nomination__user_name'))
+        .values('user_name', 'total_votes')  
     )
      return list(result)
 
@@ -49,7 +49,7 @@ def get_distribution_of_votes_percentage(election_id, distribution_of_votes_numb
     result = []
     for index, item in enumerate(distribution_of_votes_number):
         result_obj = {
-            'name' : item['emp_name'],
+            'name' : item['user_name'],
             'value': get_vote_percentage(total_election_votes,item['total_votes']),
             'color': ct.COLORS_LIST[index],
         }
@@ -84,8 +84,8 @@ def get_results_table_row_data(election_id):
         NomineeVoteCountModel.objects
         .filter(election_id=election_id)  
         .select_related('nomination')
-        .annotate(emp_name=F('nomination__emp_name'))
-        .values('emp_name','total_votes', )  
+        .annotate(user_name=F('nomination__emp_name'))
+        .values('user_name','total_votes', )  
     )
     total_election_votes = get_total_election_votes(election_id)
     for index, item in enumerate(results):
@@ -120,7 +120,7 @@ def get_emp_voted_list(request,election_id):
            'error': ct.ELECTION_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        row_data = list(EmpVotingModel.objects.filter(election_id=election_id).values('emp_id', 'emp_name'))
+        row_data = list(EmpVotingModel.objects.filter(election_id=election_id).values('user_id', 'user_name'))
         election_details = list(ElectionModel.objects.filter(election_id=election_id).values(*ct.ELECTION_REPORT_LISt))[0]
         return JsonResponse({
             'data': {'emp_vote_list': row_data, 'election_details': election_details}
