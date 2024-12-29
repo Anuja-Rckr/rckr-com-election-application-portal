@@ -29,7 +29,7 @@ export const DASHBOARD = "/dashboard";
 export const ELECTIONS = "/elections";
 export const YOUR_NOMINATIONS = "/your-nominations";
 export const HOME = "/";
-export const ELECTION_DETAILS = "/election-details/:id";
+export const ELECTION_DETAILS = "/election-details/:id/:tab?";
 export const LOGIN = "/login";
 
 // Menu options

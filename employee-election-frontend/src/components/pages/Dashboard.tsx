@@ -18,17 +18,19 @@ import {
   NOMINATIONS_ANNOUNCED,
   NOMINATIONS_COMPLETED,
   NOMINATIONS_LIVE,
+  RESULTS,
   VOTING_COMPLETED,
   VOTING_LIVE,
 } from "../../common/constants";
 import { DashboardElectionDetails } from "../../interfaces/election.interface";
 import Voting from "./ElectionForms/Voting";
 import { toast } from "../../common/toast/ToastService";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const userDetails: EmpDetailsInterface = fetchUserDetails();
   const [activeModalType, setActiveModalType] = useState<string>("");
-
+  const navigate = useNavigate();
   // Create Election
   const [isCreateElectionModal, setIsCreateElectionModal] =
     useState<boolean>(false);
@@ -118,19 +120,20 @@ const Dashboard: React.FC = () => {
     setDashboardElectionList(response);
   };
 
-  const onPublishResult = async (election: DashboardElectionDetails) => {
+  const onViewPublishResult = async (election: DashboardElectionDetails) => {
     setCurrentElectionDetails(election);
-    const requestBody = {
-      results_published_date: new Date(),
-    };
-    const response = await updateElectionDetails(
-      requestBody,
-      election?.election_id
-    );
-    toast.success("Results published successfully");
-    if (response) {
-      fetchDashboardElectionList();
-    }
+    navigate(`/election-details/${election.election_id}/${RESULTS}`);
+    // const requestBody = {
+    //   results_published_date: new Date(),
+    // };
+    // const response = await updateElectionDetails(
+    //   requestBody,
+    //   election?.election_id
+    // );
+    // toast.success("Results published successfully");
+    // if (response) {
+    //   fetchDashboardElectionList();
+    // }
   };
 
   useEffect(() => {
@@ -206,12 +209,12 @@ const Dashboard: React.FC = () => {
                   )}
                   {userDetails.group_id === 1 && (
                     <Button
-                      onClick={() => onPublishResult(election)}
+                      onClick={() => onViewPublishResult(election)}
                       disabled={
                         getElectionStatus(election) !== VOTING_COMPLETED
                       }
                     >
-                      Publish Result
+                      View & Publish Result
                     </Button>
                   )}
                   {userDetails.group_id === 2 && (

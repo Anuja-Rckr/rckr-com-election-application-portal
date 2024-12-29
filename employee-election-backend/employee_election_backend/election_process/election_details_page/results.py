@@ -84,7 +84,7 @@ def get_results_table_row_data(election_id):
         NomineeVoteCountModel.objects
         .filter(election_id=election_id)  
         .select_related('nomination')
-        .annotate(user_name=F('nomination__emp_name'))
+        .annotate(user_name=F('nomination__user_name'))
         .values('user_name','total_votes', )  
     )
     total_election_votes = get_total_election_votes(election_id)

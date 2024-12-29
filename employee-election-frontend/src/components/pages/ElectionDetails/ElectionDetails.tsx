@@ -29,16 +29,14 @@ import {
   VOTING_LIVE,
 } from "../../../common/constants";
 import {
+  fetchUserDetails,
   formatDate,
   getActiveNumber,
   getColorForStatus,
   getElectionStatus,
   isDateValid,
 } from "../../../common/utils";
-import {
-  ElectionDetailsProps,
-  overviewData,
-} from "../../../interfaces/election.interface";
+import { overviewData } from "../../../interfaces/election.interface";
 import NominationTab from "../ElectionDetails/NominationTab";
 import Results from "./Results";
 import { useEffect, useState } from "react";
@@ -46,12 +44,14 @@ import {
   getElectionOverview,
   getElectionTimeline,
 } from "../../../services/ApiService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ElectionTimelineDetails } from "../../../interfaces/common.interface";
 
-const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
-  const { id } = useParams<{ id: string }>();
+const ElectionDetails = () => {
+  const { id, tab = OVERVIEW } = useParams<{ id: string; tab: string }>();
   const electionId = id;
+  const navigate = useNavigate();
+  const userDetails = fetchUserDetails();
   const [electionOverviewDetails, setElectionOverviewDetails] = useState<
     overviewData[]
   >([]);
@@ -79,7 +79,7 @@ const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await setActiveTab(setTab);
+      await handleTabChange(tab);
       await fetchElectionOverviewDetails();
       await fetchElectionTimelineDetails();
     };
@@ -90,6 +90,7 @@ const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
   const handleTabChange = (value: string | null) => {
     if (value) {
       setActiveTab(value);
+      navigate(`/election-details/${electionId}/${value}`);
     }
   };
 
@@ -419,7 +420,11 @@ const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
           <Tabs.Tab
             value={RESULTS}
             leftSection={<IconReportAnalytics />}
-            disabled={electionStatus !== CLOSED}
+            disabled={
+              (userDetails.group_id === 2 && electionStatus !== CLOSED) ||
+              (userDetails.group_id === 1 &&
+                ![VOTING_COMPLETED, CLOSED].includes(electionStatus))
+            }
           >
             Results
           </Tabs.Tab>
@@ -435,7 +440,11 @@ const ElectionDetails = ({ setTab = OVERVIEW }: ElectionDetailsProps) => {
         </Tabs.Panel>
 
         <Tabs.Panel value={RESULTS}>
-          {electionStatus === CLOSED && <Results />}
+          {(userDetails.group_id === 2 && electionStatus === CLOSED) ||
+            (userDetails.group_id === 1 &&
+              [VOTING_COMPLETED, CLOSED].includes(electionStatus) && (
+                <Results />
+              ))}
         </Tabs.Panel>
       </Tabs>
     </>

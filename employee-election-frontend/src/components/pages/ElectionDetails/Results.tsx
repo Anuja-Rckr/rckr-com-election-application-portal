@@ -1,4 +1,4 @@
-import { Box, Flex, Group, Paper, Stack, Text } from "@mantine/core";
+import { Box, Button, Flex, Group, Paper, Stack, Text } from "@mantine/core";
 import {
   DashboardElectionDetails,
   DistributionOfVotesNumber,
@@ -14,12 +14,14 @@ import {
   getElectionResultsTable,
   getElectionWinnerDetails,
   getEmpVoteList,
+  updateElectionDetails,
 } from "../../../services/ApiService";
 import CountCard from "../../common/CountCard";
 import { ColumnData } from "../../../interfaces/common.interface";
 import FlatTable from "../../common/FlatTable";
 import { fetchUserDetails } from "../../../common/utils";
 import DownloadReportButton from "./DownloadReport";
+import { toast } from "../../../common/toast/ToastService";
 
 const Results = () => {
   console.log("rrrr");
@@ -39,6 +41,7 @@ const Results = () => {
   const [empVoteList, setEmpVoteList] = useState<EmpVoteList[]>([]);
   const [electionDetails, setElectionDetails] =
     useState<DashboardElectionDetails | null>(null);
+  const [isPublishResults, setIsPublishResults] = useState<boolean>(false);
 
   const fetchWinnerDetails = async () => {
     if (electionId) {
@@ -86,6 +89,22 @@ const Results = () => {
     fetchData();
   }, [electionId]);
 
+  const onPublishResult = async () => {
+    if (electionId) {
+      const requestBody = {
+        results_published_date: new Date(),
+      };
+      const response = await updateElectionDetails(
+        requestBody,
+        parseInt(electionId)
+      );
+      if (response) {
+        setIsPublishResults(true);
+        toast.success("Results published successfully");
+      }
+    }
+  };
+
   const renderWinnerDetails = () => {
     return (
       <>
@@ -111,14 +130,19 @@ const Results = () => {
             </Group>
           </Paper>
           {userDetails.group_id === 1 && (
-            <DownloadReportButton
-              StatCards={StatCards}
-              resultsColData={resultsColData}
-              resultsRowData={resultsRowData}
-              winnerDetails={winnerDetails}
-              empVoteList={empVoteList}
-              electionDetails={electionDetails}
-            />
+            <Group>
+              <Button onClick={onPublishResult} disabled={isPublishResults}>
+                Publish Results
+              </Button>
+              <DownloadReportButton
+                StatCards={StatCards}
+                resultsColData={resultsColData}
+                resultsRowData={resultsRowData}
+                winnerDetails={winnerDetails}
+                empVoteList={empVoteList}
+                electionDetails={electionDetails}
+              />
+            </Group>
           )}
         </Group>
       </>
