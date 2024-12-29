@@ -24,7 +24,6 @@ import DownloadReportButton from "./DownloadReport";
 import { toast } from "../../../common/toast/ToastService";
 
 const Results = () => {
-  console.log("rrrr");
   const { id } = useParams<{ id: string }>();
   const electionId = id;
   const userDetails = fetchUserDetails();

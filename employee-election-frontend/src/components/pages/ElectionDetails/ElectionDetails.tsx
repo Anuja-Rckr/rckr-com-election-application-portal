@@ -440,11 +440,11 @@ const ElectionDetails = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value={RESULTS}>
-          {(userDetails.group_id === 2 && electionStatus === CLOSED) ||
+          {((userDetails.group_id === 2 && [CLOSED].includes(electionStatus)) ||
             (userDetails.group_id === 1 &&
-              [VOTING_COMPLETED, CLOSED].includes(electionStatus) && (
-                <Results />
-              ))}
+              [VOTING_COMPLETED, CLOSED].includes(electionStatus))) && (
+            <Results />
+          )}
         </Tabs.Panel>
       </Tabs>
     </>
