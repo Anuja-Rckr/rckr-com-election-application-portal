@@ -13,9 +13,11 @@ import {
 } from "@mantine/core";
 import {
   fetchUserDetails,
+  formatDate,
   generateRandomColor,
   getElectionStatus,
   getInitials,
+  isDateValid,
 } from "../../../common/utils";
 import { NominationFormProps } from "../../../interfaces/election.interface";
 import {
@@ -23,6 +25,7 @@ import {
   getEmpNominationStatus,
 } from "../../../services/ApiService";
 import {
+  DATETIME,
   GREEN,
   NOMINATIONS_COMPLETED,
   NOMINATIONS_LIVE,
@@ -30,6 +33,7 @@ import {
 } from "../../../common/constants";
 import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
 import { toast } from "../../../common/toast/ToastService";
+import Timer from "../../common/Timer";
 
 const NominationForm = ({
   isOpened,
@@ -41,6 +45,15 @@ const NominationForm = ({
   const [submittedValues, setSubmittedValues] = useState<any>(null);
   const [isEmpNominated, setIsEmpNominated] = useState<boolean>(false);
 
+  const [isNominationDisabled, setIsNominationDisabled] =
+    useState<boolean>(false);
+  const [isTimerCompleted, setIsTimerCompleted] = useState<boolean>(false);
+
+  const handleTimerExpire = () => {
+    setIsNominationDisabled(true);
+    setIsTimerCompleted(true);
+  };
+
   const fetchNominationStatus = async () => {
     if (electionDetails?.election_id) {
       const response = await getEmpNominationStatus(
@@ -48,6 +61,7 @@ const NominationForm = ({
         electionDetails?.election_id
       );
       setIsEmpNominated(response.is_emp_nominated);
+      setIsNominationDisabled(response.is_emp_nominated);
     }
   };
 
@@ -97,6 +111,7 @@ const NominationForm = ({
       };
       if (electionDetails?.election_id) {
         createNomination(requestBody, electionDetails?.election_id);
+        setIsNominationDisabled(true);
         toast.success("Nomination created successfully");
       }
       handleClose();
@@ -111,22 +126,57 @@ const NominationForm = ({
         title="Create Nomination"
         position="right"
       >
-        {isEmpNominated &&
-          getElectionStatus(electionDetails) === NOMINATIONS_LIVE && (
-            <Alert
-              mb="md"
-              variant="light"
-              color={GREEN}
-              title="You have already nominated"
-              icon={<IconCircleCheck size={50} />}
-            ></Alert>
+        {isDateValid(
+          electionDetails?.nomination_start_date,
+          electionDetails?.nomination_end_date
+        ) &&
+          electionDetails?.nomination_end_date && (
+            <Timer
+              isValidDate={isDateValid(
+                electionDetails.nomination_start_date,
+                electionDetails.nomination_end_date
+              )}
+              type="nomination"
+              endTime={electionDetails.nomination_end_date}
+              onExpire={handleTimerExpire}
+            />
           )}
-        {getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED && (
+        {!isDateValid(
+          electionDetails?.nomination_start_date,
+          electionDetails?.nomination_end_date
+        ) &&
+          electionDetails?.nomination_start_date && (
+            <Timer
+              isValidDate={isDateValid(
+                electionDetails.nomination_start_date,
+                electionDetails.nomination_end_date
+              )}
+              type="nomination"
+              endTime={electionDetails.nomination_start_date}
+              onExpire={handleTimerExpire}
+            />
+          )}
+        {isNominationDisabled && !isTimerCompleted && (
           <Alert
-            mb="md"
+            variant="light"
+            color={GREEN}
+            title={`You have already nominated on ${
+              isEmpNominated
+                ? formatDate(
+                    electionDetails?.created_at || new Date().toISOString(),
+                    DATETIME
+                  )
+                : formatDate(new Date().toISOString(), DATETIME)
+            }`}
+            icon={<IconCircleCheck size={50} />}
+          />
+        )}
+        {isNominationDisabled && isTimerCompleted && (
+          <Alert
             variant="light"
             color={RED}
             title="The Nominations are closed"
+            mb="md"
             icon={<IconSquareRoundedX size={50} />}
           ></Alert>
         )}
@@ -145,7 +195,7 @@ const NominationForm = ({
             placeholder="Enter RCKR employee ID"
             withAsterisk
             disabled={
-              (isEmpNominated &&
+              (isNominationDisabled &&
                 getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
               getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
             }
@@ -171,7 +221,7 @@ const NominationForm = ({
             mt="md"
             key={form.key("appeal")}
             disabled={
-              (isEmpNominated &&
+              (isNominationDisabled &&
                 getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
               getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
             }
@@ -182,7 +232,7 @@ const NominationForm = ({
             mt="xl"
             type="submit"
             disabled={
-              (isEmpNominated &&
+              (isNominationDisabled &&
                 getElectionStatus(electionDetails) === NOMINATIONS_LIVE) ||
               getElectionStatus(electionDetails) === NOMINATIONS_COMPLETED
             }

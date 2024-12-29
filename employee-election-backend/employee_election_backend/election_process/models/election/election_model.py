@@ -15,6 +15,7 @@ class ElectionModel(models.Model):
     created_by_empid = models.IntegerField(blank=True, null=True) 
     results_published_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    election_total_votes = models.IntegerField(blank=False, null=False)
     
     class Meta:
         db_table = "election"

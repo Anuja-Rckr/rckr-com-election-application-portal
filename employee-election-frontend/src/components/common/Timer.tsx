@@ -4,15 +4,16 @@ import { RED } from "../../common/constants";
 import { TimerProps } from "../../interfaces/election.interface";
 
 const Timer = ({
-  votingEndTime,
+  endTime,
   onExpire,
   isValidDate,
+  type,
 }: TimerProps & { onExpire: () => void }) => {
   const [timeLeft, setTimeLeft] = useState("");
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const calculateTimeLeft = () => {
-    const utcDate = new Date(votingEndTime);
+    const utcDate = new Date(endTime);
 
     const currentTime = new Date();
 
@@ -48,13 +49,22 @@ const Timer = ({
     setIntervalId(interval);
 
     return () => clearInterval(interval);
-  }, [votingEndTime]);
+  }, [endTime]);
 
   return (
     <Group justify="center" mb="md">
-      <Text color={RED}>
-        {isValidDate ? "Voting ends in" : "Voting starts in"}
-      </Text>
+      {type === "voting" && (
+        <Text color={RED}>
+          {isValidDate ? "Voting ends in" : "Voting starts in"}
+        </Text>
+      )}
+      {type === "nomination" && (
+        <Text color={RED}>
+          {isValidDate
+            ? "Nomination process ends in"
+            : "Nomination process starts in"}
+        </Text>
+      )}
       <Stack className="timer" p="sm">
         <Text>Days : Hours : Mins : Seconds</Text>
         <Text className="timer-font">{timeLeft}</Text>

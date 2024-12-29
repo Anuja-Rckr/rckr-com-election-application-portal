@@ -40,7 +40,7 @@ def get_voting_list(request, election_id):
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
-    try:
+    try:    
         voting_list_column_data = get_voting_list_column_data()
         voting_list_row_data = list(NominationsModel.objects.filter(election_id=election_id).values().order_by('-rckr_emp_id'))
         return JsonResponse({'data': {'column_data': voting_list_column_data, 'row_data': voting_list_row_data}}, status=status.HTTP_200_OK)

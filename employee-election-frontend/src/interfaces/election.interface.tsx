@@ -89,6 +89,7 @@ export interface createElectionInterface {
   election_eligibility: ElectionEligibility;
   created_by_name: string;
   created_by_empid: number;
+  election_total_votes: string;
 }
 
 export interface ElectionEligibility {
@@ -141,9 +142,10 @@ export interface VotingListProps {
 }
 
 export interface TimerProps {
-  votingEndTime: string;
+  endTime: string;
   onExpire: () => void;
   isValidDate: boolean;
+  type: string;
 }
 
 export interface StatCard {

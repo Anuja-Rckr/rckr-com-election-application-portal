@@ -220,7 +220,7 @@ def get_voting_list_column_data():
     result = [
         {
             'title': 'RCKR Employee ID',
-            'field': 'user_id',
+            'field': 'rckr_emp_id',
             'type': 'data'
         },
         {

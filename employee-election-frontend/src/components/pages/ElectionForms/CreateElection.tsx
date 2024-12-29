@@ -1,5 +1,12 @@
 import { useForm, isNotEmpty } from "@mantine/form";
-import { Button, TextInput, Drawer, Textarea, Text } from "@mantine/core";
+import {
+  Button,
+  TextInput,
+  Drawer,
+  Textarea,
+  Text,
+  NumberInput,
+} from "@mantine/core";
 import {
   createElectionInterface,
   NominationFormProps,
@@ -19,10 +26,12 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
       electionReward: "",
       electionNominationEligibility: "",
       electionVotingEligibility: "",
+      electionTotalVotes: "",
     },
     validate: {
       electionTitle: isNotEmpty("Election title is required"),
       electionDescription: isNotEmpty("Election description is required"),
+      electionTotalVotes: isNotEmpty("Election total votes"),
     },
   });
 
@@ -37,6 +46,7 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
       },
       created_by_name: userDetails.user_name,
       created_by_empid: userDetails.user_id,
+      election_total_votes: values.electionTotalVotes,
     };
     createElection(electionDetails);
     toast.success("Election created successfully");
@@ -70,6 +80,12 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
           minRows={3}
           mt="md"
           {...form.getInputProps("electionDescription")}
+        />
+        <NumberInput
+          label="Election Total votes"
+          placeholder="Enter total votes"
+          mt="md"
+          {...form.getInputProps("electionTotalVotes")}
         />
         <TextInput
           label="Reward"

@@ -132,7 +132,8 @@ const Voting = ({
                 electionDetails.voting_start_date,
                 electionDetails.voting_end_date
               )}
-              votingEndTime={electionDetails.voting_end_date}
+              type="voting"
+              endTime={electionDetails.voting_end_date}
               onExpire={handleTimerExpire}
             />
           )}
@@ -146,7 +147,8 @@ const Voting = ({
                 electionDetails.voting_start_date,
                 electionDetails.voting_end_date
               )}
-              votingEndTime={electionDetails.voting_start_date}
+              type="voting"
+              endTime={electionDetails.voting_start_date}
               onExpire={handleTimerExpire}
             />
           )}
