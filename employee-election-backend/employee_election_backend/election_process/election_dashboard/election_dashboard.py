@@ -1,4 +1,5 @@
 from datetime import datetime
+import threading
 from rest_framework.decorators import api_view,permission_classes
 from django.http import JsonResponse
 from rest_framework import status
@@ -13,6 +14,8 @@ from django.db.models import F
 from rest_framework.permissions import IsAuthenticated
 from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
 from django.contrib.auth.models import User
+
+from communication.email.email_sender import trigger_single_email
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -100,8 +103,18 @@ def create_vote(request, election_id):
                 nominee_vote_count_obj.total_votes = F('total_votes') + 1
                 nominee_vote_count_obj.save()
 
-            emp_vote_status_serializer.save()
-
+            emp_vote_data = emp_vote_status_serializer.save()
+            election_details = ElectionModel.objects.filter(election_id=election_id).values("election_title").first()
+            email_details = {
+                "election_title": election_details['election_title'],
+                "user_id": vote_details['user_id'],
+                "created_at": EmpVotingSerializer(emp_vote_data).data.get('voted_at')
+            }
+            email_thread = threading.Thread(
+                target=trigger_single_email,
+                args=('record_vote', email_details)
+                )
+            email_thread.start()
             return JsonResponse({
                 'data': 'Vote recorded successfully',
             }, status=status.HTTP_200_OK)

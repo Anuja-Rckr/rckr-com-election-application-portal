@@ -5,7 +5,8 @@ from common import constants as ct
 from election_process.models.election.election_serializer import ElectionSerializer
 from election_process.models.election.election_model import ElectionModel
 from rest_framework.permissions import IsAuthenticated
-
+from communication.email.email_sender import trigger_email
+import threading
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -23,6 +24,11 @@ def create_election(request):
         serializer = ElectionSerializer(data=election_details)
         if serializer.is_valid():
             created_election = serializer.save()
+            email_thread = threading.Thread(
+                target=trigger_email,
+                args=('creation', election_details)
+            )
+            email_thread.start()
             return JsonResponse({
                 'data': ElectionSerializer(created_election).data
             }, status=status.HTTP_200_OK)
@@ -54,6 +60,20 @@ def update_election(request, election_id):
         serializer = ElectionSerializer(election, data=election_details, partial=True)
         if serializer.is_valid():
             updated_election_details = serializer.save()
+            type = "results"
+            if election_details.get('results_published_date'):
+                type = "results"
+            elif election_details.get('voting_start_date') and election_details.get('voting_end_date'):
+                type = "voting"
+            elif election_details.get('nomination_start_date') and election_details.get('nomination_end_date'):
+                type = "nomination"
+            election_data = ElectionSerializer(updated_election_details).data
+            email_thread = threading.Thread(
+            target=trigger_email,
+            args=(type, election_data)
+            )
+            email_thread.start()
+
             return JsonResponse({
                 'data': ElectionSerializer(updated_election_details).data
             }, status=status.HTTP_200_OK)

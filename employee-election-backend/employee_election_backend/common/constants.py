@@ -114,3 +114,6 @@ COLORS_LIST = [
 # Roles
 ADMIN = 'Admin'
 USER = 'User'
+
+#Subjects
+ELECTION_SUBJECT = "Election Management"

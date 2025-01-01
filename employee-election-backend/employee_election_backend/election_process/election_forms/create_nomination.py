@@ -1,3 +1,4 @@
+import threading
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -6,6 +7,9 @@ from election_process.models.nominations.nominations_serializer import Nominatio
 from election_process.models.nominations.nominations_model import NominationsModel
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
+
+from communication.email.email_sender import trigger_single_email
+from election_process.models.election.election_model import ElectionModel
 
 
 @api_view(['POST'])
@@ -42,6 +46,17 @@ def create_emp_nomination(request, election_id):
 
         if serializer.is_valid():
             created_nomination = serializer.save()
+            election_details = ElectionModel.objects.filter(election_id=election_id).values("election_title").first()
+            email_details = {
+                "election_title": election_details['election_title'],
+                "user_id": nomination_details['user_id'],
+                "created_at": NominationsSerializer(created_nomination).data.get('created_at')
+            }
+            email_thread = threading.Thread(
+                target=trigger_single_email,
+                args=('create_nomination', email_details)
+                )
+            email_thread.start()
             return JsonResponse({
                 'data': NominationsSerializer(created_nomination).data
             }, status=status.HTTP_201_CREATED)
