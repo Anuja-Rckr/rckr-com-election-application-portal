@@ -107,7 +107,6 @@ export interface UpdateElection {
 
 export interface CreateNominationForm {
   rckr_emp_id: number;
-  user_name: string;
   appeal: string;
 }
 

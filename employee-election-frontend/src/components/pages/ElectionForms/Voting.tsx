@@ -80,7 +80,6 @@ const Voting = ({
   const onConfirmVote = async () => {
     if (electionDetails?.election_id) {
       const requestBody = {
-        user_name: userDetails.user_name,
         nominee_user_id: currentVote?.user_id,
       };
       castVote(requestBody, electionDetails?.election_id);

@@ -10,6 +10,7 @@ from election_process.models.election.election_model import ElectionModel
 from common.mappings import get_results_stat_cards, results_winner_table_col_data
 from election_process.models.emp_voting.emp_voting_model import EmpVotingModel
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -23,15 +24,20 @@ def get_winner_details(request, election_id):
            'error': ct.ELECTION_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        winner_votes = NomineeVoteCountModel.objects.filter(election_id=election_id).values('total_votes', 'nomination_id').order_by('-total_votes').first()
-        winner_details = NominationsModel.objects.filter(nomination_id=winner_votes['nomination_id']).values(*ct.WINNER_DETAILS_LIST).first()
-        if winner_details:
-            winner_details = {**winner_details, 'total_votes': winner_votes['total_votes']}
-        total_election_votes = get_total_election_votes(election_id)
-        if not winner_details or not winner_votes:
+        user_id = request.user.id
+        user_details = User.objects.get(id=user_id)
+        nomination_ids = NominationsModel.objects.filter(election_id=election_id).values_list('nomination_id', flat=True)
+        winner_votes = NomineeVoteCountModel.objects.filter(nomination_id__in=nomination_ids).values().order_by('-total_votes').first()   
+        if not winner_votes:
             return JsonResponse({
                 'error': ct.NO_WINNER_FOR_ELECTION
             }, status=status.HTTP_404_NOT_FOUND)
+        winner_details = {
+            'user_id': user_id,
+            'user_name': user_details.username,
+            'total_votes': winner_votes['total_votes']
+        }
+        total_election_votes = get_total_election_votes(election_id)
         return JsonResponse({
             'data': get_winner_details_list(winner_details, total_election_votes)
         }, status=status.HTTP_200_OK)
@@ -40,14 +46,25 @@ def get_winner_details(request, election_id):
     
 
 def get_distribution_of_votes_number(election_id):
-     result = (
-        NomineeVoteCountModel.objects
-        .filter(election_id=election_id)  
-        .select_related('nomination')
-        .annotate(user_name=F('nomination__user_name'))
-        .values('user_name', 'total_votes')  
-    )
-     return list(result)
+    nomination_ids = list(NominationsModel.objects.filter(election_id=election_id).values('nomination_id', 'user_id'))
+    
+    result = []
+    
+    for item in nomination_ids:
+        user_name = User.objects.get(id=item['user_id']).username
+        nominee_vote_count_objs = NomineeVoteCountModel.objects.filter(nomination_id=item['nomination_id'])
+        
+        total_votes = sum(obj.total_votes for obj in nominee_vote_count_objs)  # Aggregate the total votes if multiple records exist
+        
+        vote_item = {
+            'user_name': user_name,
+            'total_votes': total_votes
+        }
+        
+        result.append(vote_item)
+
+    return result
+
 
 def get_distribution_of_votes_percentage(election_id, distribution_of_votes_number, total_election_votes):     
     result = []
@@ -88,13 +105,7 @@ def get_results_chart_data(request, election_id):
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
     
 def get_results_table_row_data(election_id):
-    results = list(
-        NomineeVoteCountModel.objects
-        .filter(election_id=election_id)  
-        .select_related('nomination')
-        .annotate(user_name=F('nomination__user_name'))
-        .values('user_name','total_votes', )  
-    )
+    results = get_distribution_of_votes_number(election_id)
     total_election_votes = get_total_election_votes(election_id)
     for index, item in enumerate(results):
         item['total_votes_%'] = f'{get_vote_percentage(total_election_votes, item['total_votes'])} %'
@@ -136,7 +147,13 @@ def get_emp_voted_list(request,election_id):
            'error': ct.ELECTION_ID_REQUIRED
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        row_data = list(EmpVotingModel.objects.filter(election_id=election_id).values('user_id', 'user_name'))
+        row_data = list(EmpVotingModel.objects.filter(election_id=election_id)
+                    .select_related('user')
+                    .annotate(
+                    user_name=F('user__username'),
+                    )
+                    .values('user_id', 'user_name')
+                    )
         election_details = list(ElectionModel.objects.filter(election_id=election_id).values(*ct.ELECTION_REPORT_LISt))[0]
         return JsonResponse({
             'data': {'emp_vote_list': row_data, 'election_details': election_details}

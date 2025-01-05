@@ -45,7 +45,21 @@ def get_voting_list(request, election_id):
        }, status=status.HTTP_400_BAD_REQUEST)
     try:    
         voting_list_column_data = get_voting_list_column_data()
-        voting_list_row_data = list(NominationsModel.objects.filter(election_id=election_id).values().order_by('-rckr_emp_id'))
+        voting_list_row_data = list(
+        NominationsModel.objects.filter(election_id=election_id)
+        .select_related('user')  
+        .annotate(
+        user_name=F('user__username')  
+        )
+        .values(
+        'rckr_emp_id',    
+        'appeal',         
+        'nomination_id',  
+        'user_id',
+        'user_name'       
+        )
+        .order_by('-rckr_emp_id')
+        )
         return JsonResponse({'data': {'column_data': voting_list_column_data, 'row_data': voting_list_row_data}}, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
@@ -54,8 +68,7 @@ def get_voting_list(request, election_id):
 @permission_classes([IsAuthenticated])
 def create_vote(request, election_id):
     user_id = request.user.id
-    vote_details = request.data
-    vote_details['election'] = election_id
+    nominee_user_id = request.data.get('nominee_user_id')
 
     if not election_id:
         return JsonResponse({
@@ -77,9 +90,12 @@ def create_vote(request, election_id):
                 return JsonResponse({
                     'error': 'Employee has already cast their vote'
                 }, status=status.HTTP_400_BAD_REQUEST)
-
-            vote_details['user'] = user_id 
-            emp_vote_status_serializer = EmpVotingSerializer(data=vote_details)
+            
+            emp_voting_model_details = {
+                'election': election_id,
+                'user': user_id
+            }
+            emp_vote_status_serializer = EmpVotingSerializer(data=emp_voting_model_details)
             if not emp_vote_status_serializer.is_valid():
                 return JsonResponse(
                     emp_vote_status_serializer.errors,
@@ -87,15 +103,12 @@ def create_vote(request, election_id):
                 )
 
             nomination = NominationsModel.objects.get(
-                user_id=vote_details['nominee_user_id'],
+                user_id=nominee_user_id,
                 election_id=election_id
             )
-            nomination_id = nomination.nomination_id
 
             nominee_vote_count_obj, created = NomineeVoteCountModel.objects.get_or_create(
-                election_id=election_id,
-                user_id=vote_details.get('nominee_user_id'),
-                nomination_id=nomination_id,
+                nomination_id=nomination.nomination_id,
                 defaults={'total_votes': 1}
             )
 

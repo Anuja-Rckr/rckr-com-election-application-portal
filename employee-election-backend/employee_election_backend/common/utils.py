@@ -25,7 +25,8 @@ def get_vote_percentage(total_votes, candidate_votes):
     return round(result,2)
 
 def get_total_election_votes(election_id):
-    result = NomineeVoteCountModel.objects.filter(election_id=election_id).aggregate(total_votes=Sum('total_votes'))
+    nomination_ids = NominationsModel.objects.filter(election_id=election_id).values_list('nomination_id', flat=True)
+    result = NomineeVoteCountModel.objects.filter(nomination_id__in=nomination_ids).aggregate(total_votes=Sum('total_votes'))
     total_votes = result['total_votes'] if result['total_votes'] is not None else 0
     return total_votes
 
@@ -146,7 +147,7 @@ def get_nominations_details_list(nomination_details,total_nominations):
 def get_winner_details_list(winner_details, total_votes):
     result = [
         {
-            'title': 'Emp ID',
+            'title': 'User ID',
             'value': winner_details['user_id'],
             'type': 'data'
         },

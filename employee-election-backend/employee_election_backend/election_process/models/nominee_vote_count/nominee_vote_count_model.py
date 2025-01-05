@@ -5,9 +5,7 @@ from django.contrib.auth.models import User
 
 class NomineeVoteCountModel(models.Model):
     nominee_vote_count_id = models.AutoField(primary_key=True)
-    election = models.ForeignKey(ElectionModel, on_delete=models.CASCADE)
     nomination = models.ForeignKey(NominationsModel, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     total_votes = models.IntegerField(default=0)
     last_updated_at = models.DateTimeField(auto_now=True)
 

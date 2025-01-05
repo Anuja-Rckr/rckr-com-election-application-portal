@@ -21,6 +21,7 @@ def create_election(request):
            'error': ct.ELECTION_DETAILS_EMPTY
        }, status=status.HTTP_400_BAD_REQUEST)
     try:
+        election_details['created_by_empid'] = request.user.id
         serializer = ElectionSerializer(data=election_details)
         if serializer.is_valid():
             created_election = serializer.save()

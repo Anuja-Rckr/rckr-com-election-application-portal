@@ -16,7 +16,7 @@ import {
   getElectionNominationDetails,
 } from "../../../services/ApiService";
 
-const NavigationTab = () => {
+const NominationTab = () => {
   const { id } = useParams<{ id: string }>();
   const electionId = id;
   const [nominationDetails, setNominationDetails] = useState<overviewData[]>(
@@ -117,4 +117,4 @@ const NavigationTab = () => {
   );
 };
 
-export default NavigationTab;
+export default NominationTab;

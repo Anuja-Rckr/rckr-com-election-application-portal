@@ -6,6 +6,8 @@ from election_process.models.election.election_model import ElectionModel
 from election_process.models.nominations.nominations_model import NominationsModel
 from common.utils import get_nominations_details_list
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from django.db.models import F
 
 
 @api_view(['GET'])
@@ -33,7 +35,14 @@ def get_nomination_candidates_list(request, election_id):
         }, status=status.HTTP_400_BAD_REQUEST)
     
     try:
-        nominations_list = list(NominationsModel.objects.filter(election_id=int(election_id)).values())
+        nominations_list = list(
+            NominationsModel.objects
+            .filter(election_id=int(election_id))
+            .select_related('user')
+            .annotate(
+            user_name=F('user__username')  
+            ).
+            values())
         return JsonResponse({'data': nominations_list}, status=status.HTTP_200_OK)
     except Exception as error:
         return JsonResponse({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)

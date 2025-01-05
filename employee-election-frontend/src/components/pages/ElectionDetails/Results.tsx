@@ -71,6 +71,9 @@ const Results = () => {
       const response = await getEmpVoteList(electionId);
       setEmpVoteList(response.emp_vote_list);
       setElectionDetails(response.election_details);
+      setIsPublishResults(
+        response.election_details.results_published_date !== null
+      );
     }
   };
 

@@ -104,7 +104,6 @@ const NominationForm = ({
       setIsConfirmModalOpen(false);
       const requestBody = {
         rckr_emp_id: submittedValues.rckrEmpId,
-        user_name: submittedValues.userName,
         appeal: submittedValues.appeal,
       };
       if (electionDetails?.election_id) {

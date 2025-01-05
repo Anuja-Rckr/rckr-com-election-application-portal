@@ -46,11 +46,6 @@ NOMINATION_DETAILS_FIELDS = [
     'nomination_end_date'
 ]
 
-WINNER_DETAILS_LIST = [
-    'user_id',
-    'user_name',
-]
-
 DASHBOARD_ELECTION_LIST = [
     'election_id', 
     'election_title', 
@@ -97,6 +92,30 @@ ACCESS_DENIED= "Access Denied."
 
 # Colors Array
 COLORS_LIST = [
+    'orange.0',
+    'orange.1',
+    'orange.2',
+    'orange.3',
+    'orange.4',
+    'orange.5',
+    'yellow.0',
+    'yellow.1',
+    'yellow.2',
+    'yellow.3',
+    'yellow.4',
+    'yellow.5',
+    'orange.0',
+    'orange.1',
+    'orange.2',
+    'orange.3',
+    'orange.4',
+    'orange.5',
+    'yellow.0',
+    'yellow.1',
+    'yellow.2',
+    'yellow.3',
+    'yellow.4',
+    'yellow.5',
     'orange.0',
     'orange.1',
     'orange.2',
