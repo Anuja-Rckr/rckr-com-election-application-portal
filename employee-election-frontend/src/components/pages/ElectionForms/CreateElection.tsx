@@ -45,7 +45,6 @@ const CreateElectionForm = ({ isOpened, onClose }: NominationFormProps) => {
         voting_eligibility: values.electionVotingEligibility,
       },
       created_by_name: userDetails.user_name,
-      created_by_empid: userDetails.user_id,
       election_total_votes: values.electionTotalVotes,
     };
     createElection(electionDetails);

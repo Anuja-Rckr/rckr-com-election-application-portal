@@ -88,7 +88,7 @@ export interface createElectionInterface {
   election_reward: string;
   election_eligibility: ElectionEligibility;
   created_by_name: string;
-  created_by_empid: number;
+  created_by_empid?: number;
   election_total_votes: string;
 }
 
@@ -107,7 +107,6 @@ export interface UpdateElection {
 
 export interface CreateNominationForm {
   rckr_emp_id: number;
-  user_id: number;
   user_name: string;
   appeal: string;
 }

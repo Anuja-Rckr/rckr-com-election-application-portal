@@ -80,7 +80,6 @@ const Voting = ({
   const onConfirmVote = async () => {
     if (electionDetails?.election_id) {
       const requestBody = {
-        user_id: userDetails.user_id,
         user_name: userDetails.user_name,
         nominee_user_id: currentVote?.user_id,
       };
@@ -94,10 +93,7 @@ const Voting = ({
 
   const fetchEmpVoteStatus = async () => {
     if (electionDetails?.election_id) {
-      const response = await getEmpVoteStatus(
-        userDetails.user_id,
-        electionDetails?.election_id
-      );
+      const response = await getEmpVoteStatus(electionDetails?.election_id);
       setEmpVoteStatus(response.is_emp_voted);
       setIsVotingDisabled(response.is_emp_voted);
     }

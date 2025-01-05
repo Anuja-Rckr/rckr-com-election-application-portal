@@ -18,7 +18,6 @@ def set_http_cookie(token_value, user_details,group_id):
     response_obj = { 
         'user_name': user_details.username, 
         'email': user_details.email, 
-        'user_id': user_details.id,
         'group_id': group_id
     } 
     api_response = JsonResponse({'data': response_obj}, status=status.HTTP_200_OK) 

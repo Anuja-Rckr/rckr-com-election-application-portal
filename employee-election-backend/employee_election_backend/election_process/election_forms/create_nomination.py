@@ -29,7 +29,7 @@ def create_emp_nomination(request, election_id):
        }, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        user_id = nomination_details.get('user_id')
+        user_id = request.user.id
         if not User.objects.filter(id=user_id).exists():
             return JsonResponse({'error': 'Invalid user ID'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -49,7 +49,7 @@ def create_emp_nomination(request, election_id):
             election_details = ElectionModel.objects.filter(election_id=election_id).values("election_title").first()
             email_details = {
                 "election_title": election_details['election_title'],
-                "user_id": nomination_details['user_id'],
+                "user_id": request.user.id,
                 "created_at": NominationsSerializer(created_nomination).data.get('created_at')
             }
             email_thread = threading.Thread(

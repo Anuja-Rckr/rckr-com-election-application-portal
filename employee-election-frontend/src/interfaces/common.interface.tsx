@@ -50,7 +50,6 @@ export interface FlatTablePropsInterface {
 export interface EmpDetailsInterface {
   user_name: string;
   email: string;
-  user_id: number;
   group_id: number;
 }
 

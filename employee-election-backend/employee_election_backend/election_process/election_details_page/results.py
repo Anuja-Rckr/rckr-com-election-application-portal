@@ -13,7 +13,11 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_winner_details(request, election_id, user_id):
+def get_winner_details(request, election_id):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN)
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -59,6 +63,10 @@ def get_distribution_of_votes_percentage(election_id, distribution_of_votes_numb
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_results_chart_data(request, election_id):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN)
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -95,6 +103,10 @@ def get_results_table_row_data(election_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_results_table(request,election_id):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN)
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED
@@ -115,6 +127,10 @@ def get_results_table(request,election_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_emp_voted_list(request,election_id):
+    if not request.user.groups.filter(name=ct.ADMIN).exists():
+        return JsonResponse({
+            'error': ct.ACCESS_DENIED
+        }, status=status.HTTP_403_FORBIDDEN)
     if not election_id:
        return JsonResponse({
            'error': ct.ELECTION_ID_REQUIRED

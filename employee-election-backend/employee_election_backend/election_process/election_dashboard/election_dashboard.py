@@ -53,6 +53,7 @@ def get_voting_list(request, election_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_vote(request, election_id):
+    user_id = request.user.id
     vote_details = request.data
     vote_details['election'] = election_id
 
@@ -63,7 +64,6 @@ def create_vote(request, election_id):
 
     try:
         with transaction.atomic():
-            user_id = vote_details.get('user_id')
             if not User.objects.filter(id=user_id).exists():
                 return JsonResponse({
                     'error': 'Invalid user ID'
@@ -107,7 +107,7 @@ def create_vote(request, election_id):
             election_details = ElectionModel.objects.filter(election_id=election_id).values("election_title").first()
             email_details = {
                 "election_title": election_details['election_title'],
-                "user_id": vote_details['user_id'],
+                "user_id": user_id,
                 "created_at": EmpVotingSerializer(emp_vote_data).data.get('voted_at')
             }
             email_thread = threading.Thread(
@@ -127,7 +127,8 @@ def create_vote(request, election_id):
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_election_vote_status(request, user_id, election_id):
+def get_election_vote_status(request,election_id):
+    user_id = request.user.id
     try:
         election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, user_id=user_id).exists()
         is_emp_voted = False
@@ -143,7 +144,8 @@ def get_election_vote_status(request, user_id, election_id):
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_election_nomination_status(request, user_id, election_id):
+def get_election_nomination_status(request, election_id):
+    user_id = request.user.id
     if not request.user.groups.filter(name=ct.USER).exists():
         return JsonResponse({
             'error': ct.ACCESS_DENIED

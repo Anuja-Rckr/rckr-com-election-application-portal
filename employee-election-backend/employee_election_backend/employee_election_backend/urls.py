@@ -38,12 +38,12 @@ urlpatterns = [
     path('election/nomination-details/<int:election_id>', get_nominations_details),
     path('election/nomination/list/<int:election_id>', get_nomination_candidates_list),
 
-    path('election/winner/<int:election_id>/<int:user_id>', get_winner_details),
+    path('election/winner/<int:election_id>', get_winner_details),
     path('election/charts/<int:election_id>',get_results_chart_data),
     path('election/results/<int:election_id>', get_results_table),
 
-    path('your-nominations/list/<int:user_id>', get_your_nominations_list),
-    path('your-nominations/cards/<int:user_id>', get_your_nominations_cards),
+    path('your-nominations/list', get_your_nominations_list),
+    path('your-nominations/cards', get_your_nominations_cards),
 
     path('election', create_election),
     path('election/<int:election_id>', update_election),
@@ -54,10 +54,10 @@ urlpatterns = [
     path('election/voting/list/<int:election_id>', get_voting_list),
 
     path('election/<int:election_id>/vote', create_vote),
-    path('election/vote/status/<int:user_id>/<int:election_id>', get_election_vote_status),
-    path('election/nomination/status/<int:user_id>/<int:election_id>', get_election_nomination_status),
+    path('election/vote/status/<int:election_id>', get_election_vote_status),
+    path('election/nomination/status/<int:election_id>', get_election_nomination_status),
     path('election/emp/vote/list/<int:election_id>', get_emp_voted_list),
 
-    path('auth/generate-token', emp_auth_token),
-    path('auth/logout', logout)
+    path('user', emp_auth_token),
+    path('logout', logout)
 ]

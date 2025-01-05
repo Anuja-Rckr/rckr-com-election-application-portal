@@ -13,7 +13,8 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_your_nominations_cards(request, user_id):    
+def get_your_nominations_cards(request):    
+    user_id = request.user.id
     if not user_id:
        return JsonResponse({
            'error': ct.EMP_ID_REQUIRED
@@ -47,7 +48,8 @@ def get_your_nominations_cards(request, user_id):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_your_nominations_list(request, user_id):
+def get_your_nominations_list(request):
+    user_id = request.user.id
     page = request.GET.get(ct.PAGE, '1')
     limit = request.GET.get(ct.LIMIT, '10')
     search_input = request.GET.get(ct.SEARCH_INPUT, '')

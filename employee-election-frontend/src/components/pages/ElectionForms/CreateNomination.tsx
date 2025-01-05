@@ -57,7 +57,6 @@ const NominationForm = ({
   const fetchNominationStatus = async () => {
     if (electionDetails?.election_id) {
       const response = await getEmpNominationStatus(
-        userDetails.user_id,
         electionDetails?.election_id
       );
       setIsEmpNominated(response.is_emp_nominated);
@@ -104,7 +103,6 @@ const NominationForm = ({
     if (submittedValues) {
       setIsConfirmModalOpen(false);
       const requestBody = {
-        user_id: userDetails.user_id,
         rckr_emp_id: submittedValues.rckrEmpId,
         user_name: submittedValues.userName,
         appeal: submittedValues.appeal,

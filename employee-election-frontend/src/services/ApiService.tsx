@@ -9,7 +9,7 @@ import { api, authApi } from "./axios";
 
 export const getUserInfo = async () => {
   try {
-    const response = await authApi.get("auth/generate-token");
+    const response = await authApi.get("user");
     return response.data.data;
   } catch (error) {
     throw error;
@@ -86,12 +86,9 @@ export const getElectionNominationCandidateList = async (
   }
 };
 
-export const getElectionWinnerDetails = async (
-  electionId: string,
-  userId: number
-) => {
+export const getElectionWinnerDetails = async (electionId: string) => {
   try {
-    const response = await api.get(`election/winner/${electionId}/${userId}`);
+    const response = await api.get(`election/winner/${electionId}`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
@@ -118,10 +115,7 @@ export const getElectionResultsTable = async (electionId: string) => {
 
 export const getYourNominationsCards = async () => {
   try {
-    const userDetails = fetchUserDetails();
-    const response = await api.get(
-      `your-nominations/cards/${userDetails.user_id}`
-    );
+    const response = await api.get(`your-nominations/cards`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
@@ -135,18 +129,14 @@ export const getYourNominationsTable = async (
   pageNumber: number
 ) => {
   try {
-    const userDetails = fetchUserDetails();
-    const response = await api.get(
-      `your-nominations/list/${userDetails.user_id}`,
-      {
-        params: {
-          search_input: searchInput,
-          page: pageNumber,
-          sort_field: sortField,
-          sort_direction: sortDirection ? "desc" : "asc",
-        },
-      }
-    );
+    const response = await api.get(`your-nominations/list`, {
+      params: {
+        search_input: searchInput,
+        page: pageNumber,
+        sort_field: sortField,
+        sort_direction: sortDirection ? "desc" : "asc",
+      },
+    });
     const colData = response.data.data.col_data;
     const rowData = response.data.data.row_data.map((election: any) => ({
       ...election,
@@ -235,25 +225,18 @@ export const castVote = async (requestBody: any, electionId: number) => {
   }
 };
 
-export const getEmpVoteStatus = async (userId: number, electionId: number) => {
+export const getEmpVoteStatus = async (electionId: number) => {
   try {
-    const response = await api.get(
-      `election/vote/status/${userId}/${electionId}`
-    );
+    const response = await api.get(`election/vote/status/${electionId}`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
   }
 };
 
-export const getEmpNominationStatus = async (
-  userId: number,
-  electionId: number
-) => {
+export const getEmpNominationStatus = async (electionId: number) => {
   try {
-    const response = await api.get(
-      `election/nomination/status/${userId}/${electionId}`
-    );
+    const response = await api.get(`election/nomination/status/${electionId}`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
@@ -271,7 +254,7 @@ export const getEmpVoteList = async (electionId: string) => {
 
 export const onLogoutApi = async () => {
   try {
-    const response = await api.post(`auth/logout`);
+    const response = await api.post(`logout`);
     return response.data.data;
   } catch (error: any) {
     toast.error(error.response.data.error);
