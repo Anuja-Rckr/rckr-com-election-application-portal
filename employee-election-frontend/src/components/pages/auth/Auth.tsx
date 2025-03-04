@@ -1,20 +1,16 @@
 import { Button, Group, Image, Text } from "@mantine/core";
-import { getUserInfo } from "../../../services/ApiService";
-import { useNavigate } from "react-router-dom";
-import { DASHBOARD } from "../../../common/constants";
 import { IconBrandGoogleFilled } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 import VoteImage from "../../../assets/rb_4448.png";
 
 const Auth = () => {
-  const navigate = useNavigate();
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
   const onGoogleSignin = async () => {
-    const response = await getUserInfo();
-    if (response) {
-      sessionStorage.setItem("userDetails", JSON.stringify(response));
-      navigate(DASHBOARD);
+    if (process.env.REACT_APP_REDIRECT_URL === undefined) {
+      throw new Error("LOGIN URL not defined");
     }
+    const redirectUri = process.env.REACT_APP_REDIRECT_URL;
+    window.location.href = redirectUri;
   };
 
   return (
@@ -33,7 +29,7 @@ const Auth = () => {
           <Button
             onClick={onGoogleSignin}
             variant="gradient"
-            gradient={{ from: "pink", to: "orange", deg: 90 }}
+            gradient={{ from: "red", to: "indigo", deg: 90 }}
             leftSection={<IconBrandGoogleFilled size={20} />}
           >
             Login with Google

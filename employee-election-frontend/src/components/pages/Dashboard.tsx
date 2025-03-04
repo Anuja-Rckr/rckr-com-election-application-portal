@@ -123,17 +123,6 @@ const Dashboard: React.FC = () => {
   const onViewPublishResult = async (election: DashboardElectionDetails) => {
     setCurrentElectionDetails(election);
     navigate(`/election-details/${election.election_id}/${RESULTS}`);
-    // const requestBody = {
-    //   results_published_date: new Date(),
-    // };
-    // const response = await updateElectionDetails(
-    //   requestBody,
-    //   election?.election_id
-    // );
-    // toast.success("Results published successfully");
-    // if (response) {
-    //   fetchDashboardElectionList();
-    // }
   };
 
   useEffect(() => {
@@ -207,16 +196,7 @@ const Dashboard: React.FC = () => {
                       Schedule polling
                     </Button>
                   )}
-                  {userDetails.group_id === 1 && (
-                    <Button
-                      onClick={() => onViewPublishResult(election)}
-                      disabled={
-                        getElectionStatus(election) !== VOTING_COMPLETED
-                      }
-                    >
-                      View & Publish Result
-                    </Button>
-                  )}
+
                   {userDetails.group_id === 2 && (
                     <Button
                       onClick={() => triggerCreateNominationModal(election)}
@@ -228,12 +208,21 @@ const Dashboard: React.FC = () => {
                     </Button>
                   )}
 
-                  {userDetails.group_id === 2 && (
+                  <Button
+                    disabled={getElectionStatus(election) !== VOTING_LIVE}
+                    onClick={() => triggerVotingModal(election)}
+                  >
+                    Vote
+                  </Button>
+
+                  {userDetails.group_id === 1 && (
                     <Button
-                      disabled={getElectionStatus(election) !== VOTING_LIVE}
-                      onClick={() => triggerVotingModal(election)}
+                      onClick={() => onViewPublishResult(election)}
+                      disabled={
+                        getElectionStatus(election) !== VOTING_COMPLETED
+                      }
                     >
-                      Vote
+                      View & Publish Result
                     </Button>
                   )}
                 </Group>
