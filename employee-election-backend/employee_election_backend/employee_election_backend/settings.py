@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv() 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +27,6 @@ SECRET_KEY = 'django-insecure-$80-0nwtiakywp*=xx6%!o$z(ez!_nuks(bc!6v-dculkey^g%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -129,9 +127,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOW_ALL_ORIGINS = True  
-
-CORS_ALLOW_CREDENTIALS = True  
+# Allow frontend domain to send requests
+CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "local.election.com",
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://local.election.com",
+    "http://localhost:3000"
+]
 
 
 # Default primary key field type

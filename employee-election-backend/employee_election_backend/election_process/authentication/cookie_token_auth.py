@@ -3,7 +3,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 class CookieTokenAuthentication(TokenAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get('token')
+        token = request.COOKIES.get('api_token')
         if not token:
             return None  
         try:

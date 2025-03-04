@@ -22,7 +22,7 @@ def set_http_cookie(token_value, user_details,group_id):
     } 
     api_response = JsonResponse({'data': response_obj}, status=status.HTTP_200_OK) 
     api_response.set_cookie( 
-        'token',   
+        'api_token',   
         token_value,   
         httponly=True,
         samesite='Lax',
@@ -30,15 +30,12 @@ def set_http_cookie(token_value, user_details,group_id):
     ) 
     return api_response 
 
-
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def emp_auth_token(request):
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
+    token = request.COOKIES.get('token')
+    if not token:
         return JsonResponse({'error': 'Authorization token missing or invalid.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    token = auth_header.split(' ')[1]
 
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=['HS256'], audience=[ct.USER, ct.ADMIN])

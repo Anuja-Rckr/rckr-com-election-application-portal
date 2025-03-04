@@ -31,6 +31,8 @@ export const YOUR_NOMINATIONS = "/your-nominations";
 export const HOME = "/";
 export const ELECTION_DETAILS = "/election-details/:id/:tab?";
 export const LOGIN = "/login";
+export const BASENAME = "/election";
+export const AUTHCOMPLETE = "/authComplete";
 
 // Menu options
 export const menuItems = [

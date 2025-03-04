@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 import { theme } from "./theme";
 import {
@@ -15,10 +14,13 @@ import {
   LIGHT,
   YOUR_NOMINATIONS,
   LOGIN,
+  BASENAME,
+  AUTHCOMPLETE,
 } from "./common/constants";
 import { Suspense, lazy } from "react";
 import Dashboard from "./components/pages/Dashboard";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import AuthComplete from "./components/pages/auth/AuthComplete";
 
 // Lazy load the components
 const Main = lazy(() => import("./components/pages/Main"));
@@ -34,11 +36,12 @@ const Auth = lazy(() => import("./components/pages/auth/Auth"));
 function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme={LIGHT}>
-      <Router>
+      <Router basename={BASENAME}>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             {/* Public Auth Route */}
             <Route path={LOGIN} element={<Auth />} />
+            <Route path={AUTHCOMPLETE} element={<AuthComplete />} />
 
             {/* Protected Routes */}
             <Route
@@ -57,7 +60,7 @@ function App() {
             </Route>
 
             {/* Redirect unknown routes to elections */}
-            <Route path="*" element={<Navigate to={ELECTIONS} replace />} />
+            <Route path="*" element={<Navigate to={DASHBOARD} replace />} />
           </Routes>
         </Suspense>
       </Router>
