@@ -81,12 +81,16 @@ WSGI_APPLICATION = 'employee_election_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DATABASE_NAME"),      
-        'USER': os.getenv("USER"),     
+        'ENGINE': 'mssql',
+        'NAME': os.getenv("DATABASE_NAME"),
+        'USER': os.getenv("USER"),
         'PASSWORD': os.getenv("PASSWORD"),
-        'HOST': 'localhost',               
-        'PORT': '3306',                   
+        'HOST': '127.0.0.1',
+        'PORT': '1433',  # Add the port
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'unicode_results': True,
+        },
     }
 }
 
