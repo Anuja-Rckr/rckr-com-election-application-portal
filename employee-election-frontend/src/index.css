@@ -128,6 +128,14 @@ code {
   align-items: center;
 }
 
+.unauthorized-image {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .google-btn-container {
   display: flex;
   flex-direction: column;

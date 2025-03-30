@@ -16,6 +16,15 @@ export const getUserInfo = async () => {
   }
 };
 
+export const getUserRole = async () => {
+  try {
+    const response = await api.get("user/role");
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getElectionCards = async () => {
   try {
     const response = await api.get("election/cards");

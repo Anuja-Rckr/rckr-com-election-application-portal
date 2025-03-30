@@ -91,6 +91,18 @@ def emp_auth_token(request):
         return JsonResponse({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_role(request):
+    try:
+        group_id = request.user.groups.values_list('id', flat=True).first()
+        return JsonResponse({ 
+                'data': {'user_role': group_id}, 
+            }, status=status.HTTP_200_OK) 
+    except Exception as e:
+        return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
