@@ -27,6 +27,7 @@ import {
   GREEN,
   RED,
   VOTING_LIVE,
+  YELLOW,
 } from "../../../common/constants";
 import Timer from "../../common/Timer";
 import {
@@ -35,7 +36,11 @@ import {
   getElectionStatus,
   isDateValid,
 } from "../../../common/utils";
-import { IconCircleCheck, IconSquareRoundedX } from "@tabler/icons-react";
+import {
+  IconCircleCheck,
+  IconSquareRoundedX,
+  IconAlertSquareFilled,
+} from "@tabler/icons-react";
 import { toast } from "../../../common/toast/ToastService";
 
 const Voting = ({
@@ -50,6 +55,8 @@ const Voting = ({
     ColumnData[]
   >([]);
   const [isVotingDisabled, setIsVotingDisabled] = useState<boolean>(false);
+  const [isTotalVotesExceeded, setTotalVotesExceeded] =
+    useState<boolean>(false);
   const [currentVote, setCurrentVote] = useState<VotingList | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [isTimerCompleted, setIsTimerCompleted] = useState<boolean>(false);
@@ -95,6 +102,7 @@ const Voting = ({
       const response = await getEmpVoteStatus(electionDetails?.election_id);
       setEmpVoteStatus(response.is_emp_voted);
       setIsVotingDisabled(response.is_emp_voted);
+      setTotalVotesExceeded(response.is_total_votes_exceeded);
     }
   };
 
@@ -147,7 +155,15 @@ const Voting = ({
               onExpire={handleTimerExpire}
             />
           )}
-        {isVotingDisabled && !isTimerCompleted && (
+        {isTotalVotesExceeded && !isVotingDisabled && !isTimerCompleted && (
+          <Alert
+            variant="light"
+            color={YELLOW}
+            title={`The voting limit for this election has been reached. You cannot cast your vote.`}
+            icon={<IconAlertSquareFilled size={50} />}
+          />
+        )}
+        {!isTotalVotesExceeded && isVotingDisabled && !isTimerCompleted && (
           <Alert
             variant="light"
             color={GREEN}
@@ -194,6 +210,7 @@ const Voting = ({
                     onClick={() => triggerConfirmVoteModal(row)}
                     disabled={
                       isVotingDisabled ||
+                      isTotalVotesExceeded ||
                       !(getElectionStatus(electionDetails) === VOTING_LIVE)
                     }
                   >

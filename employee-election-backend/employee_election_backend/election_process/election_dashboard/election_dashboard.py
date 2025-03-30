@@ -143,12 +143,21 @@ def create_vote(request, election_id):
 def get_election_vote_status(request,election_id):
     user_id = request.user.id
     try:
-        election_vote_status = EmpVotingModel.objects.filter(election_id=election_id, user_id=user_id).exists()
-        is_emp_voted = False
-        if election_vote_status:
-            is_emp_voted = True
+        total_election_votes = ElectionModel.objects.filter(
+            election_id=election_id
+        ).values_list('election_total_votes', flat=True).first() or 0
+
+        total_election_casted_votes = EmpVotingModel.objects.filter(
+            election_id=election_id, user_id=user_id
+        ).count()
+
+        is_total_votes_exceeded = total_election_casted_votes >= total_election_votes
+
+        is_emp_voted = EmpVotingModel.objects.filter(
+            election_id=election_id, user_id=user_id
+        ).exists()
         return JsonResponse({ 
-                'data': {'is_emp_voted': is_emp_voted}, 
+                'data': {'is_emp_voted': is_emp_voted, 'is_total_votes_exceeded': is_total_votes_exceeded}, 
             }, status=status.HTTP_200_OK) 
     except Exception as error: 
         return JsonResponse({ 
