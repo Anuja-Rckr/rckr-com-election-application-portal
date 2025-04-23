@@ -117,6 +117,7 @@ code {
 .container {
   height: 100%;
   width: 100%;
+  color: #ffffff;
 }
 
 .image-container {
@@ -156,6 +157,7 @@ code {
   line-height: 15px;
   letter-spacing: normal;
   text-align: start;
+  color: var(--mantine-color-black);
 }
 
 .secondary-text {
@@ -163,4 +165,5 @@ code {
   line-height: normal;
   letter-spacing: normal;
   text-align: start;
+  color: var(--mantine-color-black);
 }
